@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Repositories.StudentRepo;
 
+import java.util.Optional;
+
+
 @Service 
 public class StudentServices {
 
@@ -35,6 +38,20 @@ public class StudentServices {
         return "Welcome " + student.getName() + "!";
        }
 
+    }
+    public String loginUser(String email, String password) {
+      Optional<Student> studentOpt =studentRepo.findByStudentEmail(email);
+
+      if (studentOpt.isEmpty()){
+        return "User Does Not Exist";
+      }
+
+      Student student = studentOpt.get();
+
+      if (!student.getPassword().equals(password)) {
+        return "Incorrect Password";
+      }
+      return "Welcome back, " + student.getName() +"!";
     }
     
 }
