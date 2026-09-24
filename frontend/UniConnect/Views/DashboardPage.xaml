@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect - Dashboard Page
+
+    PURPOSE:
+    This page will be the main dashboard for a logged-in user.
+
+    FUTURE FUNCTIONALITY:
+    - Display the user's projects
+    - Show project progress
+    - Show upcoming tasks and deadlines
+    - Show milestones
+    - Show workload information
+    - Allow the user to open a project
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.DashboardPage"
+    Title="Dashboard">
+
+    <!-- Main page layout -->
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20">
+
+            <!-- Dashboard heading -->
+            <Label
+                Text="UniConnect Dashboard"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Welcome message -->
+            <Label
+                Text="Welcome to UniConnect!"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
+            <!--
+                Projects section.
+
+                FUTURE:
+                The project list can be connected to
+                DashboardViewModel and populated from the backend.
+            -->
+            <VerticalStackLayout
+                Spacing="10">
+
+                <Label
+                    Text="My Projects"
+                    FontSize="22"
+                    FontAttributes="Bold" />
+
+                <!-- Temporary project placeholder -->
+                <Frame
+                    Padding="15">
+
+                    <VerticalStackLayout>
+
+                        <Label
+                            Text="No projects loaded yet."
+                            FontSize="16" />
+
+                        <!--
+                            FUTURE:
+                            Replace this placeholder with a collection
+                            of the user's actual projects.
+                        -->
+
+                    </VerticalStackLayout>
+
+                </Frame>
+
+            </VerticalStackLayout>
+
+            <!--
+                Upcoming tasks section.
+
+                FUTURE:
+                Display tasks, deadlines and priorities here.
+            -->
+            <VerticalStackLayout
+                Spacing="10">
+
+                <Label
+                    Text="Upcoming Tasks"
+                    FontSize="22"
+                    FontAttributes="Bold" />
+
+                <Label
+                    Text="No upcoming tasks yet."
+                    FontSize="16" />
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

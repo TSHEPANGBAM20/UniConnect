@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect - New Project Page
+
+    PURPOSE:
+    This page allows a user to create a new university project/team.
+
+    FUTURE FUNCTIONALITY:
+    - Enter a project name and description
+    - Set a project deadline
+    - Create the project
+    - Make the creator the default Team Lead
+    - Add/invite team members
+    - Connect the page to NewProjectViewModel
+    - Send the project information to the Java backend
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.NewProjectPage"
+    Title="New Project">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="20">
+
+            <!-- Page heading -->
+            <Label
+                Text="Create New Project"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Project name -->
+            <Entry
+                x:Name="ProjectNameEntry"
+                Placeholder="Project name" />
+
+            <!-- Project description -->
+            <Editor
+                x:Name="ProjectDescriptionEditor"
+                Placeholder="Project description"
+                AutoSize="TextChanges"
+                HeightRequest="120" />
+
+            <!-- Project deadline -->
+            <DatePicker
+                x:Name="ProjectDeadlinePicker" />
+
+            <!--
+                Create project button.
+
+                FUTURE:
+                Connect this button to NewProjectViewModel.
+                The project creator should automatically become
+                the Team Lead.
+            -->
+            <Button
+                x:Name="CreateProjectButton"
+                Text="Create Project"
+                HorizontalOptions="Fill" />
+
+            <!--
+                Future status area.
+                This can display successful project creation
+                or validation/error messages.
+            -->
+            <Label
+                x:Name="StatusMessageLabel"
+                Text=""
+                IsVisible="False"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

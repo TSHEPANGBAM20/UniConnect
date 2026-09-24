@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect - Chat Page
+
+    PURPOSE:
+    This page will eventually contain the project team's chat system.
+
+    CURRENT STATUS:
+    This is the initial UI structure.
+    The actual messaging functionality will be connected later
+    through the ChatViewModel and backend API.
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.ChatPage"
+    Title="Chat">
+
+    <!--
+        Main vertical layout.
+        Controls placed inside this layout appear from top to bottom.
+    -->
+    <VerticalStackLayout
+        Padding="20"
+        Spacing="15">
+
+        <!-- Page heading -->
+        <Label
+            Text="Team Chat"
+            FontSize="28"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <!--
+            Temporary message for development.
+            This can later be replaced with the actual chat message list.
+        -->
+        <Label
+            Text="UniConnect Team Chat"
+            FontSize="18"
+            HorizontalOptions="Center" />
+
+        <!--
+            Future development:
+            - Display messages from ChatViewModel
+            - Add @mentions
+            - Add message input
+            - Add Send button
+            - Connect messages to the Java backend API
+        -->
+
+    </VerticalStackLayout>
+
+</ContentPage>

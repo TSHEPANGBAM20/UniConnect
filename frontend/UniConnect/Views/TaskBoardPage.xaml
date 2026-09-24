@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect - Task Board Page
+
+    PURPOSE:
+    This page will display and manage tasks for a project.
+
+    FUTURE FUNCTIONALITY:
+    - Display project tasks
+    - Assign tasks to team members
+    - Set task priorities
+    - Set deadlines
+    - Update task status/progress
+    - Show completed and outstanding tasks
+    - Connect to TaskBoardViewModel
+    - Retrieve and update tasks through the backend API
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.TaskBoardPage"
+    Title="Task Board">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20">
+
+            <!-- Page heading -->
+            <Label
+                Text="Task Board"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!--
+                Temporary task section.
+
+                FUTURE:
+                Replace this with a dynamic list of tasks
+                retrieved from the backend.
+            -->
+            <VerticalStackLayout
+                Spacing="10">
+
+                <Label
+                    Text="Project Tasks"
+                    FontSize="22"
+                    FontAttributes="Bold" />
+
+                <!-- Temporary placeholder -->
+                <Frame
+                    Padding="15">
+
+                    <VerticalStackLayout>
+
+                        <Label
+                            Text="No tasks available yet."
+                            FontSize="16" />
+
+                        <!--
+                            FUTURE:
+                            Tasks can be displayed here using
+                            a CollectionView connected to TaskBoardViewModel.
+                        -->
+
+                    </VerticalStackLayout>
+
+                </Frame>
+
+            </VerticalStackLayout>
+
+            <!--
+                Future task creation button.
+
+                This will eventually open a form where the user
+                can create and assign a new task.
+            -->
+            <Button
+                x:Name="AddTaskButton"
+                Text="Add Task"
+                HorizontalOptions="Fill" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

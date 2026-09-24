@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect - Login Page
+
+    PURPOSE:
+    This page allows an existing UniConnect user to log in.
+
+    FUTURE FUNCTIONALITY:
+    - Connect email/username and password fields to LoginViewModel
+    - Validate login details
+    - Send login request to the Java Spring Boot backend
+    - Display login errors
+    - Navigate to the Dashboard after successful login
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.LoginPage"
+    Title="Login">
+
+    <!-- Main login layout -->
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="20"
+            VerticalOptions="Center">
+
+            <!-- Application name -->
+            <Label
+                Text="UniConnect"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Page heading -->
+            <Label
+                Text="Login"
+                FontSize="24"
+                HorizontalOptions="Center" />
+
+            <!-- Email input -->
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Email"
+                Keyboard="Email"
+                ClearButtonVisibility="WhileEditing" />
+
+            <!-- Password input -->
+            <Entry
+                x:Name="PasswordEntry"
+                Placeholder="Password"
+                IsPassword="True"
+                ClearButtonVisibility="WhileEditing" />
+
+            <!-- Login button -->
+            <Button
+                x:Name="LoginButton"
+                Text="Login"
+                HorizontalOptions="Fill" />
+
+            <!--
+                FUTURE:
+                This button can navigate users to SignUpPage
+                if they do not already have an account.
+            -->
+            <Button
+                Text="Create an account"
+                HorizontalOptions="Fill" />
+
+            <!--
+                FUTURE:
+                Display validation or server error messages here.
+            -->
+            <Label
+                x:Name="ErrorMessageLabel"
+                Text=""
+                IsVisible="False"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>
