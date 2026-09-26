@@ -3,12 +3,19 @@
     x:Class="UniConnect.MAUI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:UniConnect.MAUI"
-    Title="UniConnect.MAUI">
+    xmlns:views="clr-namespace:UniConnect.MAUI.Views"
+    Title="UniConnect">
+
+    <!-- Login is the app's entry point. SignUp, NewProject, TaskBoard and Chat are
+         registered as routes below and pushed onto the stack via Shell.Current.GoToAsync. -->
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Dashboard"
+        ContentTemplate="{DataTemplate views:DashboardPage}"
+        Route="DashboardPage" />
 
 </Shell>

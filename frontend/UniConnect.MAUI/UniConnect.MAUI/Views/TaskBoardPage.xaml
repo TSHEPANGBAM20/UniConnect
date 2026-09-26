@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:UniConnect.MAUI.Models"
+             x:Class="UniConnect.MAUI.Views.TaskBoardPage"
+             Title="Tasks">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Button Grid.Row="0" Text="Open Chat" Clicked="OnChatClicked" Margin="20,10" />
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}" Margin="20,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TaskModel">
+                    <Frame Margin="0,5" Padding="15" CornerRadius="8">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding TaskTitle}" FontAttributes="Bold" />
+                            <Label FontSize="12" TextColor="Gray">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="Due: {0:dd MMM} - Assigned To {1}">
+                                        <Binding Path="DueDate" />
+                                        <Binding Path="AssignedToName" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                            <Label Text="{Binding Status}" FontSize="11" TextColor="Blue" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                            VerticalOptions="Start" Margin="0,10" />
+
+    </Grid>
+</ContentPage>
