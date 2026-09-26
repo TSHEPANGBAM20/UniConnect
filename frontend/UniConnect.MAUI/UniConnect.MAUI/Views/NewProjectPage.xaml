@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UniConnect.MAUI.Views.NewProjectPage"
+             Title="New Project">
+
+    <VerticalStackLayout Padding="30" Spacing="15">
+
+        <Label Text="Project Title" FontAttributes="Bold" />
+        <Entry x:Name="TitleEntry" Placeholder="Project Title" />
+
+        <Label Text="Project Description" FontAttributes="Bold" />
+        <Editor x:Name="DescriptionEditor" Placeholder="Describe your project" HeightRequest="100" />
+
+        <Label Text="{Binding ErrorMessage}" TextColor="Red" />
+
+        <Button Text="Create Project" Clicked="OnCreateClicked" Margin="0,10,0,0" />
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+    </VerticalStackLayout>
+</ContentPage>
