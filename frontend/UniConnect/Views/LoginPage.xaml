@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+    UniConnect Login Page
+
+    This page is responsible for displaying the login screen.
+    The actual login functionality will be connected to the
+    Java Spring Boot backend later.
+-->
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.Views.LoginPage"
+    Title="Login"
+    BackgroundColor="White">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="20"
+            VerticalOptions="Center">
+
+            <!-- UniConnect title -->
+            <Label
+                Text="UniConnect"
+                FontSize="36"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                TextColor="Black" />
+
+            <!-- Welcome message -->
+            <Label
+                Text="Welcome Back"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                TextColor="Black" />
+
+            <Label
+                Text="Log in to continue to your account"
+                FontSize="15"
+                HorizontalOptions="Center"
+                TextColor="Gray" />
+
+            <!-- Email -->
+            <VerticalStackLayout Spacing="6">
+
+                <Label
+                    Text="Email"
+                    FontAttributes="Bold"
+                    TextColor="Black" />
+
+                <Entry
+                    x:Name="EmailEntry"
+                    Placeholder="Enter your email"
+                    Keyboard="Email"
+                    ClearButtonVisibility="WhileEditing"
+                    TextColor="Black" />
+
+            </VerticalStackLayout>
+
+            <!-- Password -->
+            <VerticalStackLayout Spacing="6">
+
+                <Label
+                    Text="Password"
+                    FontAttributes="Bold"
+                    TextColor="Black" />
+
+                <Entry
+                    x:Name="PasswordEntry"
+                    Placeholder="Enter your password"
+                    IsPassword="True"
+                    ClearButtonVisibility="WhileEditing"
+                    TextColor="Black" />
+
+            </VerticalStackLayout>
+
+            <!-- Login button -->
+            <Button
+                x:Name="LoginButton"
+                Text="Login"
+                FontAttributes="Bold"
+                HeightRequest="50"
+                BackgroundColor="Black"
+                TextColor="White"
+                CornerRadius="10" />
+
+            <!-- Create account button -->
+            <Button
+                Text="Create an account"
+                HeightRequest="50"
+                BackgroundColor="Transparent"
+                TextColor="Black"
+                BorderColor="Black"
+                BorderWidth="1"
+                CornerRadius="10" />
+
+            <!-- Error message -->
+            <Label
+                x:Name="ErrorMessageLabel"
+                Text=""
+                IsVisible="False"
+                HorizontalOptions="Center"
+                TextColor="Red" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>
