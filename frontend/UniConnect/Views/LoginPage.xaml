@@ -1,113 +1,110 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<!--
-    UniConnect Login Page
-
-    This page is responsible for displaying the login screen.
-    The actual login functionality will be connected to the
-    Java Spring Boot backend later.
--->
-
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="UniConnect.Views.LoginPage"
-    Title="Login"
-    BackgroundColor="White">
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
 
-    <ScrollView>
+    <Grid>
 
         <VerticalStackLayout
-            Padding="30"
-            Spacing="20"
-            VerticalOptions="Center">
+            WidthRequest="350"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="15">
 
-            <!-- UniConnect title -->
             <Label
                 Text="UniConnect"
-                FontSize="36"
+                FontSize="34"
                 FontAttributes="Bold"
+                TextColor="Black"
                 HorizontalOptions="Center"
-                TextColor="Black" />
-
-            <!-- Welcome message -->
-            <Label
-                Text="Welcome Back"
-                FontSize="24"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                TextColor="Black" />
+                Margin="0,0,0,15" />
 
             <Label
-                Text="Log in to continue to your account"
-                FontSize="15"
-                HorizontalOptions="Center"
-                TextColor="Gray" />
+                Text="Log In"
+                FontSize="25"
+                FontAttributes="Bold"
+                TextColor="Black"
+                HorizontalOptions="Center" />
 
-            <!-- Email -->
-            <VerticalStackLayout Spacing="6">
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Email"
+                Keyboard="Email"
+                HeightRequest="50" />
 
-                <Label
-                    Text="Email"
-                    FontAttributes="Bold"
-                    TextColor="Black" />
-
-                <Entry
-                    x:Name="EmailEntry"
-                    Placeholder="Enter your email"
-                    Keyboard="Email"
-                    ClearButtonVisibility="WhileEditing"
-                    TextColor="Black" />
-
-            </VerticalStackLayout>
-
-            <!-- Password -->
-            <VerticalStackLayout Spacing="6">
-
-                <Label
-                    Text="Password"
-                    FontAttributes="Bold"
-                    TextColor="Black" />
+            <Grid ColumnDefinitions="*,Auto">
 
                 <Entry
                     x:Name="PasswordEntry"
-                    Placeholder="Enter your password"
+                    Grid.Column="0"
+                    Placeholder="Password"
                     IsPassword="True"
-                    ClearButtonVisibility="WhileEditing"
-                    TextColor="Black" />
+                    HeightRequest="50" />
 
-            </VerticalStackLayout>
+                <Label
+                    x:Name="ShowPasswordLabel"
+                    Grid.Column="1"
+                    Text="Show"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center"
+                    Margin="10,0,0,0">
 
-            <!-- Login button -->
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="OnTogglePasswordVisibility" />
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+            </Grid>
+
+            <Label
+                x:Name="ErrorLabel"
+                Text=""
+                TextColor="Red"
+                HorizontalOptions="Center" />
+
             <Button
-                x:Name="LoginButton"
-                Text="Login"
-                FontAttributes="Bold"
-                HeightRequest="50"
+                Text="Log In"
+                Clicked="OnLoginClicked"
                 BackgroundColor="Black"
                 TextColor="White"
-                CornerRadius="10" />
+                CornerRadius="25"
+                HeightRequest="50" />
 
-            <!-- Create account button -->
-            <Button
-                Text="Create an account"
-                HeightRequest="50"
-                BackgroundColor="Transparent"
-                TextColor="Black"
-                BorderColor="Black"
-                BorderWidth="1"
-                CornerRadius="10" />
-
-            <!-- Error message -->
             <Label
-                x:Name="ErrorMessageLabel"
-                Text=""
-                IsVisible="False"
-                HorizontalOptions="Center"
-                TextColor="Red" />
+                Text="Forgot your password?"
+                TextColor="Black"
+                FontSize="13"
+                HorizontalOptions="Center">
+
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnForgotPasswordTapped" />
+                </Label.GestureRecognizers>
+
+            </Label>
+
+            <Label
+                Text="Don't have an account? Sign Up"
+                TextColor="Gray"
+                FontSize="13"
+                HorizontalOptions="Center">
+
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnSignUpTapped" />
+                </Label.GestureRecognizers>
+
+            </Label>
 
         </VerticalStackLayout>
 
-    </ScrollView>
+    </Grid>
 
 </ContentPage>
