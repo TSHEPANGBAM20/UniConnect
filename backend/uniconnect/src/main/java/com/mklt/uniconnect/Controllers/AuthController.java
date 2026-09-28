@@ -10,11 +10,11 @@ import com.mklt.uniconnect.Services.StudentServices;
 
 @RestController 
 @RequestMapping ("/auth")
-public class RegisterController {
+public class AuthController {
 
     //the only job of the controller methods is to invoke the services
     private StudentServices studentService;
-    public RegisterController(StudentServices studentService) {
+    public AuthController(StudentServices studentService) {
         this.studentService = studentService;
     }
 
