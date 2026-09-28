@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.Views.LoginPage"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+
+        <VerticalStackLayout
+            WidthRequest="350"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="15">
+
+            <Label
+                Text="UniConnect"
+                FontSize="34"
+                FontAttributes="Bold"
+                TextColor="Black"
+                HorizontalOptions="Center"
+                Margin="0,0,0,15" />
+
+            <Label
+                Text="Log In"
+                FontSize="25"
+                FontAttributes="Bold"
+                TextColor="Black"
+                HorizontalOptions="Center" />
+
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Email"
+                Keyboard="Email"
+                HeightRequest="50" />
+
+            <Grid ColumnDefinitions="*,Auto">
+
+                <Entry
+                    x:Name="PasswordEntry"
+                    Grid.Column="0"
+                    Placeholder="Password"
+                    IsPassword="True"
+                    HeightRequest="50" />
+
+                <Label
+                    x:Name="ShowPasswordLabel"
+                    Grid.Column="1"
+                    Text="Show"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center"
+                    Margin="10,0,0,0">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="OnTogglePasswordVisibility" />
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+            </Grid>
+
+            <Label
+                x:Name="ErrorLabel"
+                Text=""
+                TextColor="Red"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Log In"
+                Clicked="OnLoginClicked"
+                BackgroundColor="Black"
+                TextColor="White"
+                CornerRadius="25"
+                HeightRequest="50" />
+
+            <Label
+                Text="Forgot your password?"
+                TextColor="Black"
+                FontSize="13"
+                HorizontalOptions="Center">
+
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnForgotPasswordTapped" />
+                </Label.GestureRecognizers>
+
+            </Label>
+
+            <Label
+                Text="Don't have an account? Sign Up"
+                TextColor="Gray"
+                FontSize="13"
+                HorizontalOptions="Center">
+
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnSignUpTapped" />
+                </Label.GestureRecognizers>
+
+            </Label>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
