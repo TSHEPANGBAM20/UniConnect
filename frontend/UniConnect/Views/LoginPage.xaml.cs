@@ -7,6 +7,7 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
     }
 
+    // Shows or hides the password.
     private void OnTogglePasswordVisibility(object? sender, TappedEventArgs e)
     {
         PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
@@ -15,6 +16,7 @@ public partial class LoginPage : ContentPage
             PasswordEntry.IsPassword ? "Show" : "Hide";
     }
 
+    // Temporary login button test.
     private async void OnLoginClicked(object? sender, EventArgs e)
     {
         await DisplayAlertAsync(
@@ -23,7 +25,10 @@ public partial class LoginPage : ContentPage
             "OK");
     }
 
-    private async void OnForgotPasswordTapped(object? sender, TappedEventArgs e)
+    // Temporary forgot-password message.
+    private async void OnForgotPasswordTapped(
+        object? sender,
+        TappedEventArgs e)
     {
         await DisplayAlertAsync(
             "Forgot Password",
@@ -31,11 +36,11 @@ public partial class LoginPage : ContentPage
             "OK");
     }
 
-    private async void OnSignUpTapped(object? sender, TappedEventArgs e)
+    // Opens the Sign Up page.
+    private async void OnSignUpTapped(
+        object? sender,
+        TappedEventArgs e)
     {
-        await DisplayAlertAsync(
-            "Sign Up",
-            "The Sign Up page will be added next.",
-            "OK");
+        await Shell.Current.GoToAsync("SignUpPage");
     }
 }
