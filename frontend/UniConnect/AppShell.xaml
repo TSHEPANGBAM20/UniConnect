@@ -13,8 +13,8 @@
     -->
 
     <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate views:LoginPage}"
-        Route="LoginPage" />
+        Title="Home"
+        ContentTemplate="{DataTemplate views:HomePage}"
+        Route="HomePage" />
 
 </Shell>
