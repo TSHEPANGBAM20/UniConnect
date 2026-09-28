@@ -1,113 +1,90 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<!--
-    UniConnect Login Page
-
-    This page is responsible for displaying the login screen.
-    The actual login functionality will be connected to the
-    Java Spring Boot backend later.
--->
-
-<ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="UniConnect.MAUI.Views.LoginPage"
-    Title="Login"
-    BackgroundColor="White">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UniConnect.MAUI.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="White"
+             Title="Log In">
 
     <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="18" VerticalOptions="Center" HorizontalOptions="Center" MaximumWidthRequest="420">
 
-        <VerticalStackLayout
-            Padding="30"
-            Spacing="20"
-            VerticalOptions="Center">
+            <Label Text="UniConnect"
+                   FontSize="30" FontAttributes="Bold"
+                   TextColor="Black"
+                   HorizontalOptions="Center" />
 
-            <!-- UniConnect title -->
-            <Label
-                Text="UniConnect"
-                FontSize="36"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                TextColor="Black" />
+            <Label Text="Welcome Back"
+                   FontSize="20" FontAttributes="Bold"
+                   TextColor="Black"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,10" />
 
-            <!-- Welcome message -->
-            <Label
-                Text="Welcome Back"
-                FontSize="24"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                TextColor="Black" />
+            <Label Text="Email" FontAttributes="Bold" TextColor="Black" FontSize="13" />
+            <Border Stroke="#D0D0D0" StrokeShape="RoundRectangle 12" Padding="15,0" HeightRequest="50">
+                <Entry x:Name="EmailEntry"
+                       Placeholder="Enter your email"
+                       Keyboard="Email"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center" />
+            </Border>
 
-            <Label
-                Text="Log in to continue to your account"
-                FontSize="15"
-                HorizontalOptions="Center"
-                TextColor="Gray" />
+            <Label Text="Password" FontAttributes="Bold" TextColor="Black" FontSize="13" />
+            <Border Stroke="#D0D0D0" StrokeShape="RoundRectangle 12" Padding="15,0" HeightRequest="50">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry x:Name="PasswordEntry"
+                           Grid.Column="0"
+                           Placeholder="Enter your password"
+                           IsPassword="True"
+                           BackgroundColor="Transparent"
+                           VerticalOptions="Center" />
+                    <Label x:Name="ShowPasswordLabel"
+                           Grid.Column="1"
+                           Text="Show"
+                           TextColor="Black"
+                           FontAttributes="Bold"
+                           FontSize="13"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTogglePasswordVisibility" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
 
-            <!-- Email -->
-            <VerticalStackLayout Spacing="6">
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" HorizontalOptions="Center" />
 
-                <Label
-                    Text="Email"
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+            <Button Text="Log In"
+                    Clicked="OnLoginClicked"
+                    BackgroundColor="Black"
+                    TextColor="White"
                     FontAttributes="Bold"
-                    TextColor="Black" />
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,10,0,0" />
 
-                <Entry
-                    x:Name="EmailEntry"
-                    Placeholder="Enter your email"
-                    Keyboard="Email"
-                    ClearButtonVisibility="WhileEditing"
-                    TextColor="Black" />
+            <Button Text="Create an account"
+                    Clicked="OnSignUpTapped"
+                    BackgroundColor="Transparent"
+                    TextColor="Black"
+                    BorderColor="Black"
+                    BorderWidth="1"
+                    CornerRadius="10"
+                    HeightRequest="50" />
 
-            </VerticalStackLayout>
-
-            <!-- Password -->
-            <VerticalStackLayout Spacing="6">
-
-                <Label
-                    Text="Password"
-                    FontAttributes="Bold"
-                    TextColor="Black" />
-
-                <Entry
-                    x:Name="PasswordEntry"
-                    Placeholder="Enter your password"
-                    IsPassword="True"
-                    ClearButtonVisibility="WhileEditing"
-                    TextColor="Black" />
-
-            </VerticalStackLayout>
-
-            <!-- Login button -->
-            <Button
-                x:Name="LoginButton"
-                Text="Login"
-                FontAttributes="Bold"
-                HeightRequest="50"
-                BackgroundColor="Black"
-                TextColor="White"
-                CornerRadius="10" />
-
-            <!-- Create account button -->
-            <Button
-                Text="Create an account"
-                HeightRequest="50"
-                BackgroundColor="Transparent"
-                TextColor="Black"
-                BorderColor="Black"
-                BorderWidth="1"
-                CornerRadius="10" />
-
-            <!-- Error message -->
-            <Label
-                x:Name="ErrorMessageLabel"
-                Text=""
-                IsVisible="False"
-                HorizontalOptions="Center"
-                TextColor="Red" />
+            <Label Text="Forgot your password?"
+                   HorizontalOptions="Center"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   FontSize="13"
+                   Margin="0,10,0,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
+                </Label.GestureRecognizers>
+            </Label>
 
         </VerticalStackLayout>
-
     </ScrollView>
-
 </ContentPage>
