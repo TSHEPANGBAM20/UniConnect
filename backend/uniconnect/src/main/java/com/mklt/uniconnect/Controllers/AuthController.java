@@ -46,8 +46,9 @@ public class AuthController {
             return "Email field cannot be empty. Please fill it in.";
         }else if (password.isEmpty()){
             return "Email field cannot be empty. Please fill it in.";
-        }
+        }else{
         return studentService.loginUser(email, password);
+        }
     }
 
 
