@@ -1,4 +1,4 @@
-﻿using UniConnect.MAUI.ViewModels;
+using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
 {
@@ -24,7 +24,11 @@ namespace UniConnect.MAUI.Views
                 await Shell.Current.GoToAsync("//DashboardPage");
         }
 
-        private void OnTogglePasswordVisibility(object sender, EventArgs e)
+        private async void OnSignUpTapped(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(SignUpPage));
+        }
+                private void OnTogglePasswordVisibility(object sender, EventArgs e)
         {
             PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
             ShowPasswordLabel.Text = PasswordEntry.IsPassword ? "Show" : "Hide";
@@ -32,12 +36,7 @@ namespace UniConnect.MAUI.Views
 
         private async void OnForgotPasswordTapped(object sender, EventArgs e)
         {
-            await DisplayAlert("Forgot Password", "Password reset isn't implemented yet.", "OK");
-        }
-
-        private async void OnSignUpTapped(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync(nameof(SignUpPage));
+            await this.DisplayAlertAsync("Forgot Password", "Password reset isn't implemented yet.", "OK");
         }
     }
 }
