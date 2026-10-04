@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UniConnect.MAUI.Controls.BottomNavBar">
+
+    <VerticalStackLayout Spacing="10" Padding="16,0,16,16" HorizontalOptions="Center">
+
+        <!-- Popup menu (opens above the bar when Profile is tapped).
+             No shadow on purpose: scaling a shadowed Border redraws the shadow every frame. -->
+        <Border x:Name="MenuPopup" IsVisible="False" Opacity="0"
+                AnchorX="0.5" AnchorY="1"
+                BackgroundColor="White" Stroke="#E5E5E5"
+                StrokeShape="RoundRectangle 18" Padding="6" WidthRequest="230">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="My Account" ClassId="My Account" FontSize="15" TextColor="#374151" Padding="12,10">
+                    <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnMenuItemTapped" /></Label.GestureRecognizers>
+                </Label>
+                <Label Text="Settings" ClassId="Settings" FontSize="15" TextColor="#374151" Padding="12,10">
+                    <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnMenuItemTapped" /></Label.GestureRecognizers>
+                </Label>
+                <BoxView HeightRequest="1" Color="#E5E5E5" Margin="0,2" />
+                <Label Text="Logout" ClassId="Logout" FontSize="15" TextColor="#DC2626" Padding="12,10">
+                    <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnMenuItemTapped" /></Label.GestureRecognizers>
+                </Label>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Capsule bar: labelled icons, light blue pill behind the active tab -->
+        <Border BackgroundColor="White" Stroke="#E5E5E5" StrokeShape="RoundRectangle 35"
+                Padding="6" HorizontalOptions="Center">
+            <Border.Shadow>
+                <Shadow Brush="Black" Opacity="0.12" Radius="16" Offset="0,6" />
+            </Border.Shadow>
+            <HorizontalStackLayout Spacing="2">
+
+                <Border x:Name="HomeTab" ClassId="Home" WidthRequest="66" HeightRequest="58"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 29"
+                        SemanticProperties.Description="Home">
+                    <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path x:Name="HomeIcon" Data="M3 10 L12 3 L21 10 V20 H3 Z M9 20 V13 H15 V20"
+                              Stroke="#6B7280" StrokeThickness="1.8" StrokeLineCap="Round" StrokeLineJoin="Round"
+                              Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Label x:Name="HomeLabel" Text="Home" FontSize="11" FontAttributes="Bold"
+                               TextColor="#6B7280" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTabTapped" /></Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="ProjectsTab" ClassId="Projects" WidthRequest="66" HeightRequest="58"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 29"
+                        SemanticProperties.Description="Projects">
+                    <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path x:Name="ProjectsIcon" Data="M3 6 H10 L12 8 H21 V19 H3 Z"
+                              Stroke="#6B7280" StrokeThickness="1.8" StrokeLineCap="Round" StrokeLineJoin="Round"
+                              Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Label x:Name="ProjectsLabel" Text="Projects" FontSize="11" FontAttributes="Bold"
+                               TextColor="#6B7280" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTabTapped" /></Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="CalendarTab" ClassId="Calendar" WidthRequest="66" HeightRequest="58"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 29"
+                        SemanticProperties.Description="Calendar">
+                    <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path x:Name="CalendarIcon" Data="M3 6 H21 V21 H3 Z M3 11 H21 M8 3 V8 M16 3 V8"
+                              Stroke="#6B7280" StrokeThickness="1.8" StrokeLineCap="Round" StrokeLineJoin="Round"
+                              Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Label x:Name="CalendarLabel" Text="Calendar" FontSize="11" FontAttributes="Bold"
+                               TextColor="#6B7280" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTabTapped" /></Border.GestureRecognizers>
+                </Border>
+
+                <Border x:Name="ProfileTab" ClassId="Profile" WidthRequest="66" HeightRequest="58"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 29"
+                        SemanticProperties.Description="Profile">
+                    <VerticalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path x:Name="ProfileIcon" Data="M16 7 A4 4 0 1 1 8 7 A4 4 0 1 1 16 7 Z M5 21 V19 Q5 15 9 15 H15 Q19 15 19 19 V21"
+                              Stroke="#6B7280" StrokeThickness="1.8" StrokeLineCap="Round" StrokeLineJoin="Round"
+                              Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" />
+                        <Label x:Name="ProfileLabel" Text="Profile" FontSize="11" FontAttributes="Bold"
+                               TextColor="#6B7280" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnTabTapped" /></Border.GestureRecognizers>
+                </Border>
+
+            </HorizontalStackLayout>
+        </Border>
+    </VerticalStackLayout>
+</ContentView>

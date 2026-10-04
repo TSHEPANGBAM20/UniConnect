@@ -27,10 +27,26 @@ namespace UniConnect.MAUI.Views
 
         private async void OnProjectTapped(object sender, TappedEventArgs e)
         {
-            if (sender is TapGestureRecognizer tap && tap.BindingContext is ProjectModel project)
+            if (sender is BindableObject view && view.BindingContext is ProjectModel project)
             {
                 await Shell.Current.GoToAsync($"{nameof(TaskBoardPage)}?projectId={project.ProjectId}");
             }
+        }
+
+        private async void OnTabSelected(object? sender, string tab)
+        {
+            if (tab == "Home") return;
+            await this.DisplayAlertAsync("Coming soon", $"{tab} isn't built yet.", "OK");
+        }
+
+        private async void OnMenuItemSelected(object? sender, string item)
+        {
+            if (item == "Logout")
+            {
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+            await this.DisplayAlertAsync("Coming soon", $"{item} isn't built yet.", "OK");
         }
     }
 }

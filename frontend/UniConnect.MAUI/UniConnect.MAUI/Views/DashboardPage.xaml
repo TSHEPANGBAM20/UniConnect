@@ -2,36 +2,90 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:UniConnect.MAUI.Models"
+             xmlns:controls="clr-namespace:UniConnect.MAUI.Controls"
              x:Class="UniConnect.MAUI.Views.DashboardPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="White"
              Title="Dashboard">
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid MaximumWidthRequest="500">
 
-        <Label Grid.Row="0" Text="{Binding WelcomeMessage}"
-               FontSize="20" FontAttributes="Bold" Margin="20,20,20,10" />
+        <!-- Main content -->
+        <ScrollView>
+            <VerticalStackLayout Padding="24,20,24,120" Spacing="14">
 
-        <Button Grid.Row="1" Text="+ New Project" Clicked="OnNewProjectClicked"
-                Margin="20,0,20,10" />
+                <Label Text="Dashboard" FontSize="22" FontAttributes="Bold"
+                       TextColor="Black" HorizontalOptions="Center" />
 
-        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                            VerticalOptions="Start" Margin="0,10" />
+                <Label Text="{Binding WelcomeMessage}" FontSize="22" FontAttributes="Bold"
+                       TextColor="Black" HorizontalOptions="Center" Margin="0,6,0,6" />
 
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Projects}" Margin="20,0">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:ProjectModel">
-                    <Frame Margin="0,5" Padding="15" CornerRadius="8">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding ProjectName}" FontAttributes="Bold" />
-                            <Label Text="{Binding Role}" FontSize="12" TextColor="Gray" />
-                        </VerticalStackLayout>
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnProjectTapped"
-                                BindingContext="{Binding .}" />
-                        </Frame.GestureRecognizers>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                <Button Text="New Project" Clicked="OnNewProjectClicked"
+                        BackgroundColor="Black" TextColor="White" FontAttributes="Bold"
+                        CornerRadius="25" HeightRequest="50" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   Color="Black" />
+
+                <!-- Projects -->
+                <Label Text="Your Projects" FontSize="13" FontAttributes="Bold"
+                       TextColor="Black" Margin="0,10,0,0" />
+
+                <Label Text="No projects yet. Tap New Project to create one."
+                       FontSize="12" TextColor="Gray"
+                       IsVisible="{Binding ShowEmptyProjects}" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Projects}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:ProjectModel">
+                            <Border Stroke="Black" StrokeShape="RoundRectangle 14" Padding="16,12">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding ProjectName}" FontAttributes="Bold"
+                                           FontSize="14" TextColor="Black" />
+                                    <Label Text="{Binding Role}" FontSize="11" TextColor="Gray" />
+                                </VerticalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnProjectTapped" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="1" Color="#D0D0D0" Margin="0,10" />
+
+                <!-- Notifications -->
+                <Label Text="Notifications" FontSize="13" FontAttributes="Bold" TextColor="Black" />
+
+                <Label Text="You're all caught up."
+                       FontSize="12" TextColor="Gray"
+                       IsVisible="{Binding ShowEmptyNotifications}" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notifications}" Spacing="10">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:NotificationModel">
+                            <Border Stroke="Black" StrokeShape="RoundRectangle 14" Padding="16,14">
+                                <Label Text="{Binding Message}" FontSize="13"
+                                       FontAttributes="Bold" TextColor="Black">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsRead}" Value="True">
+                                            <Setter Property="FontAttributes" Value="None" />
+                                            <Setter Property="TextColor" Value="Gray" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Floating bottom navigation (reusable control) -->
+        <controls:BottomNavBar ActiveTab="Home" VerticalOptions="End"
+                               TabSelected="OnTabSelected"
+                               MenuItemSelected="OnMenuItemSelected" />
 
     </Grid>
 </ContentPage>
