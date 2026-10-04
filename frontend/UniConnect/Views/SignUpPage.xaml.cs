@@ -46,6 +46,6 @@ public partial class SignUpPage : ContentPage
 
     private async void OnLoginTapped(object? sender, TappedEventArgs e)
     {
-        await Shell.Current.GoToAsync("//LoginPage");
+        await Shell.Current.GoToAsync("//LoginPage"); // register
     }
 }
