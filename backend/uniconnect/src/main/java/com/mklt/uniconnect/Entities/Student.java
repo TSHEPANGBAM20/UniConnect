@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
  
 @Entity  //all variables will be translated to table columns
-@Table (name = "ucStudents") //the table in the database where the information is supposed to go
+@Table (name = "UniConnectStudents") //the table in the database where the information is supposed to go
 public class Student {
 
 @Id //says that the variable is a primary key
@@ -17,12 +17,9 @@ private Long id;
 
 private String student_name;
 private String student_surname;
-@Column (unique = true) //the variable/column will be unique 
-private String student_number;
 
 @Column (unique = true)
 private String studentEmail;
-
 private String password;
 
     //an empty constructor = allows a version of object creation where parameters aren't passed
@@ -31,10 +28,9 @@ private String password;
     }
 
 
-     public Student(String name, String surname, String number, String studentEmail,String password) {
+     public Student(String name, String surname,String studentEmail,String password) {
         this.student_name = name;
         this.student_surname = surname;
-        this.student_number = number;
         this.studentEmail = studentEmail;
         this.password = password;
         
@@ -55,10 +51,6 @@ private String password;
         this.studentEmail= email;
     }
 
-     public void setNumber(String number){
-        this.student_number = number;
-    }
-
     public void setPassword(String password){
         this.password = password;
     }
@@ -73,9 +65,6 @@ private String password;
         return student_surname;
     }
 
-    public String getNumber (){
-        return student_number;
-    }
 
     public String getEmail(){
         return studentEmail;

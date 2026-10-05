@@ -1,5 +1,9 @@
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Controllers\AuthController.java
+C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Controllers\ProjectsController.java
+C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Entities\Project.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Entities\Student.java
+C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Repositories\ProjectsRepo.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Repositories\StudentRepo.java
+C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Services\ProjectsServices.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Services\StudentServices.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\UniconnectApplication.java

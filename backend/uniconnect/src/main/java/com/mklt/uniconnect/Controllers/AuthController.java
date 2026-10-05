@@ -1,11 +1,14 @@
 package com.mklt.uniconnect.Controllers;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Services.StudentServices;
+
 
 
 @RestController 
@@ -19,25 +22,33 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser (@RequestParam("name") String name, @RequestParam("surname") String surname, @RequestParam("number") String number,@RequestParam("email") String email, @RequestParam ("password") String password){
+    public Student registerUser (@RequestBody Student student){
+
+        //Variables
+        String name = student.getName();
+        String surname = student.getSurname();
+        String email = student.getEmail();
+        String password = student.getPassword();
+
         if (name.isEmpty()){
-            return "Name field cannot be empty.Please fill it in.";
+           throw new RuntimeException("Name field cannot be empty.Please fill it in.");
         }else if (surname.isEmpty()){
-            return "Surname field cannot be empty.Please fill it in.";
-        }else if (number.isEmpty()){
-            return "Number field cannot be empty.Please fill it in.";
+           throw new RuntimeException("Surname field cannot be empty.Please fill it in.");
         }else if (email.isEmpty()){
-            return "Email field cannot be empty.Please fill it in.";
+             throw new RuntimeException("Email field cannot be empty.Please fill it in.");
         } else if (password.isEmpty()){
-            return "Password field cannot be empty.Please fill it in.";
-        }else if (password.length() < 4){
-            return "Your Password cannot be less than 3 characters. Please Try again";
+             throw new RuntimeException("Password field cannot be empty.Please fill it in.");
+        }else if (password.length() <= 4){
+             throw new RuntimeException("Password cannot be less than 4 characters.");
         }else{
-             return studentService.createUser(name, surname, number, email, password); 
+             return studentService.createUser(name, surname,email, password); 
         }
         
        
     }
+
+    //1. Data is collected into usermodel
+    //1. Sent to  is collected to path as json body via
 
     //login
     @PostMapping("/login")

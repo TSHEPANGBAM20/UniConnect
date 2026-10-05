@@ -11,7 +11,7 @@ namespace UniConnect.MAUI.Services
 
         // Android emulator uses 10.0.2.2 to reach the host machine's localhost.
         // Change this once the backend is actually hosted somewhere shared.
-        private const string BaseUrl = "http://10.0.2.2:8080/api/v1";
+        private const string BaseUrl = "http://localhost:8080"; //the base url
 
         public int? CurrentUserId { get; private set; }
         public string CurrentUserName { get; private set; }
@@ -31,7 +31,7 @@ namespace UniConnect.MAUI.Services
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var response = await _http.PostAsJsonAsync("/auth/login", request);
+            var response = await _http.PostAsJsonAsync("/auth/login", request); //points to login endpoint
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
             SetAuthToken(result.Token);
@@ -42,7 +42,7 @@ namespace UniConnect.MAUI.Services
 
         public async Task<UserModel> RegisterAsync(RegisterRequest request)
         {
-            var response = await _http.PostAsJsonAsync("/auth/register", request);
+            var response = await _http.PostAsJsonAsync("/auth/register", request); // points to 
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<UserModel>();
         }
