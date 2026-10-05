@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.Views.HomePage"
+    BackgroundColor="White"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+
+        <Grid Padding="30">
+
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Spacing="20"
+                MaximumWidthRequest="500">
+
+                <!-- UniConnect logo / application name -->
+                <Label
+                    Text="UniConnect"
+                    FontSize="42"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    Margin="0,0,0,10" />
+
+                <!-- Main heading -->
+                <Label
+                    Text="Connect. Collaborate. Succeed."
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="Center" />
+
+                <!-- Description -->
+                <Label
+                    Text="A simple workspace for university students to manage projects, tasks, deadlines and team communication."
+                    FontSize="15"
+                    TextColor="Gray"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="Center"
+                    Margin="10,0,10,20" />
+
+                <!-- Log In button -->
+                <Button
+                    Text="Log In"
+                    Clicked="OnLoginClicked"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    CornerRadius="25"
+                    HeightRequest="50"
+                    FontAttributes="Bold" />
+
+                <!-- Sign Up button -->
+                <Button
+                    Text="Sign Up"
+                    Clicked="OnSignUpClicked"
+                    BackgroundColor="White"
+                    TextColor="Black"
+                    BorderColor="Black"
+                    BorderWidth="2"
+                    CornerRadius="25"
+                    HeightRequest="50"
+                    FontAttributes="Bold" />
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+    </ScrollView>
+
+</ContentPage>
