@@ -2,6 +2,7 @@ C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\un
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Controllers\ProjectsController.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Entities\Project.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Entities\Student.java
+C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Helpers\PasswordConfig.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Repositories\ProjectsRepo.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Repositories\StudentRepo.java
 C:\Users\ttbam\Documents\UniConnect\backend\uniconnect\src\main\java\com\mklt\uniconnect\Services\ProjectsServices.java

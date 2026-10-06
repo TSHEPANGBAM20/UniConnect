@@ -3,7 +3,6 @@ package com.mklt.uniconnect.Controllers;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mklt.uniconnect.Entities.Student;
@@ -52,11 +51,14 @@ public class AuthController {
 
     //login
     @PostMapping("/login")
-    public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
+    public Student loginUser(@RequestBody Student student) {
+        String email = student.getEmail();
+        String password = student.getPassword();
+        
         if (email.isEmpty()){
-            return "Email field cannot be empty. Please fill it in.";
+             throw new RuntimeException("Email field cannot be empty.Please fill it in.");
         }else if (password.isEmpty()){
-            return "Email field cannot be empty. Please fill it in.";
+             throw new RuntimeException("Password field cannot be empty.Please fill it in.");
         }else{
         return studentService.loginUser(email, password);
         }
