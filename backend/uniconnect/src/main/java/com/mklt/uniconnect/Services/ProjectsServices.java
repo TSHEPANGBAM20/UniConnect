@@ -22,12 +22,12 @@ public class ProjectsServices {
 
     //method to create project
 
-    public String createProject(String projectName,String projectDescription, LocalDate startDate, LocalDate endDate){
+    public Project createProject(String projectName,String projectDescription, LocalDate startDate, LocalDate endDate){
         //checks if a project of that name exists
         boolean projectExists = projectsRepo.existsByProjectName(projectName);
 
         if (projectExists){
-            return "Error! A project with the name " + projectName + " already exists. Please try another name.";
+            throw new RuntimeException("A project of that name already exists.");
         }else{
             //create a new project and save it to db
             Project newProject = new Project(projectName, projectDescription, startDate, endDate);
@@ -35,7 +35,7 @@ public class ProjectsServices {
             //save to db
             projectsRepo.save(newProject);
 
-            return "Project " + newProject.getProjectName() + " has been created. \n Project ID: " + newProject.getID();
+            return newProject;
 
         }
         
@@ -43,7 +43,7 @@ public class ProjectsServices {
 
     //method to edit the file upload
 
-    public String updateProjectFile(Long id, MultipartFile projectFile) throws IOException{
+    public Project updateProjectFile(Long id, MultipartFile projectFile) throws IOException{
         Project project = projectsRepo.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         id = project.getID();
 
@@ -59,20 +59,14 @@ public class ProjectsServices {
 
         //save project
         projectsRepo.save(project);
-        return "Project file update successfully.";
+        return project;
     }
 
     //method to delete the project
-    public String deleteProject(Long id){
+    public void deleteProject(Long id){
         Project project = projectsRepo.findById(id).orElseThrow(() -> new RuntimeException("Project Not found"));
 
         //delete the project
         projectsRepo.deleteById(id);
-        return "Project " + "has been deleted";
-    }
-
-
-
-
-    
+    }  
 }
