@@ -31,15 +31,23 @@ namespace UniConnect.MAUI.Services
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var response = await _http.PostAsJsonAsync("/auth/login", request); //points to login endpoint
+            //Sends login details to the Spring Boot backend
+            var response = await _http.PostAsJsonAsync("/auth/login", request);
+
             response.EnsureSuccessStatusCode();
+
+            //The backend currently returns a Student object directly 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            SetAuthToken(result.Token);
-            CurrentUserId = result.UserId;
+
+            if (result == null)
+                throw new Exception("Login response was empty.");
+
+            //Store user login ID for use by other features
+            CurrentUserId = (int)result.Id;
             CurrentUserName = result.Name;
+
             return result;
         }
-
         public async Task<UserModel> RegisterAsync(RegisterRequest request)
         {
             var response = await _http.PostAsJsonAsync("/auth/register", request); // points to 
