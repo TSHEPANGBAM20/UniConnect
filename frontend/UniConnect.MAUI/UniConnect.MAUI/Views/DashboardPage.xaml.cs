@@ -33,10 +33,21 @@ namespace UniConnect.MAUI.Views
             }
         }
 
-        private async void OnTabSelected(object? sender, string tab)
-        {
-            if (tab == "Home") return;
-            await this.DisplayAlertAsync("Coming soon", $"{tab} isn't built yet.", "OK");
+       private async void OnTabSelected(object? sender, string tab)
+       {
+           if (tab == "Home")
+           return;
+
+           if (tab == "Calendar")
+           {
+               await Shell.Current.GoToAsync(nameof(CalendarPage));
+               return;
+            }
+
+            await this.DisplayAlertAsync(
+            "Coming soon"
+            $"{tab} isn't built yet.",
+            "OK");
         }
 
         private async void OnMenuItemSelected(object? sender, string item)
