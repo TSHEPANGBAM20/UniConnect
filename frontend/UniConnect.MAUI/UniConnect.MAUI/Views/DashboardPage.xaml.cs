@@ -45,7 +45,7 @@ namespace UniConnect.MAUI.Views
             }
 
             await this.DisplayAlertAsync(
-            "Coming soon"
+            "Coming soon",
             $"{tab} isn't built yet.",
             "OK");
         }
