@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="UniConnect.MAUI.Views.CalendarPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Calendar">
+
+    <Grid
+        Padding="20"
+        RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- Page title -->
+        <Label
+            Grid.Row="0"
+            Text="Calendar"
+            FontSize="28"
+            FontAttributes="Bold"
+            TextColor="#111111"
+            Margin="0,10,0,20" />
+
+        <!-- Month navigation -->
+        <Grid
+            Grid.Row="1"
+            ColumnDefinitions="Auto,*,Auto"
+            Margin="0,0,0,20">
+
+            <Button
+                Grid.Column="0"
+                Text="‹"
+                FontSize="24"
+                WidthRequest="50"
+                HeightRequest="45"
+                Clicked="OnPreviousMonthClicked" />
+
+            <Label
+                x:Name="MonthTitleLabel"
+                Grid.Column="1"
+                Text="October 2026"
+                FontSize="20"
+                FontAttributes="Bold"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center" />
+
+            <Button
+                Grid.Column="2"
+                Text="›"
+                FontSize="24"
+                WidthRequest="50"
+                HeightRequest="45"
+                Clicked="OnNextMonthClicked" />
+
+        </Grid>
+
+        <!-- Days of the week -->
+        <Grid
+            Grid.Row="2"
+            ColumnDefinitions="*,*,*,*,*,*,*"
+            Margin="0,0,0,8">
+
+            <Label Grid.Column="0" Text="Mon" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="1" Text="Tue" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="2" Text="Wed" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="3" Text="Thu" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="4" Text="Fri" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="5" Text="Sat" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <Label Grid.Column="6" Text="Sun" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+
+        </Grid>
+
+        <!-- Calendar dates are added dynamically from CalendarPage.xaml.cs -->
+        <Grid
+            x:Name="CalendarGrid"
+            Grid.Row="3"
+            ColumnDefinitions="*,*,*,*,*,*,*"
+            RowSpacing="8"
+            ColumnSpacing="4" />
+
+    </Grid>
+
+</ContentPage>
