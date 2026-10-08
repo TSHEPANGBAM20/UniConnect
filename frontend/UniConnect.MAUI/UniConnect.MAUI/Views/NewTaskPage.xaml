@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.Views.NewTaskPage"
+    Title="New Task"
+    BackgroundColor="White">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="16">
+
+            <!-- Page title -->
+            <Label
+                Text="Create New Task"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Label
+                Text="Add the details for this task."
+                FontSize="13"
+                TextColor="Gray" />
+
+            <!-- Task title -->
+            <Label
+                Text="Task Title"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Entry
+                x:Name="TaskTitleEntry"
+                Placeholder="Enter task title"
+                TextColor="Black"
+                PlaceholderColor="Gray" />
+
+            <!-- Description -->
+            <Label
+                Text="Description"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Editor
+                x:Name="TaskDescriptionEditor"
+                Placeholder="Describe what needs to be done"
+                HeightRequest="110"
+                TextColor="Black"
+                PlaceholderColor="Gray" />
+
+            <!-- Start date -->
+            <Label
+                Text="Start Date"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <DatePicker
+                x:Name="StartDatePicker"
+                Format="dd MMM yyyy"
+                TextColor="Black" />
+
+            <!-- Due date -->
+            <Label
+                Text="Due Date"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <DatePicker
+                x:Name="DueDatePicker"
+                Format="dd MMM yyyy"
+                TextColor="Black" />
+
+            <!-- Priority -->
+            <Label
+                Text="Priority"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Picker
+                x:Name="PriorityPicker"
+                Title="Select priority"
+                TextColor="Black"
+                TitleColor="Gray">
+
+                <Picker.Items>
+                    <x:String>Low</x:String>
+                    <x:String>Medium</x:String>
+                    <x:String>High</x:String>
+                </Picker.Items>
+
+            </Picker>
+
+            <!-- Assigned team member -->
+            <Label
+                Text="Assign To"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Picker
+                x:Name="AssignedMemberPicker"
+                Title="Select team member"
+                TextColor="Black"
+                TitleColor="Gray" />
+
+            <!-- Progress / status -->
+            <Label
+                Text="Progress"
+                FontAttributes="Bold"
+                TextColor="Black" />
+
+            <Picker
+                x:Name="StatusPicker"
+                Title="Select progress"
+                TextColor="Black"
+                TitleColor="Gray">
+
+                <Picker.Items>
+                    <x:String>Not Started</x:String>
+                    <x:String>In Progress</x:String>
+                    <x:String>Completed</x:String>
+                </Picker.Items>
+
+            </Picker>
+
+            <!-- Error message -->
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red"
+                FontSize="12" />
+
+            <!-- Create button -->
+            <Button
+                x:Name="CreateTaskButton"
+                Text="Create Task"
+                Clicked="OnCreateTaskClicked"
+                BackgroundColor="Black"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="25"
+                HeightRequest="50"
+                Margin="0,10,0,0" />
+
+            <!-- Loading indicator -->
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="Black" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
