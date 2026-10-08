@@ -35,7 +35,7 @@ namespace UniConnect.MAUI.Views
 
        private async void OnTabSelected(object? sender, string tab)
        {
-           if (tab == "Home")
+           if (tab == "Home" || tab == "Projects")
            return;
 
            if (tab == "Calendar")
