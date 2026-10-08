@@ -21,11 +21,7 @@ namespace UniConnect.MAUI.Services
             _http = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
-        private void SetAuthToken(string token)
-        {
-            _http.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        }
+       
 
         // ---------- Auth ----------
 
