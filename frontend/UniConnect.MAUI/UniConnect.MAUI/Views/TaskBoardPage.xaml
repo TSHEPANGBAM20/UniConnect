@@ -7,31 +7,98 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <Button Grid.Row="0" Text="Open Chat" Clicked="OnChatClicked" Margin="20,10" />
+        <!-- Open the project chat -->
+        <Button
+            Grid.Row="0"
+            Text="Open Chat"
+            Clicked="OnChatClicked"
+            Margin="20,10" />
 
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}" Margin="20,0">
+        <!-- List of project tasks -->
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Tasks}"
+            Margin="20,0">
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:TaskModel">
-                    <Frame Margin="0,5" Padding="15" CornerRadius="8">
+
+                    <Frame
+                        Margin="0,5"
+                        Padding="15"
+                        CornerRadius="8">
+
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="{Binding TaskTitle}" FontAttributes="Bold" />
-                            <Label FontSize="12" TextColor="Gray">
+
+                            <!-- Task title -->
+                            <Label
+                                Text="{Binding TaskTitle}"
+                                FontAttributes="Bold" />
+
+                            <!-- Due date and assigned member -->
+                            <Label
+                                FontSize="12"
+                                TextColor="Gray">
+
                                 <Label.Text>
-                                    <MultiBinding StringFormat="Due: {0:dd MMM} - Assigned To {1}">
+                                    <MultiBinding
+                                        StringFormat="Due: {0:dd MMM} - Assigned To {1}">
                                         <Binding Path="DueDate" />
                                         <Binding Path="AssignedToName" />
                                     </MultiBinding>
                                 </Label.Text>
+
                             </Label>
-                            <Label Text="{Binding Status}" FontSize="11" TextColor="Blue" />
+
+                            <!-- Current task status -->
+                            <Label
+                                Text="{Binding Status}"
+                                FontSize="11"
+                                TextColor="Blue" />
+
+                            <!-- Mark task as completed -->
+                            <Button
+                                Text="Mark Done"
+                                Clicked="OnMarkDoneClicked"
+                                BackgroundColor="Black"
+                                TextColor="White"
+                                CornerRadius="20"
+                                HeightRequest="40"
+                                FontAttributes="Bold">
+
+                                <!-- Hide the button if the task is already DONE -->
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding Status}"
+                                        Value="DONE">
+
+                                        <Setter
+                                            Property="IsVisible"
+                                            Value="False" />
+
+                                    </DataTrigger>
+                                </Button.Triggers>
+
+                            </Button>
+
                         </VerticalStackLayout>
+
                     </Frame>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
         </CollectionView>
 
-        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                            VerticalOptions="Start" Margin="0,10" />
+        <!-- Shows while tasks are loading -->
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Start"
+            Margin="0,10" />
 
     </Grid>
+
 </ContentPage>
