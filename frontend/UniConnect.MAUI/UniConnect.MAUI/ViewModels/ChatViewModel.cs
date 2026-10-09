@@ -53,9 +53,11 @@ namespace UniConnect.MAUI.ViewModels
 
         public async Task SendAsync()
         {
-            if (string.IsNullOrWhiteSpace(DraftMessage)) return;
+            if (string.IsNullOrWhiteSpace(DraftMessage))
+            return;
 
-            var text = DraftMessage;
+            var text = DraftMessage.Trim();
+            
             DraftMessage = string.Empty;
             OnPropertyChanged(nameof(DraftMessage));
 
