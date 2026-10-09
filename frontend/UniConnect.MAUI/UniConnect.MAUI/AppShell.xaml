@@ -23,5 +23,4 @@
         Title="Calendar"
         ContentTemplate="{DataTemplate views:CalendarPage}"
         Route="CalendarPage" />
-    </Shell>
 </Shell>
