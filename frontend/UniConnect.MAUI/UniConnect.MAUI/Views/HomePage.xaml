@@ -53,7 +53,7 @@
                 <Grid>
 
                     <Image
-                        Source="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+                        Source="uniconnect_hero.jpg"
                         Aspect="AspectFill" />
 
                     <BoxView
