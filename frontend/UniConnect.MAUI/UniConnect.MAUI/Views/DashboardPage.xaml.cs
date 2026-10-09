@@ -40,7 +40,7 @@ namespace UniConnect.MAUI.Views
 
            if (tab == "Calendar")
            {
-               await Shell.Current.GoToAsync(nameof(CalendarPage));
+               await Shell.Current.GoToAsync("//CalendarPage");
                return;
             }
 
