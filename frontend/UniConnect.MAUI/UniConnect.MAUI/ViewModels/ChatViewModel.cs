@@ -54,18 +54,20 @@ namespace UniConnect.MAUI.ViewModels
         public async Task SendAsync()
         {
             if (string.IsNullOrWhiteSpace(DraftMessage))
-            return;
+                return;
 
             var text = DraftMessage.Trim();
-            
+
+            await _apiService.SendMessageAsync(ProjectId, text);
+
             DraftMessage = string.Empty;
             OnPropertyChanged(nameof(DraftMessage));
 
-            await _apiService.SendMessageAsync(ProjectId, text);
             await LoadMessagesAsync();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
