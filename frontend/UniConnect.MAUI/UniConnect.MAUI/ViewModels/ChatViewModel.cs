@@ -10,19 +10,60 @@ namespace UniConnect.MAUI.ViewModels
     public class ChatViewModel : INotifyPropertyChanged
     {
         private readonly ApiService _apiService;
+        private bool _isBusy;
+        private bool _isSending;
+        private string _draftMessage = string.Empty;
 
         public int ProjectId { get; set; }
 
         public ObservableCollection<MessageModel> Messages { get; } = new();
 
-        public string DraftMessage { get; set; }
+        public string DraftMessage
+        {
+            get => _draftMessage;
+            set
+            {
+                if (_draftMessage == value)
+                    return;
 
-        private bool _isBusy;
+                _draftMessage = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSend));
+            }
+        }
+
         public bool IsBusy
         {
             get => _isBusy;
-            set { _isBusy = value; OnPropertyChanged(); }
+            set
+            {
+                if (_isBusy == value)
+                    return;
+
+                _isBusy = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSend));
+            }
         }
+
+        public bool IsSending
+        {
+            get => _isSending;
+            private set
+            {
+                if (_isSending == value)
+                    return;
+
+                _isSending = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSend));
+            }
+        }
+
+        public bool CanSend =>
+            !IsBusy &&
+            !IsSending &&
+            !string.IsNullOrWhiteSpace(DraftMessage);
 
         public ChatViewModel(ApiService apiService)
         {
@@ -31,15 +72,19 @@ namespace UniConnect.MAUI.ViewModels
 
         public async Task LoadMessagesAsync()
         {
-            if (ProjectId == 0) return;
+            if (ProjectId == 0 || IsBusy)
+                return;
 
             IsBusy = true;
+
             try
             {
                 var messages = await _apiService.GetMessagesAsync(ProjectId);
+
                 Messages.Clear();
-                foreach (var m in messages)
-                    Messages.Add(m);
+
+                foreach (var message in messages)
+                    Messages.Add(message);
             }
             catch (Exception)
             {
@@ -53,22 +98,35 @@ namespace UniConnect.MAUI.ViewModels
 
         public async Task SendAsync()
         {
-            if (string.IsNullOrWhiteSpace(DraftMessage))
+            if (!CanSend || ProjectId == 0)
                 return;
 
             var text = DraftMessage.Trim();
 
-            await _apiService.SendMessageAsync(ProjectId, text);
+            IsSending = true;
 
-            DraftMessage = string.Empty;
-            OnPropertyChanged(nameof(DraftMessage));
+            try
+            {
+                await _apiService.SendMessageAsync(ProjectId, text);
 
-            await LoadMessagesAsync();
+                DraftMessage = string.Empty;
+
+                await LoadMessagesAsync();
+            }
+            finally
+            {
+                IsSending = false;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        protected void OnPropertyChanged(
+            [CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(name));
+        }
     }
 }
