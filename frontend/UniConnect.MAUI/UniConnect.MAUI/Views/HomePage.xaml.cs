@@ -19,6 +19,6 @@ public partial class HomePage : ContentPage
 
     private async void OnDashboardPreviewClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("DashboardPreviewPage?preview=true");
+        await Shell.Current.GoToAsync("//DashboardPage");
     }
 }
