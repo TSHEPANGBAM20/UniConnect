@@ -1,57 +1,23 @@
-using System.Diagnostics;
 using UniConnect.MAUI.Models;
 using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
 {
-    public partial class DashboardPage : ContentPage, IQueryAttributable
+    public partial class DashboardPage : ContentPage
     {
         private readonly DashboardViewModel _viewModel;
-
-        public string Preview { get; set; } = "false";
 
         public DashboardPage(DashboardViewModel viewModel)
         {
             InitializeComponent();
-
             _viewModel = viewModel;
             BindingContext = _viewModel;
-        }
-
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
-        {
-            Preview = query.TryGetValue("preview", out var value)
-                && string.Equals(
-                    value?.ToString(),
-                    "true",
-                    StringComparison.OrdinalIgnoreCase)
-                ? "true"
-                : "false";
-
-            Debug.WriteLine($"DASHBOARD DIAGNOSTIC: Preview = {Preview}");
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
-            Debug.WriteLine(
-                $"DASHBOARD DIAGNOSTIC: OnAppearing, Preview = {Preview}");
-
-            if (Preview == "true")
-            {
-                _viewModel.LoadPreviewProjects();
-
-                Debug.WriteLine(
-                    $"DASHBOARD DIAGNOSTIC: Preview project count = {_viewModel.Projects.Count}");
-            }
-            else
-            {
-                await _viewModel.LoadProjectsAsync();
-
-                Debug.WriteLine(
-                    $"DASHBOARD DIAGNOSTIC: API project count = {_viewModel.Projects.Count}");
-            }
+            await _viewModel.LoadProjectsAsync();
         }
 
         private async void OnNewProjectClicked(object sender, EventArgs e)
@@ -61,22 +27,20 @@ namespace UniConnect.MAUI.Views
 
         private async void OnProjectTapped(object sender, TappedEventArgs e)
         {
-            if (sender is BindableObject view &&
-                view.BindingContext is ProjectModel project)
+            if (sender is BindableObject view && view.BindingContext is ProjectModel project)
             {
-                await Shell.Current.GoToAsync(
-                    $"{nameof(TaskBoardPage)}?projectId={project.ProjectId}");
+                await Shell.Current.GoToAsync($"{nameof(TaskBoardPage)}?projectId={project.ProjectId}");
             }
         }
 
         private async void OnTabSelected(object? sender, string tab)
         {
-            if (tab == "Home")
+            if (tab == "Home" || tab == "Projects")
                 return;
 
             if (tab == "Calendar")
             {
-                await Shell.Current.GoToAsync(nameof(CalendarPage));
+                await Shell.Current.GoToAsync("//CalendarPage");
                 return;
             }
 
@@ -94,10 +58,7 @@ namespace UniConnect.MAUI.Views
                 return;
             }
 
-            await this.DisplayAlertAsync(
-                "Coming soon",
-                $"{item} isn't built yet.",
-                "OK");
+            await this.DisplayAlertAsync("Coming soon", $"{item} isn't built yet.", "OK");
         }
     }
 }
