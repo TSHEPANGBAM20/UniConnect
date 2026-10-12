@@ -8,17 +8,13 @@ namespace UniConnect.MAUI
         {
             InitializeComponent();
 
-            // Account pages
+            // These pages are navigated to with GoToAsync rather than shown as
+            // permanent tabs, so they need explicit route registration here.
             Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
-
-            // Project and collaboration pages
             Routing.RegisterRoute(nameof(NewProjectPage), typeof(NewProjectPage));
+            Routing.RegisterRoute(nameof(NewTaskPage), typeof(NewTaskPage));
             Routing.RegisterRoute(nameof(TaskBoardPage), typeof(TaskBoardPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
-            Routing.RegisterRoute(nameof(CalendarPage), typeof(CalendarPage));
-
-            // Separate route for dashboard preview mode
-            Routing.RegisterRoute("DashboardPreviewPage", typeof(DashboardPage));
         }
     }
 }
