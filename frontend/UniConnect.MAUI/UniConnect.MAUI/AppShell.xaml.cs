@@ -12,6 +12,7 @@ namespace UniConnect.MAUI
             // permanent tabs, so they need explicit route registration here.
             Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
             Routing.RegisterRoute(nameof(NewProjectPage), typeof(NewProjectPage));
+            Routing.RegisterRoute(nameof(NewTaskPage), typeof(NewTaskPage));
             Routing.RegisterRoute(nameof(TaskBoardPage), typeof(TaskBoardPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
         }
