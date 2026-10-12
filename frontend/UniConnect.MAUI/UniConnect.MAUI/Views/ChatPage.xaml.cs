@@ -19,24 +19,29 @@ namespace UniConnect.MAUI.Views
             await _viewModel.LoadMessagesAsync();
         }
 
-       private async void OnSendClicked(object sender, EventArgs e)
-{
-    _viewModel.DraftMessage = MessageEntry.Text;
+        private async void OnSendClicked(object sender, EventArgs e)
+        {
+            _viewModel.DraftMessage = MessageEntry.Text;
 
-    try
-    {
-        await _viewModel.SendAsync();
+            try
+            {
+            
 
-        // Clear the input only after a successful send.
-        MessageEntry.Text = string.Empty;
+                await _viewModel.SendAsync();
+
+                // Clear the input only when the draft was successfully cleared.
+                if (string.IsNullOrEmpty(_viewModel.DraftMessage))
+                {
+                    MessageEntry.Text = string.Empty;
+                }
+            }
+            catch (Exception)
+            {
+                await DisplayAlertAsync(
+                    "Message not sent",
+                    "Your message could not be sent. Please check your connection and try again.",
+                    "OK");
+            }
+        }
     }
-    catch (Exception)
-    {
-        await DisplayAlertAsync(
-            "Message not sent",
-            "Your message could not be sent. Please check your connection and try again.",
-            "OK");
-    }
-}
-}
 }
