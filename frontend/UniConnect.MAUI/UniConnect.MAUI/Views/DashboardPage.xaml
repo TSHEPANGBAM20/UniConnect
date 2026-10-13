@@ -42,7 +42,15 @@
                                 <VerticalStackLayout Spacing="2">
                                     <Label Text="{Binding ProjectName}" FontAttributes="Bold"
                                            FontSize="14" TextColor="Black" />
-                                    <Label Text="{Binding Role}" FontSize="11" TextColor="Gray" />
+                                    <Label Text="Team Member" FontSize="11" TextColor="Gray">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Role}" Value="TEAM_LEAD">
+                                                <Setter Property="Text" Value="Team Lead" />
+                                                <Setter Property="TextColor" Value="#1E3A8A" />
+                                                <Setter Property="FontAttributes" Value="Bold" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </VerticalStackLayout>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnProjectTapped" />

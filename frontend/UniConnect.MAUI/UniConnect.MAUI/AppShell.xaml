@@ -20,6 +20,11 @@
         Route="DashboardPage" />
 
     <ShellContent
+        Title="Projects"
+        ContentTemplate="{DataTemplate views:ProjectsPage}"
+        Route="ProjectsPage" />
+
+    <ShellContent
         Title="Calendar"
         ContentTemplate="{DataTemplate views:CalendarPage}"
         Route="CalendarPage" />

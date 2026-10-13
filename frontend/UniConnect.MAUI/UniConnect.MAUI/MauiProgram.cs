@@ -37,6 +37,9 @@ namespace UniConnect.MAUI
             builder.Services.AddTransient<DashboardPage>();
             builder.Services.AddTransient<DashboardViewModel>();
 
+            builder.Services.AddTransient<ProjectsPage>();
+            builder.Services.AddTransient<ProjectsViewModel>();
+
             builder.Services.AddTransient<NewProjectPage>();
             builder.Services.AddTransient<NewProjectViewModel>();
 

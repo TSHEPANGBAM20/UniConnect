@@ -1,4 +1,5 @@
 using UniConnect.MAUI.Models;
+using UniConnect.MAUI.Services;
 using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
@@ -20,32 +21,33 @@ namespace UniConnect.MAUI.Views
             await _viewModel.LoadTasksAsync();
         }
 
-        private async void OnChatClicked(object sender, EventArgs e)
+        private async void OnDoneClicked(object? sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(
-                $"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
+            if (sender is Button button && button.BindingContext is TaskModel task)
+                await _viewModel.MarkDoneAsync(task);
         }
 
-        private async void OnMarkDoneClicked(object sender, EventArgs e)
+        // Menu icon (user story: menu -> Chat / Project details)
+        private async void OnMenuTapped(object? sender, TappedEventArgs e)
         {
-            if (sender is Button button &&
-                button.BindingContext is TaskModel task)
-            {
-                try
-                {
-                    await _viewModel.MarkDoneAsync(task);
+            string choice = await this.DisplayActionSheetAsync("Project", "Cancel", null, "Chat", "Project details");
 
-                    // Hide the button after the task is successfully marked as done.
-                    button.IsVisible = false;
-                }
-                catch (Exception)
-                {
-                    await DisplayAlertAsync(
-                        "Error",
-                        "Could not mark the task as done. Please try again.",
-                        "OK");
-                }
-            }
+            if (choice == "Chat")
+                await Shell.Current.GoToAsync($"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
+            else if (choice == "Project details")
+                await this.DisplayAlertAsync("Coming soon", "Project details isn't built yet.", "OK");
         }
+
+        private async void OnAddTaskTapped(object? sender, TappedEventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(NewTaskPage));
+        }
+
+        // current is empty on purpose: tapping Projects here returns to the project list
+        private async void OnTabSelected(object? sender, string tab)
+            => await TabNavigator.GoToTabAsync(this, tab, current: "");
+
+        private async void OnMenuItemSelected(object? sender, string item)
+            => await TabNavigator.HandleMenuItemAsync(this, item);
     }
 }

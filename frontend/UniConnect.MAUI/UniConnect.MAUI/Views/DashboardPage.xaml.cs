@@ -1,4 +1,5 @@
 using UniConnect.MAUI.Models;
+using UniConnect.MAUI.Services;
 using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
@@ -34,31 +35,9 @@ namespace UniConnect.MAUI.Views
         }
 
         private async void OnTabSelected(object? sender, string tab)
-        {
-            if (tab == "Home" || tab == "Projects")
-                return;
-
-            if (tab == "Calendar")
-            {
-                await Shell.Current.GoToAsync("//CalendarPage");
-                return;
-            }
-
-            await this.DisplayAlertAsync(
-                "Coming soon",
-                $"{tab} isn't built yet.",
-                "OK");
-        }
+            => await TabNavigator.GoToTabAsync(this, tab, current: "Home");
 
         private async void OnMenuItemSelected(object? sender, string item)
-        {
-            if (item == "Logout")
-            {
-                await Shell.Current.GoToAsync("//LoginPage");
-                return;
-            }
-
-            await this.DisplayAlertAsync("Coming soon", $"{item} isn't built yet.", "OK");
-        }
+            => await TabNavigator.HandleMenuItemAsync(this, item);
     }
 }
