@@ -9,21 +9,29 @@ namespace UniConnect.MAUI.ViewModels
     {
         private readonly ApiService _apiService;
 
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
-        private string _errorMessage;
+        private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
             get => _errorMessage;
-            set { _errorMessage = value; OnPropertyChanged(); }
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged();
+            }
         }
 
         private bool _isBusy;
         public bool IsBusy
         {
             get => _isBusy;
-            set { _isBusy = value; OnPropertyChanged(); }
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+            }
         }
 
         public LoginViewModel(ApiService apiService)
@@ -33,7 +41,8 @@ namespace UniConnect.MAUI.ViewModels
 
         public async Task<bool> LoginAsync()
         {
-            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            if (string.IsNullOrWhiteSpace(Email) ||
+                string.IsNullOrWhiteSpace(Password))
             {
                 ErrorMessage = "Please enter both email and password.";
                 return false;
@@ -44,7 +53,13 @@ namespace UniConnect.MAUI.ViewModels
 
             try
             {
-                await _apiService.LoginAsync(new LoginRequest { Email = Email, Password = Password });
+                await _apiService.LoginAsync(
+                    new LoginRequest
+                    {
+                        Email = Email,
+                        Password = Password
+                    });
+
                 return true;
             }
             catch (Exception)
@@ -58,8 +73,14 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged(
+            [CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(name));
+        }
     }
 }

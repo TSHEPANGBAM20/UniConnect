@@ -1,80 +1,243 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage
-    x:Class="UniConnect.MAUI.Views.CalendarPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Calendar">
+    x:Class="UniConnect.MAUI.Views.CalendarPage"
+    Title="Calendar"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F0F0F}">
 
-    <Grid
-        Padding="20"
-        RowDefinitions="Auto,Auto,Auto,*">
+    <ScrollView>
 
-        <!-- Page title -->
-        <Label
-            Grid.Row="0"
-            Text="Calendar"
-            FontSize="28"
-            FontAttributes="Bold"
-            TextColor="#111111"
-            Margin="0,10,0,20" />
+        <VerticalStackLayout
+            Padding="24,20,24,30"
+            Spacing="20">
 
-        <!-- Month navigation -->
-        <Grid
-            Grid.Row="1"
-            ColumnDefinitions="Auto,*,Auto"
-            Margin="0,0,0,20">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
 
-            <Button
-                Grid.Column="0"
-                Text="‹"
-                FontSize="24"
-                WidthRequest="50"
-                HeightRequest="45"
-                Clicked="OnPreviousMonthClicked" />
+                <Label
+                    Text="YOUR SCHEDULE"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    CharacterSpacing="1.5"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-            <Label
-                x:Name="MonthTitleLabel"
-                Grid.Column="1"
-                Text="October 2026"
-                FontSize="20"
-                FontAttributes="Bold"
-                HorizontalTextAlignment="Center"
-                VerticalTextAlignment="Center" />
+                <Label
+                    Text="Calendar"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-            <Button
-                Grid.Column="2"
-                Text="›"
-                FontSize="24"
-                WidthRequest="50"
-                HeightRequest="45"
-                Clicked="OnNextMonthClicked" />
+                <Label
+                    Text="Keep track of deadlines and milestones."
+                    FontSize="13"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-        </Grid>
+            </VerticalStackLayout>
 
-        <!-- Days of the week -->
-        <Grid
-            Grid.Row="2"
-            ColumnDefinitions="*,*,*,*,*,*,*"
-            Margin="0,0,0,8">
 
-            <Label Grid.Column="0" Text="Mon" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="1" Text="Tue" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="2" Text="Wed" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="3" Text="Thu" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="4" Text="Fri" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="5" Text="Sat" HorizontalTextAlignment="Center" FontAttributes="Bold" />
-            <Label Grid.Column="6" Text="Sun" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+            <!-- Month header -->
+            <Border
+                Padding="18"
+                BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 18">
 
-        </Grid>
+                <Grid ColumnDefinitions="*,Auto,*">
 
-        <!-- Calendar dates are added dynamically from CalendarPage.xaml.cs -->
-        <Grid
-            x:Name="CalendarGrid"
-            Grid.Row="3"
-            ColumnDefinitions="*,*,*,*,*,*,*"
-            RowSpacing="8"
-            ColumnSpacing="4" />
+                    <Button
+                        x:Name="PreviousMonthButton"
+                        Grid.Column="0"
+                        Text="‹"
+                        Clicked="OnPreviousMonthClicked"
+                        FontSize="25"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                        HorizontalOptions="Start" />
 
-    </Grid>
+                    <Label
+                        x:Name="MonthTitleLabel"
+                        Grid.Column="1"
+                        Text="October 2026"
+                        FontSize="17"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}" />
+
+                    <Button
+                        x:Name="NextMonthButton"
+                        Grid.Column="2"
+                        Text="›"
+                        Clicked="OnNextMonthClicked"
+                        FontSize="25"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                        HorizontalOptions="End" />
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- Weekdays -->
+            <Grid
+                ColumnDefinitions="*,*,*,*,*,*,*"
+                ColumnSpacing="4">
+
+                <Label Grid.Column="0" Text="M" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="1" Text="T" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="2" Text="W" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="3" Text="T" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="4" Text="F" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="5" Text="S" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="6" Text="S" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+            </Grid>
+
+
+            <!-- Calendar days -->
+            <Grid
+    x:Name="CalendarGrid"
+    ColumnDefinitions="*,*,*,*,*,*,*"
+    RowSpacing="8"
+    ColumnSpacing="6" />
+
+
+            <!-- Upcoming -->
+            <VerticalStackLayout Spacing="12">
+
+                <Label
+                    Text="Upcoming"
+                    FontSize="19"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                <Border
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light=#F7F7F7, Dark=#191919}"
+                    Stroke="{AppThemeBinding Light=#E4E4E4, Dark=#2A2A2A}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16">
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+
+                        <VerticalStackLayout
+                            Grid.Column="0"
+                            HorizontalOptions="Center">
+
+                            <Label
+                                Text="08"
+                                FontSize="22"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                            <Label
+                                Text="OCT"
+                                FontSize="10"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="3">
+
+                            <Label
+                                Text="Database Assignment"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                            <Label
+                                Text="Project deadline"
+                                FontSize="12"
+                                TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+
+                </Border>
+
+                <Border
+                    Padding="16"
+                    BackgroundColor="{AppThemeBinding Light=#F7F7F7, Dark=#191919}"
+                    Stroke="{AppThemeBinding Light=#E4E4E4, Dark=#2A2A2A}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16">
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+
+                        <VerticalStackLayout
+                            Grid.Column="0"
+                            HorizontalOptions="Center">
+
+                            <Label
+                                Text="15"
+                                FontSize="22"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                            <Label
+                                Text="OCT"
+                                FontSize="10"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="3">
+
+                            <Label
+                                Text="UniConnect Milestone"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                            <Label
+                                Text="Milestone due"
+                                FontSize="12"
+                                TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+
+                </Border>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
 
 </ContentPage>

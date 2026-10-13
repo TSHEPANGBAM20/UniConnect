@@ -1,4 +1,3 @@
-using UniConnect.MAUI.Models;
 using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
@@ -22,30 +21,7 @@ namespace UniConnect.MAUI.Views
 
         private async void OnChatClicked(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync(
-                $"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
-        }
-
-        private async void OnMarkDoneClicked(object sender, EventArgs e)
-        {
-            if (sender is Button button &&
-                button.BindingContext is TaskModel task)
-            {
-                try
-                {
-                    await _viewModel.MarkDoneAsync(task);
-
-                    // Hide the button after the task is successfully marked as done.
-                    button.IsVisible = false;
-                }
-                catch (Exception)
-                {
-                    await DisplayAlertAsync(
-                        "Error",
-                        "Could not mark the task as done. Please try again.",
-                        "OK");
-                }
-            }
+            await Shell.Current.GoToAsync($"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
         }
     }
 }

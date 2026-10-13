@@ -1,90 +1,225 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="UniConnect.MAUI.Views.LoginPage"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="White"
-             Title="Log In">
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.Views.LoginPage"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+    Title="Log In">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="18" VerticalOptions="Center" HorizontalOptions="Center" MaximumWidthRequest="420">
 
-            <Label Text="UniConnect"
-                   FontSize="30" FontAttributes="Bold"
-                   TextColor="Black"
-                   HorizontalOptions="Center" />
+        <VerticalStackLayout
+            Padding="22,30,22,45"
+            Spacing="0"
+            MaximumWidthRequest="520"
+            HorizontalOptions="Center">
 
-            <Label Text="Welcome Back"
-                   FontSize="20" FontAttributes="Bold"
-                   TextColor="Black"
-                   HorizontalOptions="Center"
-                   Margin="0,0,0,10" />
+            <!-- Header -->
 
-            <Label Text="Email" FontAttributes="Bold" TextColor="Black" FontSize="13" />
-            <Border Stroke="#D0D0D0" StrokeShape="RoundRectangle 12" Padding="15,0" HeightRequest="50">
-                <Entry x:Name="EmailEntry"
-                       Placeholder="Enter your email"
-                       Keyboard="Email"
-                       BackgroundColor="Transparent"
-                       VerticalOptions="Center" />
-            </Border>
+            <Grid
+                ColumnDefinitions="Auto,*"
+                Margin="0,0,0,35">
 
-            <Label Text="Password" FontAttributes="Bold" TextColor="Black" FontSize="13" />
-            <Border Stroke="#D0D0D0" StrokeShape="RoundRectangle 12" Padding="15,0" HeightRequest="50">
-                <Grid ColumnDefinitions="*,Auto">
-                    <Entry x:Name="PasswordEntry"
-                           Grid.Column="0"
-                           Placeholder="Enter your password"
-                           IsPassword="True"
-                           BackgroundColor="Transparent"
-                           VerticalOptions="Center" />
-                    <Label x:Name="ShowPasswordLabel"
-                           Grid.Column="1"
-                           Text="Show"
-                           TextColor="Black"
-                           FontAttributes="Bold"
-                           FontSize="13"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnTogglePasswordVisibility" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Grid>
-            </Border>
-
-            <Label Text="{Binding ErrorMessage}" TextColor="Red" HorizontalOptions="Center" />
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-
-            <Button Text="Log In"
-                    Clicked="OnLoginClicked"
-                    BackgroundColor="Black"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    HeightRequest="50"
-                    Margin="0,10,0,0" />
-
-            <Button Text="Create an account"
-                    Clicked="OnSignUpTapped"
+                <Button
+                    Text="‹"
+                    FontSize="34"
                     BackgroundColor="Transparent"
-                    TextColor="Black"
-                    BorderColor="Black"
-                    BorderWidth="1"
-                    CornerRadius="10"
-                    HeightRequest="50" />
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                    WidthRequest="45"
+                    HeightRequest="45"
+                    Padding="0"
+                    Clicked="OnBackClicked" />
 
-            <Label Text="Forgot your password?"
-                   HorizontalOptions="Center"
-                   TextColor="Black"
-                   FontAttributes="Bold"
-                   FontSize="13"
-                   Margin="0,10,0,0">
+                <Label
+                    Grid.Column="1"
+                    Text="UniConnect"
+                    FontSize="25"
+                    FontAttributes="Bold"
+                    CharacterSpacing="-1"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                    VerticalOptions="Center" />
+
+            </Grid>
+
+            <!-- Introduction -->
+
+            <VerticalStackLayout
+                Spacing="8"
+                Margin="0,0,0,30">
+
+                <Label
+                    Text="Welcome back"
+                    FontSize="32"
+                    FontAttributes="Bold"
+                    CharacterSpacing="-0.5"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                <Label
+                    Text="Log in to continue managing your university projects and team."
+                    FontSize="14"
+                    LineHeight="1.25"
+                    TextColor="{AppThemeBinding Light=#666666, Dark=#B8B8B8}" />
+
+            </VerticalStackLayout>
+
+            <!-- Email -->
+
+            <Label
+                Text="Email"
+                FontSize="13"
+                FontAttributes="Bold"
+                TextColor="{AppThemeBinding Light=#222222, Dark=#FFFFFF}"
+                Margin="0,0,0,7" />
+
+            <Border
+                Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 14"
+                Padding="15,0"
+                HeightRequest="52"
+                BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1B1B1B}"
+                Margin="0,0,0,18">
+
+                <Entry
+                    x:Name="EmailEntry"
+                    Placeholder="Enter your email"
+                    Keyboard="Email"
+                    FontSize="14"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                    PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#777777}"
+                    VerticalOptions="Center" />
+
+            </Border>
+
+            <!-- Password -->
+
+            <Label
+                Text="Password"
+                FontSize="13"
+                FontAttributes="Bold"
+                TextColor="{AppThemeBinding Light=#222222, Dark=#FFFFFF}"
+                Margin="0,0,0,7" />
+
+            <Border
+                Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 14"
+                Padding="15,0"
+                HeightRequest="52"
+                BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1B1B1B}"
+                Margin="0,0,0,8">
+
+                <Grid ColumnDefinitions="*,Auto">
+
+                    <Entry
+                        x:Name="PasswordEntry"
+                        Grid.Column="0"
+                        Placeholder="Enter your password"
+                        IsPassword="True"
+                        FontSize="14"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#777777}"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        x:Name="ShowPasswordLabel"
+                        Grid.Column="1"
+                        Text="Show"
+                        FontSize="13"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        VerticalOptions="Center">
+
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnTogglePasswordVisibility" />
+                        </Label.GestureRecognizers>
+
+                    </Label>
+
+                </Grid>
+
+            </Border>
+
+            <!-- Forgot Password -->
+
+            <Label
+                Text="Forgot your password?"
+                FontSize="13"
+                FontAttributes="Bold"
+                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                HorizontalOptions="End"
+                Margin="0,4,0,15">
+
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnForgotPasswordTapped" />
+                    <TapGestureRecognizer
+                        Tapped="OnForgotPasswordTapped" />
                 </Label.GestureRecognizers>
+
             </Label>
 
+            <!-- Error -->
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="#D00000"
+                FontSize="13"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Margin="0,0,0,5" />
+
+            <!-- Login -->
+
+            <Button
+                Text="Log In"
+                Clicked="OnLoginClicked"
+                BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                CornerRadius="26"
+                HeightRequest="54"
+                FontSize="15"
+                FontAttributes="Bold"
+                Margin="0,10,0,10" />
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                Margin="0,5,0,10" />
+
+            <!-- Sign Up -->
+
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Spacing="4"
+                Margin="0,15,0,0">
+
+                <Label
+                    Text="Don't have an account?"
+                    FontSize="13"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label
+                    Text="Sign Up"
+                    FontSize="13"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="OnSignUpTapped" />
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+            </HorizontalStackLayout>
+
         </VerticalStackLayout>
+
     </ScrollView>
+
 </ContentPage>

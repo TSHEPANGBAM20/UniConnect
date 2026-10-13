@@ -29,7 +29,25 @@ namespace UniConnect.MAUI.Views
 
         private async void OnLoginTapped(object sender, EventArgs e)
         {
+            await Shell.Current.GoToAsync("//LoginPage");
+        }
+
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
             await Shell.Current.GoToAsync("..");
+        }
+
+        private void OnTogglePasswordVisibility(object sender, EventArgs e)
+        {
+            PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
+            ShowPasswordLabel.Text = PasswordEntry.IsPassword ? "Show" : "Hide";
+        }
+
+        private void OnToggleConfirmPasswordVisibility(object sender, EventArgs e)
+        {
+            ConfirmPasswordEntry.IsPassword = !ConfirmPasswordEntry.IsPassword;
+            ShowConfirmPasswordLabel.Text =
+                ConfirmPasswordEntry.IsPassword ? "Show" : "Hide";
         }
     }
 }

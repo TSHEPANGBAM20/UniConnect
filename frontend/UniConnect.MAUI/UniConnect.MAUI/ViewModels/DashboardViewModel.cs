@@ -8,39 +8,59 @@ namespace UniConnect.MAUI.ViewModels
 {
     public class DashboardViewModel : INotifyPropertyChanged
     {
-        // DEV SWITCH: while the backend has no /projects endpoint, fall back to sample
-        // data so the UI can be built and tested. Set to false once the API works.
-        private const bool UseSampleDataOnFailure = true;
-
         private readonly ApiService _apiService;
 
         public ObservableCollection<ProjectModel> Projects { get; } = new();
         public ObservableCollection<NotificationModel> Notifications { get; } = new();
 
-        public string WelcomeMessage => $"Welcome Back, {_apiService.CurrentUserName ?? "User"}!";
+        public string WelcomeMessage =>
+            $"Welcome Back, {_apiService.CurrentUserName ?? "User"}!";
 
         private bool _isBusy;
+
         public bool IsBusy
         {
             get => _isBusy;
-            set { _isBusy = value; OnPropertyChanged(); }
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowEmptyProjects));
+                OnPropertyChanged(nameof(ShowEmptyNotifications));
+            }
         }
 
         private bool _hasProjects;
+
         public bool HasProjects
         {
             get => _hasProjects;
-            set { _hasProjects = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowEmptyProjects)); }
+            set
+            {
+                _hasProjects = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowEmptyProjects));
+            }
         }
-        public bool ShowEmptyProjects => !HasProjects && !IsBusy;
+
+        public bool ShowEmptyProjects =>
+            !HasProjects && !IsBusy;
 
         private bool _hasNotifications;
+
         public bool HasNotifications
         {
             get => _hasNotifications;
-            set { _hasNotifications = value; OnPropertyChanged(); OnPropertyChanged(nameof(ShowEmptyNotifications)); }
+            set
+            {
+                _hasNotifications = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowEmptyNotifications));
+            }
         }
-        public bool ShowEmptyNotifications => !HasNotifications && !IsBusy;
+
+        public bool ShowEmptyNotifications =>
+            !HasNotifications && !IsBusy;
 
         public DashboardViewModel(ApiService apiService)
         {
@@ -50,72 +70,108 @@ namespace UniConnect.MAUI.ViewModels
         public async Task LoadProjectsAsync()
         {
             IsBusy = true;
-            OnPropertyChanged(nameof(WelcomeMessage)); // name is set after login, so refresh it
 
-            List<ProjectModel> projects;
+            // The user's name is set after login,
+            // so refresh the welcome message when the Dashboard appears.
+            OnPropertyChanged(nameof(WelcomeMessage));
+
             try
             {
-                projects = await _apiService.GetProjectsAsync();
+                // Backend endpoint:
+                // GET /projects
+                //
+                // The ApiService is responsible for communicating
+                // with the Spring Boot backend.
+                var projects = await _apiService.GetProjectsAsync();
+
+                Projects.Clear();
+
+                foreach (var project in projects)
+                {
+                    Projects.Add(project);
+                }
+
+                HasProjects = Projects.Count > 0;
+
+                // Notifications will eventually be loaded from
+                // the backend notification endpoint.
+                //
+                // For now, we keep the collection empty rather than
+                // displaying fake/sample notification data.
+                Notifications.Clear();
+                HasNotifications = false;
             }
             catch (Exception)
             {
-                projects = UseSampleDataOnFailure ? SampleProjects() : new List<ProjectModel>();
+                // If the backend is unavailable, don't display
+                // fake project data. Simply show the empty state.
+                Projects.Clear();
+                Notifications.Clear();
+
+                HasProjects = false;
+                HasNotifications = false;
             }
-
-            Projects.Clear();
-            foreach (var p in projects)
-                Projects.Add(p);
-
-            BuildNotifications(projects);
-
-            HasProjects = Projects.Count > 0;
-            HasNotifications = Notifications.Count > 0;
-            IsBusy = false;
-            OnPropertyChanged(nameof(ShowEmptyProjects));
-            OnPropertyChanged(nameof(ShowEmptyNotifications));
-        }
-
-        // Deadline notifications derived from project end dates.
-        // Task-level notifications can be added here once the calendar/tasks endpoint is ready.
-        private void BuildNotifications(IEnumerable<ProjectModel> projects)
-        {
-            Notifications.Clear();
-            var today = DateTime.Today;
-            int nextId = 1; // local placeholder ids until the backend supplies NotificationId
-
-            foreach (var p in projects
-                .Where(p => p.EndDate.Date >= today)
-                .OrderBy(p => p.EndDate)
-                .Take(5))
+            finally
             {
-                int days = (p.EndDate.Date - today).Days;
-                string when = days switch
-                {
-                    0 => "today",
-                    1 => "tomorrow",
-                    < 14 => $"in {days} days",
-                    _ => $"in {days / 7} weeks"
-                };
-
-                // NotificationModel (defined in Models/MessageModel.cs) has only:
-                // NotificationId, Message, IsRead.
-                Notifications.Add(new NotificationModel
-                {
-                    NotificationId = nextId++,
-                    Message = $"{p.ProjectName} is due {when}.",
-                    IsRead = false
-                });
+                IsBusy = false;
             }
         }
-
-        private static List<ProjectModel> SampleProjects() => new()
-        {
-            new ProjectModel { ProjectId = 1, ProjectName = "UniConnect", Role = "TEAM_LEAD", EndDate = DateTime.Today.AddDays(2) },
-            new ProjectModel { ProjectId = 2, ProjectName = "Database Assignment", Role = "TEAM_MEMBER", EndDate = DateTime.Today.AddDays(21) },
-        };
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public void LoadPreviewProjects()
+        {
+            IsBusy = true;
+
+            try
+            {
+                Projects.Clear();
+                Notifications.Clear();
+
+                Projects.Add(new ProjectModel
+                {
+                    ProjectId = 1,
+                    ProjectName = "UniConnect",
+                    ProjectDescription = "University team collaboration platform",
+                    StartDate = new DateTime(2026, 10, 1),
+                    EndDate = new DateTime(2026, 11, 30),
+                    Role = "Team Lead"
+                });
+
+                Projects.Add(new ProjectModel
+                {
+                    ProjectId = 2,
+                    ProjectName = "Handy Market",
+                    ProjectDescription = "Marketplace for local service providers",
+                    StartDate = new DateTime(2026, 9, 15),
+                    EndDate = new DateTime(2026, 12, 15),
+                    Role = "Developer"
+                });
+
+                Projects.Add(new ProjectModel
+                {
+                    ProjectId = 3,
+                    ProjectName = "Student Portal",
+                    ProjectDescription = "A platform for student resources",
+                    StartDate = new DateTime(2026, 10, 5),
+                    EndDate = new DateTime(2026, 12, 1),
+                    Role = "Team Member"
+                });
+
+                HasProjects = Projects.Count > 0;
+                HasNotifications = false;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        protected void OnPropertyChanged(
+            [CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(name));
+        }
     }
 }

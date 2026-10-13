@@ -46,6 +46,8 @@ namespace UniConnect.MAUI
             builder.Services.AddTransient<ChatPage>();
             builder.Services.AddTransient<ChatViewModel>();
 
+            builder.Services.AddTransient<CalendarPage>();
+
             return builder.Build();
         }
     }

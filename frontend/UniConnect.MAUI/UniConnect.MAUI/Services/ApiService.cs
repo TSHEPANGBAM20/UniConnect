@@ -11,7 +11,7 @@ namespace UniConnect.MAUI.Services
 
         // Android emulator uses 10.0.2.2 to reach the host machine's localhost.
         // Change this once the backend is actually hosted somewhere shared.
-        private const string BaseUrl = "http://localhost:8080"; //the base url
+        private const string BaseUrl = "http://10.0.2.2:8080"; //the base url
 
         public int? CurrentUserId { get; private set; }
         public string CurrentUserName { get; private set; }
@@ -21,29 +21,23 @@ namespace UniConnect.MAUI.Services
             _http = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
 
-       
+        private void SetAuthToken(string token)
+        {
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
 
         // ---------- Auth ----------
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            //Sends login details to the Spring Boot backend
-            var response = await _http.PostAsJsonAsync("/auth/login", request);
-
+            var response = await _http.PostAsJsonAsync("/auth/login", request); //points to login endpoint
             response.EnsureSuccessStatusCode();
-
-            //The backend currently returns a Student object directly 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-
-            if (result == null)
-                throw new Exception("Login response was empty.");
-
-            //Store user login ID for use by other features
-            CurrentUserId = (int)result.Id;
-            CurrentUserName = result.Name;
-
+            CurrentUserName = result?.Name;
             return result;
         }
+
         public async Task<UserModel> RegisterAsync(RegisterRequest request)
         {
             var response = await _http.PostAsJsonAsync("/auth/register", request); // points to 

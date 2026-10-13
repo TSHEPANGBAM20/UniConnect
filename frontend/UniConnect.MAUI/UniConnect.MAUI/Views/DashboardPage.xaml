@@ -1,91 +1,337 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:UniConnect.MAUI.Models"
-             xmlns:controls="clr-namespace:UniConnect.MAUI.Controls"
-             x:Class="UniConnect.MAUI.Views.DashboardPage"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="White"
-             Title="Dashboard">
 
-    <Grid MaximumWidthRequest="500">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:UniConnect.MAUI.Models"
+    xmlns:controls="clr-namespace:UniConnect.MAUI.Controls"
+    x:Class="UniConnect.MAUI.Views.DashboardPage"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+    Title="Dashboard">
 
-        <!-- Main content -->
+    <Grid>
+
+        <!-- Main scrollable content -->
         <ScrollView>
-            <VerticalStackLayout Padding="24,20,24,120" Spacing="14">
 
-                <Label Text="Dashboard" FontSize="22" FontAttributes="Bold"
-                       TextColor="Black" HorizontalOptions="Center" />
+            <VerticalStackLayout
+                Padding="22,30,22,125"
+                Spacing="0"
+                MaximumWidthRequest="520"
+                HorizontalOptions="Center">
 
-                <Label Text="{Binding WelcomeMessage}" FontSize="22" FontAttributes="Bold"
-                       TextColor="Black" HorizontalOptions="Center" Margin="0,6,0,6" />
+                <!-- Header -->
 
-                <Button Text="New Project" Clicked="OnNewProjectClicked"
-                        BackgroundColor="Black" TextColor="White" FontAttributes="Bold"
-                        CornerRadius="25" HeightRequest="50" />
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    Margin="0,0,0,32">
 
-                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                                   Color="Black" />
+                    <VerticalStackLayout
+                        Spacing="3"
+                        VerticalOptions="Center">
 
-                <!-- Projects -->
-                <Label Text="Your Projects" FontSize="13" FontAttributes="Bold"
-                       TextColor="Black" Margin="0,10,0,0" />
+                        <Label
+                            Text="UniConnect"
+                            FontSize="24"
+                            FontAttributes="Bold"
+                            CharacterSpacing="-1"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-                <Label Text="No projects yet. Tap New Project to create one."
-                       FontSize="12" TextColor="Gray"
-                       IsVisible="{Binding ShowEmptyProjects}" />
+                        <Label
+                            Text="Your workspace"
+                            FontSize="12"
+                            TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Projects}" Spacing="10">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:ProjectModel">
-                            <Border Stroke="Black" StrokeShape="RoundRectangle 14" Padding="16,12">
-                                <VerticalStackLayout Spacing="2">
-                                    <Label Text="{Binding ProjectName}" FontAttributes="Bold"
-                                           FontSize="14" TextColor="Black" />
-                                    <Label Text="{Binding Role}" FontSize="11" TextColor="Gray" />
-                                </VerticalStackLayout>
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnProjectTapped" />
-                                </Border.GestureRecognizers>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Border
+                        Grid.Column="1"
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 22"
+                        BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1B1B1B}">
+
+                        <Label
+                            Text="M"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                    </Border>
+
+                </Grid>
+
+                <!-- Welcome -->
+
+                <VerticalStackLayout
+                    Spacing="6"
+                    Margin="0,0,0,25">
+
+                    <Label
+                        Text="{Binding WelcomeMessage}"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        CharacterSpacing="-0.5"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                    <Label
+                        Text="Stay organised. Keep your team moving."
+                        FontSize="14"
+                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
                 </VerticalStackLayout>
 
-                <BoxView HeightRequest="1" Color="#D0D0D0" Margin="0,10" />
+                <!-- New Project -->
+
+                <Button
+                    Text="+  New Project"
+                    Clicked="OnNewProjectClicked"
+                    BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                    TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                    CornerRadius="26"
+                    HeightRequest="54"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    Margin="0,0,0,30" />
+
+                <!-- Projects heading -->
+
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    Margin="0,0,0,12">
+
+                    <Label
+                        Text="Your Projects"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                    <Label
+                        Text="View all"
+                        Grid.Column="1"
+                        FontSize="12"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        VerticalOptions="Center" />
+
+                </Grid>
+
+                <!-- Empty projects -->
+
+                <Border
+                    IsVisible="{Binding ShowEmptyProjects}"
+                    Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20"
+                    BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1B1B1B}"
+                    Margin="0,0,0,25">
+
+                    <VerticalStackLayout
+                        Spacing="7"
+                        HorizontalOptions="Center">
+
+                        <Label
+                            Text="No projects yet"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="Center"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                        <Label
+                            Text="Create a project to start working with your team."
+                            FontSize="12"
+                            HorizontalTextAlignment="Center"
+                            TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+                <!-- Project cards -->
+
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding Projects}"
+                    Spacing="12"
+                    Margin="0,0,0,28">
+
+                    <BindableLayout.ItemTemplate>
+
+                        <DataTemplate x:DataType="models:ProjectModel">
+
+                            <Border
+                                Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16"
+                                Padding="17"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#181818}">
+
+                                <Grid
+                                    ColumnDefinitions="*,Auto"
+                                    RowDefinitions="Auto,Auto"
+                                    RowSpacing="5">
+
+                                    <Label
+                                        Text="{Binding ProjectName}"
+                                        FontSize="15"
+                                        FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                                    <Label
+                                        Text="›"
+                                        Grid.Column="1"
+                                        Grid.RowSpan="2"
+                                        FontSize="25"
+                                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Text="{Binding Role}"
+                                        Grid.Row="1"
+                                        FontSize="12"
+                                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                                </Grid>
+
+                                <Border.GestureRecognizers>
+
+                                    <TapGestureRecognizer
+                                        Tapped="OnProjectTapped" />
+
+                                </Border.GestureRecognizers>
+
+                            </Border>
+
+                        </DataTemplate>
+
+                    </BindableLayout.ItemTemplate>
+
+                </VerticalStackLayout>
+
+                <!-- Divider -->
+
+                <BoxView
+                    HeightRequest="1"
+                    Color="{AppThemeBinding Light=#E5E5E5, Dark=#2C2C2C}"
+                    Margin="0,0,0,25" />
 
                 <!-- Notifications -->
-                <Label Text="Notifications" FontSize="13" FontAttributes="Bold" TextColor="Black" />
 
-                <Label Text="You're all caught up."
-                       FontSize="12" TextColor="Gray"
-                       IsVisible="{Binding ShowEmptyNotifications}" />
+                <Grid
+                    ColumnDefinitions="*,Auto"
+                    Margin="0,0,0,12">
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Notifications}" Spacing="10">
+                    <Label
+                        Text="Notifications"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                    <Label
+                        Text="Recent"
+                        Grid.Column="1"
+                        FontSize="12"
+                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                        VerticalOptions="Center" />
+
+                </Grid>
+
+                <!-- Empty notifications -->
+
+                <Border
+                    IsVisible="{Binding ShowEmptyNotifications}"
+                    Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="18"
+                    BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1B1B1B}">
+
+                    <Label
+                        Text="You're all caught up."
+                        FontSize="13"
+                        HorizontalTextAlignment="Center"
+                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                </Border>
+
+                <!-- Notification cards -->
+
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding Notifications}"
+                    Spacing="10">
+
                     <BindableLayout.ItemTemplate>
+
                         <DataTemplate x:DataType="models:NotificationModel">
-                            <Border Stroke="Black" StrokeShape="RoundRectangle 14" Padding="16,14">
-                                <Label Text="{Binding Message}" FontSize="13"
-                                       FontAttributes="Bold" TextColor="Black">
+
+                            <Border
+                                Stroke="{AppThemeBinding Light=#D8D8D8, Dark=#333333}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="15"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#181818}">
+
+                                <Label
+                                    Text="{Binding Message}"
+                                    FontSize="13"
+                                    FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}">
+
                                     <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding IsRead}" Value="True">
-                                            <Setter Property="FontAttributes" Value="None" />
-                                            <Setter Property="TextColor" Value="Gray" />
+
+                                        <DataTrigger
+                                            TargetType="Label"
+                                            Binding="{Binding IsRead}"
+                                            Value="True">
+
+                                            <Setter
+                                                Property="FontAttributes"
+                                                Value="None" />
+
+                                            <Setter
+                                                Property="TextColor"
+                                                Value="{AppThemeBinding Light=#888888, Dark=#777777}" />
+
                                         </DataTrigger>
+
                                     </Label.Triggers>
+
                                 </Label>
+
                             </Border>
+
                         </DataTemplate>
+
                     </BindableLayout.ItemTemplate>
+
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
+
         </ScrollView>
 
-        <!-- Floating bottom navigation (reusable control) -->
-        <controls:BottomNavBar ActiveTab="Home" VerticalOptions="End"
-                               TabSelected="OnTabSelected"
-                               MenuItemSelected="OnMenuItemSelected" />
+        <!-- Bottom navigation -->
+
+        <controls:BottomNavBar
+            ActiveTab="Home"
+            VerticalOptions="End"
+            TabSelected="OnTabSelected"
+            MenuItemSelected="OnMenuItemSelected" />
+
+        <!-- Loading -->
+
+        <ActivityIndicator
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Color="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
 
     </Grid>
+
 </ContentPage>

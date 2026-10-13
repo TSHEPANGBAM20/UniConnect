@@ -22,7 +22,7 @@
                 Margin="0,0,0,22">
 
                 <Label
-                    Text="UniConnect"
+                    Text="UniConnect Application V1"
                     FontSize="27"
                     FontAttributes="Bold"
                     CharacterSpacing="-1"
@@ -53,7 +53,7 @@
                 <Grid>
 
                     <Image
-                        Source="uniconnect_hero.jpg"
+                        Source="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
                         Aspect="AspectFill" />
 
                     <BoxView

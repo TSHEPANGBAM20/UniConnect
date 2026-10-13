@@ -25,11 +25,9 @@ namespace UniConnect.MAUI.Views
 
             try
             {
-            
-
                 await _viewModel.SendAsync();
 
-                // Clear the input only when the draft was successfully cleared.
+                // Clear the input only after the draft was cleared successfully.
                 if (string.IsNullOrEmpty(_viewModel.DraftMessage))
                 {
                     MessageEntry.Text = string.Empty;
