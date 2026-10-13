@@ -8,7 +8,7 @@
     Title="Project Workspace"
     BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid MaximumWidthRequest="500">
 
         <!-- Header -->
         <VerticalStackLayout
@@ -217,7 +217,14 @@
 
             </CollectionView.ItemTemplate>
 
-        </CollectionView>
+                <CollectionView.Footer>
+                    <VerticalStackLayout>
+                        <Label Text="When you are done with a task, press the 'Done' button."
+                               FontSize="11" TextColor="Gray" Margin="4,4,4,0" />
+                        <BoxView HeightRequest="120" Color="Transparent" />
+                    </VerticalStackLayout>
+                </CollectionView.Footer>
+            </CollectionView>
 
         <!-- Loading -->
         <ActivityIndicator

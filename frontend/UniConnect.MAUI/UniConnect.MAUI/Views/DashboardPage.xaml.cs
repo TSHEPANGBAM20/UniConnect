@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using UniConnect.MAUI.Models;
+using UniConnect.MAUI.Services;
 using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
@@ -79,12 +80,6 @@ namespace UniConnect.MAUI.Views
                 await Shell.Current.GoToAsync(nameof(CalendarPage));
                 return;
             }
-
-            await this.DisplayAlertAsync(
-                "Coming soon",
-                $"{tab} isn't built yet.",
-                "OK");
-        }
 
         private async void OnMenuItemSelected(object? sender, string item)
         {
