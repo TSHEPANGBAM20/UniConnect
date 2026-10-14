@@ -19,16 +19,20 @@ namespace UniConnect.MAUI.Views
             await _viewModel.LoadTasksAsync();
         }
 
-        private async void OnDoneClicked(object? sender, EventArgs e)
+        private async void OnChatClicked(object? sender, EventArgs e)
         {
             await Shell.Current.GoToAsync($"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
         }
 
-        // current is empty on purpose: tapping Projects here returns to the project list
+        
         private async void OnTabSelected(object? sender, string tab)
-            => await TabNavigator.GoToTabAsync(this, tab, current: "");
+        {
+            await Shell.Current.GoToAsync("//DashboardPage");
+        }
 
         private async void OnMenuItemSelected(object? sender, string item)
-            => await TabNavigator.HandleMenuItemAsync(this, item);
+        {
+            await Shell.Current.GoToAsync("//DashboardPage");
+        }
     }
 }
