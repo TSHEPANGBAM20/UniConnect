@@ -46,13 +46,14 @@ private BCryptPasswordEncoder passwordEncoder;
 
     }
     public Student loginUser(String email, String password) {
-      List<Student> studentList =studentRepo.findByStudentEmail(email);
+      //List<Student> studentList =studentRepo.findByStudentEmail(email);
+      Student student = studentRepo.findByStudentEmail(email);
 
-      if (studentList.isEmpty()){
+
+
+      if (student == null){
         throw new RuntimeException("Student does not exist"); 
       }
-
-      Student student = studentList.get(0);
 
       //getting the hashed password
       String hashedPassword = student.getPassword(); //store saved password (hashed)

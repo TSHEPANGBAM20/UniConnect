@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mklt.uniconnect.Entities.Project;
 
+
+
 public interface ProjectsRepo extends JpaRepository<Project, Long> {
 boolean existsByProjectName(String projectName);
 List <Long> findByProjectID(Long id);
+boolean existsByProjectCode(int projectCode);
+Project findByProjectCode(Integer projectCode);
 
 }

@@ -2,8 +2,12 @@ package com.mklt.uniconnect.Entities;
 
 import java.time.LocalDate;
 
+import com.mklt.uniconnect.Helpers.ProjectStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
@@ -20,6 +24,11 @@ public class Project {
     private LocalDate startDate;
     private LocalDate endDate;
     private String projectFile;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
+    @Column (unique=true)
+    private Integer projectCode;
+
 
 
     //setters, for changing or later insertions
@@ -44,6 +53,7 @@ public class Project {
      public void setProjectFile(String file){
         this.projectFile = file;
     }
+
 
 
     //getters
@@ -73,18 +83,30 @@ public class Project {
         return projectFile;
     }
 
+    public int getProjectCode() {
+        return projectCode;
+    }
+
+    
+
+    
+
     //constructors
 
     public Project() {
     } //empty constructor for JPA
 
-    public Project(String projectName, String projectDescription, LocalDate startDate, LocalDate endDate) {
+    public Project(String projectName, String projectDescription, LocalDate startDate, LocalDate endDate,ProjectStatus status, Integer projectCode) {
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
+        this.projectCode = projectCode;
         
     }
+
+   
 
 
 

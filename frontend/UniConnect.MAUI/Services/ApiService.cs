@@ -11,7 +11,18 @@ namespace UniConnect.MAUI.Services
 
         // Android emulator uses 10.0.2.2 to reach the host machine's localhost.
         // Change this once the backend is actually hosted somewhere shared.
-        private const string BaseUrl = "http://10.0.2.2:8080"; //the base url
+        //private const string BaseUrl = "http://10.0.2.2:8080"; //the base url
+
+#if ANDROID
+    // Points to your development PC from the Android emulator
+    public static string BaseUrl = "http://10.0.2:8080";
+#elif IOS
+    // Points to your development Mac/PC from the iOS simulator
+    public static string BaseUrl = "http://localhost:8080";
+#else
+    // Fallback for production or other platforms
+    public static string BaseUrl = "http://localhost:8080";
+#endif
 
         public int? CurrentUserId { get; private set; }
         public string CurrentUserName { get; private set; }
