@@ -80,6 +80,7 @@ namespace UniConnect.MAUI.Views
                 await Shell.Current.GoToAsync(nameof(CalendarPage));
                 return;
             }
+        }
 
         private async void OnMenuItemSelected(object? sender, string item)
         {
