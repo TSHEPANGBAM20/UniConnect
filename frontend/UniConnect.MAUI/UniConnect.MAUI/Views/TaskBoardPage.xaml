@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?xml version="1.0" encoding="utf-8" ?>
 
 <ContentPage
@@ -7,6 +8,17 @@
     xmlns:models="clr-namespace:UniConnect.MAUI.Models"
     Title="Project Workspace"
     BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}">
+=======
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:UniConnect.MAUI.Models"
+             xmlns:controls="clr-namespace:UniConnect.MAUI.Controls"
+             x:Class="UniConnect.MAUI.Views.TaskBoardPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="White"
+             Title="Tasks">
+>>>>>>> Stashed changes
 
     <Grid MaximumWidthRequest="500">
 
@@ -221,7 +233,7 @@
                     <VerticalStackLayout>
                         <Label Text="When you are done with a task, press the 'Done' button."
                                FontSize="11" TextColor="Gray" Margin="4,4,4,0" />
-                        <BoxView HeightRequest="120" Color="Transparent" />
+                        <Grid HeightRequest="120" />
                     </VerticalStackLayout>
                 </CollectionView.Footer>
             </CollectionView>
@@ -236,5 +248,10 @@
             Margin="0,12,0,0" />
 
     </Grid>
+<<<<<<< Updated upstream
 
 </ContentPage>
+=======
+</ContentPage>
+
+>>>>>>> Stashed changes

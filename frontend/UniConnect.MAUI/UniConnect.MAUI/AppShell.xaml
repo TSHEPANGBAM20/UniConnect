@@ -8,6 +8,7 @@
     FlyoutBehavior="Disabled"
     Title="UniConnect">
 
+<<<<<<< Updated upstream
     <!-- Public Home page -->
     <ShellContent
         Title="Home"
@@ -15,15 +16,36 @@
         Route="HomePage" />
 
     <!-- Login page -->
+=======
+    <!-- Login is the app's entry point. SignUp, NewProject, TaskBoard and Chat are
+         registered as routes below and pushed onto the stack via Shell.Current.GoToAsync. -->
+
+
+     
+>>>>>>> Stashed changes
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage" />
+<<<<<<< Updated upstream
 
     <!-- Dashboard -->
     <ShellContent
+=======
+<ShellContent
+>>>>>>> Stashed changes
         Title="Dashboard"
         ContentTemplate="{DataTemplate views:DashboardPage}"
         Route="DashboardPage" />
+   
+
+<<<<<<< Updated upstream
+</Shell>
+=======
+    <ShellContent
+        Title="Projects"
+        ContentTemplate="{DataTemplate views:ProjectsPage}"
+        Route="ProjectsPage" />
 
 </Shell>
+>>>>>>> Stashed changes
