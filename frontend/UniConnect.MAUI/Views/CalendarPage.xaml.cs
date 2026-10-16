@@ -1,4 +1,5 @@
 using System.Globalization;
+using UniConnect.MAUI.Services;
 
 namespace UniConnect.MAUI.Views;
 
@@ -82,4 +83,11 @@ public partial class CalendarPage : ContentPage
             Grid.SetColumn(dayLabel, column);
         }
     }
+
+    // Bottom navigation: Home/Projects switch pages, Calendar is the current tab.
+    private async void OnTabSelected(object? sender, string tab)
+        => await TabNavigator.GoToTabAsync(this, tab, current: "Calendar");
+
+    private async void OnMenuItemSelected(object? sender, string item)
+        => await TabNavigator.HandleMenuItemAsync(this, item);
 }
