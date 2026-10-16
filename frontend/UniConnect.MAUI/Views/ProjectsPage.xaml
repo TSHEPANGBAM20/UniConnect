@@ -55,7 +55,7 @@
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="120" Color="Transparent" />
+                    <Grid HeightRequest="120" />
                 </CollectionView.Footer>
             </CollectionView>
 

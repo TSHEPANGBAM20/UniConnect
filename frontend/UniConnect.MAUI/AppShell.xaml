@@ -26,4 +26,10 @@
         ContentTemplate="{DataTemplate views:DashboardPage}"
         Route="DashboardPage" />
 
+    <!-- Projects (bottom nav tab) -->
+    <ShellContent
+        Title="Projects"
+        ContentTemplate="{DataTemplate views:ProjectsPage}"
+        Route="ProjectsPage" />
+
 </Shell>

@@ -18,7 +18,7 @@ namespace UniConnect.MAUI.Services
                     await Shell.Current.GoToAsync("//ProjectsPage");
                     break;
                 case "Calendar":
-                    await Shell.Current.GoToAsync("//CalendarPage");
+                    await Shell.Current.GoToAsync(nameof(Views.CalendarPage)); // pushed route (AppShell.xaml.cs)
                     break;
                 default:
                     await page.DisplayAlertAsync("Coming soon", $"{tab} isn't built yet.", "OK");

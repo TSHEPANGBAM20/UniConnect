@@ -71,16 +71,7 @@ namespace UniConnect.MAUI.Views
         }
 
         private async void OnTabSelected(object? sender, string tab)
-        {
-            if (tab == "Home")
-                return;
-
-            if (tab == "Calendar")
-            {
-                await Shell.Current.GoToAsync(nameof(CalendarPage));
-                return;
-            }
-        }
+            => await TabNavigator.GoToTabAsync(this, tab, current: "Home");
 
         private async void OnMenuItemSelected(object? sender, string item)
         {

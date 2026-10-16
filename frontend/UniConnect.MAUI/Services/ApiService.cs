@@ -15,7 +15,7 @@ namespace UniConnect.MAUI.Services
 
 #if ANDROID
     // Points to your development PC from the Android emulator
-    public static string BaseUrl = "http://10.0.2:8080";
+    public static string BaseUrl = "http://10.0.2.2:8080";
 #elif IOS
     // Points to your development Mac/PC from the iOS simulator
     public static string BaseUrl = "http://localhost:8080";
