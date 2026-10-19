@@ -26,6 +26,27 @@ namespace UniConnect.MAUI.Views
             await Shell.Current.GoToAsync(nameof(NewProjectPage));
         }
 
+        // Join an existing project with its 6-digit code, then open that project.
+        private async void OnJoinWithCodeClicked(object? sender, EventArgs e)
+        {
+            string? code = await this.DisplayPromptAsync(
+                "Join a project",
+                "Enter the 6-digit project code your Team Lead shared with you.",
+                "Join", "Cancel",
+                placeholder: "123456", maxLength: 6, keyboard: Keyboard.Numeric);
+
+            if (string.IsNullOrWhiteSpace(code)) return; // cancelled
+
+            var (projectId, error) = await _viewModel.JoinByCodeAsync(code.Trim());
+            if (projectId == null)
+            {
+                await this.DisplayAlertAsync("Couldn't join", error ?? "Something went wrong.", "OK");
+                return;
+            }
+
+            await Shell.Current.GoToAsync($"{nameof(TaskBoardPage)}?projectId={projectId}");
+        }
+
         private async void OnProjectTapped(object? sender, TappedEventArgs e)
         {
             if (sender is BindableObject view && view.BindingContext is ProjectModel project)

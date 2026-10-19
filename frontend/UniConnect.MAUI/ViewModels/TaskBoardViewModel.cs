@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UniConnect.MAUI.Models;
@@ -12,7 +12,7 @@ namespace UniConnect.MAUI.ViewModels
         // DEV SWITCH: the backend has no task endpoints yet. While true, a failed call
         // falls back to sample data (and "Done" works locally) so the UI can be tested.
         // Set to false once the API works.
-        private const bool UseSampleDataOnFailure = true;
+        private static readonly bool UseSampleDataOnFailure = true;
 
         private readonly ApiService _apiService;
 
@@ -101,3 +101,4 @@ namespace UniConnect.MAUI.ViewModels
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
+

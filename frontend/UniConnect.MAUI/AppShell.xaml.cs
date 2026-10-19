@@ -15,6 +15,7 @@ namespace UniConnect.MAUI
             Routing.RegisterRoute(nameof(NewProjectPage), typeof(NewProjectPage));
             Routing.RegisterRoute(nameof(TaskBoardPage), typeof(TaskBoardPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
+            Routing.RegisterRoute(nameof(ProjectDetailsPage), typeof(ProjectDetailsPage));
             Routing.RegisterRoute(nameof(CalendarPage), typeof(CalendarPage));
 
             // Separate route for dashboard preview mode

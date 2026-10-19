@@ -46,6 +46,9 @@ namespace UniConnect.MAUI
             builder.Services.AddTransient<TaskBoardPage>();
             builder.Services.AddTransient<TaskBoardViewModel>();
 
+            builder.Services.AddTransient<ProjectDetailsPage>();
+            builder.Services.AddTransient<ProjectDetailsViewModel>();
+
             builder.Services.AddTransient<ChatPage>();
             builder.Services.AddTransient<ChatViewModel>();
 

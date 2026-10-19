@@ -17,6 +17,7 @@ namespace UniConnect.MAUI.Models
     // Matches the Student object returned by the current Spring Boot backend.
     public class LoginResponse
     {
+        public int Id { get; set; }   // Student.getId() -> "id". Needed as the requesterId / studentId in project calls.
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }

@@ -35,7 +35,7 @@ namespace UniConnect.MAUI.Views
             if (choice == "Chat")
                 await Shell.Current.GoToAsync($"{nameof(ChatPage)}?projectId={_viewModel.ProjectId}");
             else if (choice == "Project details")
-                await this.DisplayAlertAsync("Coming soon", "Project details isn't built yet.", "OK");
+                await Shell.Current.GoToAsync($"{nameof(ProjectDetailsPage)}?projectId={_viewModel.ProjectId}");
         }
 
         private async void OnAddTaskTapped(object? sender, TappedEventArgs e)
