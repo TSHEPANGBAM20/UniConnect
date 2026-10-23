@@ -1,8 +1,8 @@
 namespace UniConnect.MAUI.Services
 {
-    // One place for what the BottomNavBar does, so every page behaves the same.
-    // Home and Projects are top-level pages (absolute routes, which also clear any
-    // pushed pages such as the Task Board). Calendar/Profile items aren't built yet.
+  
+
+  //handles navigation on dash bottom nav
     public static class TabNavigator
     {
         public static async Task GoToTabAsync(Page page, string tab, string current)

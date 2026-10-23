@@ -8,9 +8,6 @@ namespace UniConnect.MAUI.ViewModels
 {
     public class ProjectsViewModel : INotifyPropertyChanged
     {
-        // DEV SWITCH: the backend has no /projects endpoint yet. While true, a failed
-        // call falls back to sample data so the UI can be built and tested.
-        // Set to false once the API works, otherwise a broken backend looks like a working app.
         private static readonly bool UseSampleDataOnFailure = false;
 
         private readonly ApiService _apiService;
@@ -51,8 +48,6 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // Join a project with the 6-digit code from its Team Lead, then open it.
-        // Returns (projectId, null) on success or (null, message) on failure.
-        // BACKEND: POST /projects/joinByCode?projectCode=&email=  (see ApiService.JoinProjectByCodeAsync)
         public async Task<(long? ProjectId, string? Error)> JoinByCodeAsync(string code)
         {
             if (code.Length != 6 || !int.TryParse(code, out int projectCode))

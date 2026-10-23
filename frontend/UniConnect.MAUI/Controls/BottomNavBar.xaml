@@ -5,8 +5,7 @@
 
     <VerticalStackLayout Spacing="10" Padding="16,0,16,16" HorizontalOptions="Center">
 
-        <!-- Popup menu (opens above the bar when Profile is tapped).
-             No shadow on purpose: scaling a shadowed Border redraws the shadow every frame. -->
+        <!-- Popup menu (opens above the bar when Profile is tapped).-->
         <Border x:Name="MenuPopup" IsVisible="False" Opacity="0"
                 AnchorX="0.5" AnchorY="1"
                 BackgroundColor="White" Stroke="#E5E5E5"

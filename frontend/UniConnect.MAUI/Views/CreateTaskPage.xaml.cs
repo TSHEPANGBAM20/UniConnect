@@ -83,9 +83,8 @@ namespace UniConnect.MAUI.Views
 
             try
             {
-                // BACKEND: ApiService must POST the task to
-                // /tasks/createTask/{projectId}. The backend must save
-                // the task and return the created task or an error.
+               
+                //  return the created task or an error.
                 var request = new CreateTaskRequest
                 {
                     TaskTitle = title,

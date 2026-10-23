@@ -7,21 +7,13 @@ using UniConnect.MAUI.Services;
 
 namespace UniConnect.MAUI.ViewModels
 {
-    // Project Details screen: 1) project details + code, 2) members, 3) project actions.
-    // What the viewer can do depends on their role in THIS project:
-    //   Team Lead   -> add members, remove members, disband the project
-    //   Team Member -> view everything, leave the project
-    // The UI hides what a role can't do, but the BACKEND MUST ALSO ENFORCE these rules
-    // (see docs/API_PROJECT_DETAILS.md) - hiding a button is not security.
+   
     [QueryProperty(nameof(ProjectId), "projectId")]
     public class ProjectDetailsViewModel : INotifyPropertyChanged
     {
-        // DEV SWITCH: the details/members/remove/disband endpoints don't exist on the backend yet.
-        // While true, a failed call falls back to sample data (and actions work locally) so the
-        // UI can be built and tested. Set to false once the API works.
+     
         private static readonly bool UseSampleDataOnFailure = false;
 
-        // Preview helper (sample data only): true = you see the Team Lead view, false = Team Member view.
         private const bool SampleViewerIsLeader = true;
 
         private readonly ApiService _api;
@@ -81,7 +73,7 @@ namespace UniConnect.MAUI.ViewModels
 
         // Id of the logged-in student (sample mode pretends to be student 2).
         
-        private long MyId => UseSampleDataOnFailure ? 2 : _api.CurrentUserId;//private long MyId => _api.CurrentUserId  (UseSampleDataOnFailure ? 2 : -1);
+        private long MyId => UseSampleDataOnFailure ? 2 : _api.CurrentUserId;
 
         public ProjectDetailsViewModel(ApiService api)
         {
@@ -136,11 +128,7 @@ namespace UniConnect.MAUI.ViewModels
             IsBusy = false;
         }
 
-        // ---- Actions. Each returns null on success, or a message to show the user. ----
-
-        // ---- Files. Any member can upload; only the uploader or the Team Lead can delete. ----
-
-        // BACKEND: POST /projects/{projectId}/files?uploaderId=   (multipart, part name "file")
+        
         public async Task<string?> UploadFileAsync(FileResult file)
         {
             string extension = Path.GetExtension(file.FileName);
@@ -178,8 +166,8 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // BACKEND: GET /projects/{projectId}/files/{fileId}/download?studentId=
-        // Returns the local path of the downloaded copy so the page can open it.
+        
+        // returns the local path of the downloaded copy so the page can open it.
         public async Task<(string? Path, string? Error)> DownloadFileAsync(ProjectFileModel file)
         {
             try
@@ -194,7 +182,6 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // BACKEND: DELETE /projects/{projectId}/files/{fileId}?requesterId=
         public async Task<string?> DeleteFileAsync(ProjectFileModel file)
         {
             if (!(IsLeader || file.UploadedById == MyId))
@@ -210,7 +197,7 @@ namespace UniConnect.MAUI.ViewModels
             return null;
         }
 
-        // Team Lead only. BACKEND: POST /projects/addMember?projectId=&email=&requesterId=
+        // Team Lead only
         public async Task<string?> AddMemberAsync(string email)
 {
     email = email?.Trim() ?? string.Empty;
@@ -268,8 +255,7 @@ namespace UniConnect.MAUI.ViewModels
     }
 }
 
-        // Team Lead only, and never the lead themselves.
-        // BACKEND: DELETE /projects/{projectId}/members/{studentId}?requesterId=
+        // Team Lead only
         public async Task<string?> RemoveMemberAsync(ProjectMemberModel member)
         {
             if (!IsLeader) return "Only the Team Lead can remove members.";
@@ -285,7 +271,7 @@ namespace UniConnect.MAUI.ViewModels
             return null;
         }
 
-        // Team Lead only. BACKEND: DELETE /projects/{projectId}?requesterId=
+        // Team Lead only
         public async Task<string?> DisbandAsync()
         {
             if (!IsLeader) return "Only the Team Lead can disband the project.";
@@ -297,8 +283,8 @@ namespace UniConnect.MAUI.ViewModels
             return null;
         }
 
-        // Team Members only (the lead must disband instead).
-        // BACKEND: DELETE /projects/{projectId}/members/{myStudentId}?requesterId={myStudentId}
+        // Team Members only 
+        //
         public async Task<string?> LeaveAsync()
         {
             if (IsLeader) return "The Team Lead can't leave. Disband the project instead.";
@@ -314,7 +300,7 @@ namespace UniConnect.MAUI.ViewModels
             return null;
         }
 
-        // ---- helpers ----
+        
 
         private static string FormatDate(DateTime? d) => d?.ToString("d MMM yyyy", CultureInfo.InvariantCulture) ?? "-";
 

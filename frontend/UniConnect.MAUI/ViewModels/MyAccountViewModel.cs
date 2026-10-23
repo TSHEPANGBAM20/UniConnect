@@ -10,9 +10,8 @@ namespace UniConnect.MAUI.ViewModels
     {
         private readonly ApiService _apiService;
 
-        // BACKEND: Stores the ID of the currently logged-in student.
+        // stores the ID of the currently logged-in student.
         // The backend team must confirm how this ID should be used
-        // when retrieving and updating the student's profile.
         private long? _userId;
 
         private string _name = string.Empty;
@@ -126,13 +125,7 @@ namespace UniConnect.MAUI.ViewModels
         {
             _apiService = apiService;
 
-            // BACKEND: The current profile is populated from the
-            // details stored by ApiService after login.
-            // This does not retrieve fresh profile data from the database.
-            //
-            // BACKEND: Once a profile GET endpoint is confirmed,
-            // load the student's saved name, surname and email here
-            // through an ApiService method.
+            
             _userId = _apiService.CurrentUserId;
 
             string[] nameParts =
@@ -163,8 +156,7 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // Validates the profile fields on the frontend.
-        // BACKEND: Apply server-side validation as well when the
-        // profile update endpoint is implemented.
+       
         public bool ValidateProfile()
         {
             ErrorMessage = string.Empty;

@@ -69,8 +69,7 @@
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
 
-            <!-- This defines how each message appears in the list.
-                 The bindings get the sender's name and message text from MessageModel. -->
+        
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MessageModel">
 
@@ -113,7 +112,7 @@
 
         </CollectionView>
 
-        <!-- This is where the user types a message before sending it. -->
+        <!-- user types a message before sending it. -->
         <Border
             Grid.Row="2"
             Padding="10"
@@ -137,8 +136,7 @@
                     VerticalOptions="Center"
                     ReturnType="Send" />
 
-                <!-- Clicking this button calls OnSendClicked in ChatPage.xaml.cs,
-                     which passes the typed message to ChatViewModel to send. -->
+                <!-- Clicking this button calls OnSendClicked in ChatPage.xaml.cs, passes the typed message to ChatViewModel to send. -->
                 <Button
                     Grid.Column="1"
                     Text="Send"

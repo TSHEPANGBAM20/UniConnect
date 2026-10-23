@@ -9,9 +9,7 @@ namespace UniConnect.MAUI.ViewModels
     [QueryProperty(nameof(ProjectId), "projectId")]
     public class TaskBoardViewModel : INotifyPropertyChanged
     {
-        // DEV SWITCH: the backend has no task endpoints yet. While true, a failed call
-        // falls back to sample data (and "Done" works locally) so the UI can be tested.
-        // Set to false once the API works.
+   
         private static readonly bool UseSampleDataOnFailure = true;
 
         private readonly ApiService _apiService;
@@ -83,7 +81,6 @@ namespace UniConnect.MAUI.ViewModels
 
             task.Status = "DONE";
 
-            // TaskModel doesn't raise change notifications, so re-insert the item
             // to make the card redraw as completed (button hidden, tick shown).
             int index = Tasks.IndexOf(task);
             if (index >= 0) Tasks[index] = task;

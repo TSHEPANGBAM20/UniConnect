@@ -4,7 +4,7 @@ namespace UniConnect.MAUI.Models
 {
     public class UserModel
     {
-        //this is used in the dasboard i think
+        //this is used in the dasboard i think -Tshepang
         [JsonPropertyName("id")]
         public long UserId { get; set; }
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace UniConnect.MAUI.Models
         public string Password { get; set; }
     }
 
-    // Matches the Student object returned by the current Spring Boot backend.
+    // Matches the Student object returned by the current logged in user
     public class LoginResponse
     {
         [JsonPropertyName("id")]

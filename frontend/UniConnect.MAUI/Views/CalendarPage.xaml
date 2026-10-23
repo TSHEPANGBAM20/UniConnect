@@ -123,55 +123,54 @@
 
             <!-- Calendar days -->
             <Grid
-    x:Name="CalendarGrid"
-    ColumnDefinitions="*,*,*,*,*,*,*"
-    RowSpacing="8"
-    ColumnSpacing="6" />
+            x:Name="CalendarGrid"
+            ColumnDefinitions="*,*,*,*,*,*,*"
+            RowSpacing="8"
+            ColumnSpacing="6" />
 
 
-            <!-- Upcoming -->
             <!-- Upcoming Tasks -->
 
-<VerticalStackLayout Spacing="12">
+            <VerticalStackLayout Spacing="12">
 
-<Label
-    Text="Upcoming Tasks"
-    FontSize="19"
-    FontAttributes="Bold"
-    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                <Label
+                    Text="Upcoming Tasks"
+                    FontSize="19"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-<VerticalStackLayout
-    x:Name="UpcomingList"
-    Spacing="12" />
+            <VerticalStackLayout
+            x:Name="UpcomingList"
+            Spacing="12" />
 
-</VerticalStackLayout>
+            </VerticalStackLayout>
 
-<!-- Upcoming Project Deadlines -->
+            <!-- Upcoming Project Deadlines -->
 
-<VerticalStackLayout Spacing="12">
+            <VerticalStackLayout Spacing="12">
 
-<Label
-    Text="Project Deadlines"
-    FontSize="19"
-    FontAttributes="Bold"
-    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+            <Label
+                Text="Project Deadlines"
+                FontSize="19"
+                FontAttributes="Bold"
+                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-<VerticalStackLayout
-    x:Name="UpcomingProjectsList"
-    Spacing="12" />
+            <VerticalStackLayout
+                x:Name="UpcomingProjectsList"
+                Spacing="12" />
 
-</VerticalStackLayout>
+            </VerticalStackLayout>
 
-    </VerticalStackLayout>
-</ScrollView>
+                </VerticalStackLayout>
+            </ScrollView>
 
-<!-- Floating bottom navigation -->
-<controls:BottomNavBar
-    ActiveTab="Calendar"
-    VerticalOptions="End"
-    TabSelected="OnTabSelected"
-    MenuItemSelected="OnMenuItemSelected" />
+            <!-- Floating bottom navigation -->
+            <controls:BottomNavBar
+                ActiveTab="Calendar"
+                VerticalOptions="End"
+                TabSelected="OnTabSelected"
+                MenuItemSelected="OnMenuItemSelected" />
 
-</Grid>
+            </Grid>
 
-</ContentPage>
+            </ContentPage>

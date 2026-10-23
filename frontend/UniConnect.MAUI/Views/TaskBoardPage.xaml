@@ -124,7 +124,7 @@
           IsVisible="False"
           ZIndex="10">
 
-        <!-- Dark backdrop; tapping it closes the drawer -->
+        <!-- tapping it closes the drawer -->
         <BoxView x:Name="DrawerBackdrop"
                  Color="#80000000"
                  Opacity="0">

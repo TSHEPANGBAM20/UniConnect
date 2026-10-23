@@ -22,12 +22,11 @@ namespace UniConnect.MAUI
             builder.Logging.AddDebug();
 #endif
 
-            // ApiService holds the auth token/current user, so it must be a Singleton -
-            // one shared instance for the whole app's lifetime, not a new one per page.
+          
             builder.Services.AddSingleton<ApiService>();
 
-            // Pages + ViewModels are Transient - a fresh instance each time you navigate
-            // to them, which is the standard MAUI pattern.
+            //a fresh instance of page each time you navigate
+            
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<LoginViewModel>();
 

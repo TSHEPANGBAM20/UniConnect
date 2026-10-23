@@ -7,7 +7,7 @@ using UniConnect.MAUI.Services;
 
 namespace UniConnect.MAUI.ViewModels
 {
-    // This ViewModel handles the chat screen. It loads messages for a project,
+   
     // sends new messages and keeps the screen updated when something changes.
     [QueryProperty(nameof(ProjectId), "projectId")]
     public class ChatViewModel : INotifyPropertyChanged
@@ -19,8 +19,7 @@ namespace UniConnect.MAUI.ViewModels
         private string _errorMessage = string.Empty;
         private long _projectId;
 
-        // This is the ID of the project whose chat the user is opening.
-        // It is passed to this page when the user navigates to the chat screen.
+        //  ID of the project whose chat the user is opening. passed to this page when the user navigates to the chat screen.
         public long ProjectId
         {
             get => _projectId;
@@ -36,7 +35,7 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // This collection stores the messages shown in the chat.
-        // When messages are added or removed, the screen can update automatically.
+
         public ObservableCollection<MessageModel> Messages { get; } = new();
 
         // This stores the message the user is busy typing.
@@ -110,7 +109,6 @@ namespace UniConnect.MAUI.ViewModels
             ProjectId > 0 &&
             !string.IsNullOrWhiteSpace(DraftMessage);
 
-        // ApiService is used to communicate with the backend, keeping the API requests
         // separate from the code that controls what happens on the chat screen.
         public ChatViewModel(ApiService apiService)
         {
@@ -119,10 +117,9 @@ namespace UniConnect.MAUI.ViewModels
 
         // This loads the messages for the selected project and displays them in the chat.
         // If something goes wrong, an error is saved and the loading state is reset.
-        //
-        // BACKEND NOTE: GetMessagesAsync(ProjectId) must retrieve messages for the correct
-        // project. We need to agree on the API route and response format, including the message
-        // details needed by MessageModel and how the messages will be ordered.
+    
+        // note: GetMessagesAsync(ProjectId) must retrieve messages for the correct project
+        
         public async Task LoadMessagesAsync()
         {
             if (ProjectId <= 0 || IsBusy)
@@ -152,13 +149,7 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // This sends the text the user typed for the selected project's chat.
-        // The message is trimmed first, and the input is only cleared after the send request
-        // succeeds. The chat is then refreshed to show the latest messages.
-        //
-        // BACKEND NOTE: SendMessageAsync(ProjectId, text) needs to send the message to the
-        // correct project. The backend should identify the sender from the logged-in user,
-        // validate the message and return a response that lets the frontend know if sending
-        // succeeded or failed. We still need to agree on the request format and API route.
+
         public async Task SendAsync()
         {
             if (!CanSend)
@@ -197,12 +188,7 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // This reloads the messages after sending so the chat can show the latest version
-        // returned by the backend. A refresh error is handled separately because the message
-        // might already have been sent successfully.
-        //
-        // BACKEND NOTE: Make sure the message appears in the history returned by
-        // GetMessagesAsync(ProjectId) after it has been saved. Real-time updates are not
-        // implemented here; the current approach is to request the messages again.
+        // returned by the backend.
         private async Task RefreshMessagesAfterSendAsync()
         {
             try

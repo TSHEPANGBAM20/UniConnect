@@ -15,10 +15,8 @@ namespace UniConnect.MAUI.Views
             _viewModel = viewModel;
             BindingContext = _viewModel;
 
-            // Displays the profile details currently held by the ViewModel.
-            // BACKEND: These values currently come from the details stored
-            // after login. Load the latest saved profile from the database
-            // once the backend profile GET endpoint has been confirmed.
+            //Displays the profile details currently held by the ViewModel.
+        
 
             FullNameEntry.Text = _viewModel.FullName;
             EmailEntry.Text = _viewModel.Email;
@@ -108,19 +106,6 @@ namespace UniConnect.MAUI.Views
 
             _viewModel.Email = email;
 
-            // BACKEND: Connect this Save action to the confirmed profile
-            // update method in ApiService through MyAccountViewModel.
-            //
-            // BACKEND: Send the student's ID (or use the authenticated
-            // student identity) together with the updated name, surname
-            // and email, using the agreed request format.
-            //
-            // BACKEND: Wait for the server response. Only close edit mode
-            // and display a success message after the database update
-            // has been confirmed.
-            //
-            // IMPORTANT: PrepareProfileUpdate currently validates values
-            // but does not send an API request or save to the database.
 
             bool saved = _viewModel.PrepareProfileUpdate();
 

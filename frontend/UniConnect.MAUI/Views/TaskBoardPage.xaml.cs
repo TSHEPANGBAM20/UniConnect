@@ -56,8 +56,6 @@ namespace UniConnect.MAUI.Views
             _initialLoadCompleted = true;
             _refreshTasksOnAppearing = false;
 
-            // BACKEND: Loads tasks for the selected project through the
-            // TaskBoardViewModel and ApiService.
             await _viewModel.LoadTasksAsync();
         }
 
@@ -66,8 +64,8 @@ namespace UniConnect.MAUI.Views
             if (sender is Button button &&
                 button.BindingContext is TaskModel task)
             {
-                // BACKEND: Updates this task's status to DONE.
-                // ApiService sends PUT /tasks/updateStatus/{taskId}/status.
+                //Updates this task's status to DONE.
+                
                 await _viewModel.MarkDoneAsync(task);
             }
         }
@@ -197,8 +195,8 @@ switch (choice)
                 return;
             }
 
-            // BACKEND: CreateTaskPage receives the selected project ID.
-            // ApiService sends the new task to the backend when saved.
+            // CreateTaskPage receives the selected project ID.
+        
             _refreshTasksOnAppearing = true;
 
             try
