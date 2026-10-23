@@ -1,0 +1,64 @@
+using Microsoft.Extensions.Logging;
+using UniConnect.MAUI.Services;
+using UniConnect.MAUI.ViewModels;
+using UniConnect.MAUI.Views;
+
+namespace UniConnect.MAUI
+{
+    public static class MauiProgram
+    {
+        public static MauiApp CreateMauiApp()
+        {
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
+
+#if DEBUG
+            builder.Logging.AddDebug();
+#endif
+
+          
+            builder.Services.AddSingleton<ApiService>();
+
+            //a fresh instance of page each time you navigate
+            
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<LoginViewModel>();
+
+            builder.Services.AddTransient<SignUpPage>();
+            builder.Services.AddTransient<SignUpViewModel>();
+
+            builder.Services.AddTransient<DashboardPage>();
+            builder.Services.AddTransient<DashboardViewModel>();
+
+            builder.Services.AddTransient<ProjectsPage>();
+            builder.Services.AddTransient<ProjectsViewModel>();
+
+            builder.Services.AddTransient<NewProjectPage>();
+            builder.Services.AddTransient<NewProjectViewModel>();
+
+            builder.Services.AddTransient<TaskBoardPage>();
+            builder.Services.AddTransient<TaskBoardViewModel>();
+
+            builder.Services.AddTransient<ProjectDetailsPage>();
+            builder.Services.AddTransient<ProjectDetailsViewModel>();
+
+            builder.Services.AddTransient<ChatPage>();
+            builder.Services.AddTransient<ChatViewModel>();
+
+        
+            builder.Services.AddTransient<MyAccountPage>();
+            builder.Services.AddTransient<MyAccountViewModel>();
+
+            builder.Services.AddTransient<CalendarPage>();
+            builder.Services.AddTransient<CreateTaskPage>();
+
+            return builder.Build();
+        }
+    }
+}

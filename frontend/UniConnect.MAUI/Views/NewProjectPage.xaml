@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="UniConnect.MAUI.Views.NewProjectPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="New Project"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24,28,24,40"
+            Spacing="0">
+
+            <!-- Back button -->
+            <Button
+                Text="‹  Back"
+                Clicked="OnBackClicked"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                HorizontalOptions="Start"
+                Padding="0"
+                FontSize="15"
+                FontAttributes="Bold" />
+
+            <!-- Header -->
+            <VerticalStackLayout
+                Spacing="8"
+                Margin="0,28,0,30">
+
+                <Label
+                    Text="Create a project"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                <Label
+                    Text="Set up a workspace for your university team."
+                    FontSize="14"
+                    LineBreakMode="WordWrap"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+            </VerticalStackLayout>
+
+            <!-- Project name -->
+            <VerticalStackLayout Spacing="8" Margin="0,0,0,22">
+
+                <Label
+                    Text="PROJECT NAME"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    CharacterSpacing="1"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Border
+                    Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="14,0">
+
+                    <Entry
+                        x:Name="TitleEntry"
+                        Placeholder="e.g. Software Engineering Project"
+                        PlaceholderColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        FontSize="15"
+                        HeightRequest="52" />
+
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <VerticalStackLayout Spacing="8" Margin="0,0,0,22">
+
+                <Label
+                    Text="DESCRIPTION"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    CharacterSpacing="1"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Border
+                    Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="14,10">
+
+                    <Editor
+                        x:Name="DescriptionEditor"
+                        Placeholder="What is your team working on?"
+                        PlaceholderColor="{AppThemeBinding Light=#AAAAAA, Dark=#666666}"
+                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        FontSize="15"
+                        HeightRequest="130"
+                        AutoSize="TextChanges" />
+
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- Dates -->
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="12"
+                Margin="0,0,0,22">
+
+                <VerticalStackLayout
+                    Grid.Column="0"
+                    Spacing="8">
+
+                    <Label
+                        Text="START DATE"
+                        FontSize="11"
+                        FontAttributes="Bold"
+                        CharacterSpacing="1"
+                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                    <Border
+                        Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
+                        StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="10,0">
+
+                        <DatePicker
+                            Date="{Binding StartDate}"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                            FontSize="14"
+                            HeightRequest="52" />
+
+                    </Border>
+
+                </VerticalStackLayout>
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    Spacing="8">
+
+                    <Label
+                        Text="END DATE"
+                        FontSize="11"
+                        FontAttributes="Bold"
+                        CharacterSpacing="1"
+                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                    <Border
+                        Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
+                        StrokeThickness="1"
+                        BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A1A}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="10,0">
+
+                        <DatePicker
+                            Date="{Binding EndDate}"
+                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                            FontSize="14"
+                            HeightRequest="52" />
+
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </Grid>
+
+            <!-- Error -->
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="#C62828"
+                FontSize="13"
+                IsVisible="{Binding ErrorMessage}"
+                Margin="0,0,0,14" />
+
+            <!-- Create button -->
+            <Button
+                Text="Create Project"
+                Clicked="OnCreateClicked"
+                BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                CornerRadius="26"
+                HeightRequest="54"
+                FontSize="15"
+                FontAttributes="Bold" />
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

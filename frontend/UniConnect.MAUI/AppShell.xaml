@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Shell
+    x:Class="UniConnect.MAUI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:UniConnect.MAUI.Views"
+    FlyoutBehavior="Disabled"
+    Title="UniConnect">
+
+    <!-- Public Home page -->
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:HomePage}"
+        Route="HomePage" />
+
+    <!-- Login page -->
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+
+    <!-- Dashboard -->
+    <ShellContent
+        Title="Dashboard"
+        ContentTemplate="{DataTemplate views:DashboardPage}"
+        Route="DashboardPage" />
+
+    <!-- Projects (bottom nav tab) -->
+    <ShellContent
+        Title="Projects"
+        ContentTemplate="{DataTemplate views:ProjectsPage}"
+        Route="ProjectsPage" />
+
+    <ShellContent
+        Title="Account"
+        ContentTemplate="{DataTemplate views:MyAccountPage}"
+        Route="MyAccountPage" />
+
+</Shell>

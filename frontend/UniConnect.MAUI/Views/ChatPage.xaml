@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:UniConnect.MAUI.Models"
+    x:Class="UniConnect.MAUI.Views.ChatPage"
+    Title="Chat"
+    BackgroundColor="#F7F7F8">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- This is the heading at the top of the chat screen. -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            Padding="24,20,24,14"
+            Spacing="4"
+            BackgroundColor="#FFFFFF">
+
+            <Label
+                Text="PROJECT CHAT"
+                FontSize="11"
+                FontAttributes="Bold"
+                TextColor="#777777"
+                CharacterSpacing="1.5" />
+
+            <Label
+                Text="Team Chat"
+                FontSize="28"
+                FontAttributes="Bold"
+                TextColor="#171717" />
+
+            <BoxView
+                HeightRequest="1"
+                Margin="0,12,0,0"
+                Color="#EAEAEA" />
+
+        </VerticalStackLayout>
+
+        <!-- This displays the messages loaded by ChatViewModel.
+             Each message uses MessageModel to display the sender's name and message text. -->
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Messages}"
+            Margin="18,10"
+            SelectionMode="None">
+
+            <!-- This appears when the selected project's chat has no messages to display. -->
+            <CollectionView.EmptyView>
+                <VerticalStackLayout
+                    Padding="30"
+                    Spacing="8"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+
+                    <Label
+                        Text="No messages yet"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#171717" />
+
+                    <Label
+                        Text="Start the conversation with your team."
+                        FontSize="13"
+                        HorizontalTextAlignment="Center"
+                        TextColor="#777777" />
+
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+        
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:MessageModel">
+
+                    <Border
+                        Stroke="#EAEAEA"
+                        StrokeThickness="1"
+                        BackgroundColor="#FFFFFF"
+                        Padding="14,12"
+                        Margin="0,5"
+                        StrokeShape="RoundRectangle 16">
+
+                        <VerticalStackLayout Spacing="5">
+
+                            <Label
+                                Text="{Binding Sender.Name}"
+                                FontSize="11"
+                                FontAttributes="Bold"
+                                TextColor="#666666" />
+
+                            <Label
+                                Text="{Binding Message}"
+                                FontSize="14"
+                                LineBreakMode="WordWrap"
+                                TextColor="#171717" />
+
+
+                            <Label Text="{Binding TimeSent}"
+                                    FontSize="10" 
+                                    TextColor="#999999"
+                                     HorizontalOptions="End" />
+
+                            
+
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <!-- user types a message before sending it. -->
+        <Border
+            Grid.Row="2"
+            Padding="10"
+            Margin="16,8,16,18"
+            BackgroundColor="#FFFFFF"
+            Stroke="#E5E5E5"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 18">
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+
+                <Entry
+                    x:Name="MessageEntry"
+                    Grid.Column="0"
+                    Placeholder="Write a message..."
+                    Text="{Binding DraftMessage}"
+                    PlaceholderColor="#999999"
+                    TextColor="#171717"
+                    BackgroundColor="Transparent"
+                    FontSize="14"
+                    VerticalOptions="Center"
+                    ReturnType="Send" />
+
+                <!-- Clicking this button calls OnSendClicked in ChatPage.xaml.cs, passes the typed message to ChatViewModel to send. -->
+                <Button
+                    Grid.Column="1"
+                    Text="Send"
+                    Clicked="OnSendClicked"
+                    IsEnabled="True"
+                    BackgroundColor="#171717"
+                    TextColor="#FFFFFF"
+                    CornerRadius="14"
+                    HeightRequest="42"
+                    Padding="18,0"
+                    FontAttributes="Bold"
+                    FontSize="13" />
+
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentPage>

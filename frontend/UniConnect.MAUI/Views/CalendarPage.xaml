@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:UniConnect.MAUI.Controls"
+    x:Class="UniConnect.MAUI.Views.CalendarPage"
+    Title="Calendar"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F0F0F}">
+
+    <Grid MaximumWidthRequest="500">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="24,20,24,120"
+            Spacing="20">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
+
+                <Label
+                    Text="YOUR SCHEDULE"
+                    FontSize="11"
+                    FontAttributes="Bold"
+                    CharacterSpacing="1.5"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label
+                    Text="Calendar"
+                    FontSize="30"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+                <Label
+                    Text="Keep track of deadlines and milestones."
+                    FontSize="13"
+                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+            </VerticalStackLayout>
+
+
+            <!-- Month header -->
+            <Border
+                Padding="18"
+                BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 18">
+
+                <Grid ColumnDefinitions="*,Auto,*">
+
+                    <Button
+                        x:Name="PreviousMonthButton"
+                        Grid.Column="0"
+                        Text="‹"
+                        Clicked="OnPreviousMonthClicked"
+                        FontSize="25"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                        HorizontalOptions="Start" />
+
+                    <Label
+                        x:Name="MonthTitleLabel"
+                        Grid.Column="1"
+                        Text="October 2026"
+                        FontSize="17"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}" />
+
+                    <Button
+                        x:Name="NextMonthButton"
+                        Grid.Column="2"
+                        Text="›"
+                        Clicked="OnNextMonthClicked"
+                        FontSize="25"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                        HorizontalOptions="End" />
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- Weekdays -->
+            <Grid
+                ColumnDefinitions="*,*,*,*,*,*,*"
+                ColumnSpacing="4">
+
+                <Label Grid.Column="0" Text="M" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="1" Text="T" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="2" Text="W" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="3" Text="T" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="4" Text="F" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="5" Text="S" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                <Label Grid.Column="6" Text="S" HorizontalTextAlignment="Center"
+                       FontAttributes="Bold" FontSize="12"
+                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+            </Grid>
+
+
+            <!-- Calendar days -->
+            <Grid
+            x:Name="CalendarGrid"
+            ColumnDefinitions="*,*,*,*,*,*,*"
+            RowSpacing="8"
+            ColumnSpacing="6" />
+
+
+            <!-- Upcoming Tasks -->
+
+            <VerticalStackLayout Spacing="12">
+
+                <Label
+                    Text="Upcoming Tasks"
+                    FontSize="19"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+            <VerticalStackLayout
+            x:Name="UpcomingList"
+            Spacing="12" />
+
+            </VerticalStackLayout>
+
+            <!-- Upcoming Project Deadlines -->
+
+            <VerticalStackLayout Spacing="12">
+
+            <Label
+                Text="Project Deadlines"
+                FontSize="19"
+                FontAttributes="Bold"
+                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+
+            <VerticalStackLayout
+                x:Name="UpcomingProjectsList"
+                Spacing="12" />
+
+            </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Floating bottom navigation -->
+            <controls:BottomNavBar
+                ActiveTab="Calendar"
+                VerticalOptions="End"
+                TabSelected="OnTabSelected"
+                MenuItemSelected="OnMenuItemSelected" />
+
+            </Grid>
+
+            </ContentPage>
