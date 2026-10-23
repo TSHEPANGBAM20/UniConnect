@@ -170,7 +170,7 @@
                 Text="{Binding ErrorMessage}"
                 TextColor="#C62828"
                 FontSize="13"
-                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}"
+                IsVisible="{Binding ErrorMessage}"
                 Margin="0,0,0,14" />
 
             <!-- Create button -->

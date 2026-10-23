@@ -81,7 +81,16 @@ namespace UniConnect.MAUI.Views
                 return;
             }
 
-            await this.DisplayAlertAsync(
+            if (item == "MyAccount")
+            {
+               await Shell.Current.GoToAsync("//MyAccountPage");
+               return ;
+            }
+            
+
+            
+            
+            this.DisplayAlertAsync(
                 "Coming soon",
                 $"{item} isn't built yet.",
                 "OK");

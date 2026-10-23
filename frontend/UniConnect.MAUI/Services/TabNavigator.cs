@@ -33,6 +33,12 @@ namespace UniConnect.MAUI.Services
                 await Shell.Current.GoToAsync("//LoginPage");
                 return;
             }
+
+            if (item == "MyAccount")
+            {
+                await Shell.Current.GoToAsync("//MyAccountPage");
+                return;
+            }
             await page.DisplayAlertAsync("Coming soon", $"{item} isn't built yet.", "OK");
         }
     }

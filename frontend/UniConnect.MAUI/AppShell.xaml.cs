@@ -10,6 +10,7 @@ namespace UniConnect.MAUI
 
             // Account pages
             Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
+            Routing.RegisterRoute(nameof(MyAccountPage),typeof(MyAccountPage));
 
             // Project and collaboration pages
             Routing.RegisterRoute(nameof(NewProjectPage), typeof(NewProjectPage));
@@ -17,6 +18,8 @@ namespace UniConnect.MAUI
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
             Routing.RegisterRoute(nameof(ProjectDetailsPage), typeof(ProjectDetailsPage));
             Routing.RegisterRoute(nameof(CalendarPage), typeof(CalendarPage));
+              // Task creation page.
+            Routing.RegisterRoute(nameof(CreateTaskPage),typeof(CreateTaskPage));
 
             // Separate route for dashboard preview mode
             Routing.RegisterRoute("DashboardPreviewPage", typeof(DashboardPage));

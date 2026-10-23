@@ -2,8 +2,10 @@ package com.mklt.uniconnect.Services;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Repositories.StudentRepo;
@@ -33,7 +35,7 @@ private BCryptPasswordEncoder passwordEncoder;
 
        if (exists){
             //User does not exist message
-    throw new RuntimeException("User already exists");   
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already exists");   
 }
        else{
         //hashing password
@@ -52,7 +54,7 @@ private BCryptPasswordEncoder passwordEncoder;
 
 
       if (student == null){
-        throw new RuntimeException("Student does not exist"); 
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student does not exist"); 
       }
 
       //getting the hashed password
@@ -60,7 +62,7 @@ private BCryptPasswordEncoder passwordEncoder;
       boolean passwordCheck = passwordEncoder.matches(password,hashedPassword);//check if password input and hashed match
 
       if (!passwordCheck) {
-         throw new RuntimeException("Password Incorrect! Try again"); 
+         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password Incorrect! Try again"); 
       }
       return student;
     }

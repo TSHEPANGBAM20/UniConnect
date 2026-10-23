@@ -32,4 +32,9 @@
         ContentTemplate="{DataTemplate views:ProjectsPage}"
         Route="ProjectsPage" />
 
+    <ShellContent
+        Title="Account"
+        ContentTemplate="{DataTemplate views:MyAccountPage}"
+        Route="MyAccountPage" />
+
 </Shell>

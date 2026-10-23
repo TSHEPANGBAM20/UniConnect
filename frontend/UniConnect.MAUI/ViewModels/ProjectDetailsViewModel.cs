@@ -19,14 +19,14 @@ namespace UniConnect.MAUI.ViewModels
         // DEV SWITCH: the details/members/remove/disband endpoints don't exist on the backend yet.
         // While true, a failed call falls back to sample data (and actions work locally) so the
         // UI can be built and tested. Set to false once the API works.
-        private static readonly bool UseSampleDataOnFailure = true;
+        private static readonly bool UseSampleDataOnFailure = false;
 
         // Preview helper (sample data only): true = you see the Team Lead view, false = Team Member view.
         private const bool SampleViewerIsLeader = true;
 
         private readonly ApiService _api;
 
-        public int ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         public ObservableCollection<ProjectMemberModel> Members { get; } = new();
         public ObservableCollection<ProjectFileModel> Files { get; } = new();
@@ -42,7 +42,7 @@ namespace UniConnect.MAUI.ViewModels
         public ProjectDetailsModel? Details
         {
             get => _details;
-            private set { _details = value; Refresh(); }
+            //private set { _details = value; Refresh(); }
         }
 
         private bool _isBusy;
@@ -80,7 +80,8 @@ namespace UniConnect.MAUI.ViewModels
         public string MemberCountText => Members.Count == 1 ? "1 member" : $"{Members.Count} members";
 
         // Id of the logged-in student (sample mode pretends to be student 2).
-        private int MyId => _api.CurrentUserId ?? (UseSampleDataOnFailure ? 2 : -1);
+        
+        private long MyId => UseSampleDataOnFailure ? 2 : _api.CurrentUserId;//private long MyId => _api.CurrentUserId  (UseSampleDataOnFailure ? 2 : -1);
 
         public ProjectDetailsViewModel(ApiService api)
         {
@@ -98,9 +99,9 @@ namespace UniConnect.MAUI.ViewModels
             try
             {
                 if (ProjectId == 0) throw new InvalidOperationException("No project selected");
-                details = await _api.GetProjectDetailsAsync(ProjectId);
-                members = await _api.GetProjectMembersAsync(ProjectId);
-                files = await _api.GetProjectFilesAsync(ProjectId);
+                details = await _api.GetProjectDetailsAsync(ProjectId); 
+                members = await _api.GetProjectMembersAsync(ProjectId); //project members
+                files = new List<ProjectFileModel>();
             }
             catch (Exception)
             {
@@ -116,7 +117,7 @@ namespace UniConnect.MAUI.ViewModels
 
             // If the server didn't say what role we have, work it out from the member list.
             if (string.IsNullOrEmpty(details.MyRole))
-                details.MyRole = members.FirstOrDefault(m => m.StudentId == _api.CurrentUserId)?.Role;
+                details.MyRole = members.FirstOrDefault(m => m.Student.UserId == _api.CurrentUserId)?.Role;
 
             bool leader = RoleNames.IsLeader(details.MyRole);
             foreach (var m in members)
@@ -130,7 +131,8 @@ namespace UniConnect.MAUI.ViewModels
             Files.Clear();
             foreach (var f in files) Files.Add(f);
 
-            Details = details;
+            _details = details;
+            Refresh();
             IsBusy = false;
         }
 
@@ -209,36 +211,62 @@ namespace UniConnect.MAUI.ViewModels
         }
 
         // Team Lead only. BACKEND: POST /projects/addMember?projectId=&email=&requesterId=
-        public async Task<string?> AddMemberAsync(string? email)
-        {
-            email = email?.Trim() ?? string.Empty;
-            if (!IsLeader) return "Only the Team Lead can add members.";
-            if (email.Length == 0 || !email.Contains('@') || !email.Contains('.'))
-                return "Enter a valid student email.";
-            if (Members.Any(m => string.Equals(m.Email, email, StringComparison.OrdinalIgnoreCase)))
-                return "That student is already in this project.";
+        public async Task<string?> AddMemberAsync(string email)
+{
+    email = email?.Trim() ?? string.Empty;
 
-            try
-            {
-                await _api.AddMemberAsync(ProjectId, email);
-                var fresh = await _api.GetProjectMembersAsync(ProjectId);
-                Members.Clear();
-                foreach (var m in fresh) { m.CanRemove = !m.IsLeader; Members.Add(m); }
-                Refresh();
-                return null;
-            }
-            catch (Exception ex)
-            {
-                if (!UseSampleDataOnFailure) return FriendlyError(ex, "Couldn't add that member.");
-                Members.Add(new ProjectMemberModel
-                {
-                    StudentId = 100 + Members.Count, Name = email.Split('@')[0], Surname = string.Empty,
-                    Email = email, Role = "MEMBER", CanRemove = true
-                });
-                Refresh();
-                return null;
-            }
+    if (!IsLeader)
+        return "Only the Team Lead can add members.";
+
+    if (email.Length == 0 || !email.Contains('@') || !email.Contains('.'))
+        return "Enter a valid student email.";
+
+    if (Members.Any(m =>
+        string.Equals(
+            m.Student?.Email,
+            email,
+            StringComparison.OrdinalIgnoreCase)))
+    {
+        return "That student is already in this project.";
+    }
+
+    try
+    {
+        var fresh = await _api.GetProjectMembersAsync(ProjectId);
+
+        Members.Clear();
+
+        foreach (var m in fresh)
+        {
+            m.CanRemove = IsLeader && !m.IsLeader;
+            Members.Add(m);
         }
+
+        Refresh();
+        return null;
+    }
+    catch (Exception ex)
+    {
+        if (!UseSampleDataOnFailure)
+            return FriendlyError(ex, "Couldn't add that member.");
+
+        Members.Add(new ProjectMemberModel
+        {
+            Student = new UserModel
+            {
+                UserId = 100 + Members.Count,
+                Name = email.Split('@')[0],
+                Surname = string.Empty,
+                Email = email
+            },
+            Role = "MEMBER",
+            CanRemove = true
+        });
+
+        Refresh();
+        return null;
+    }
+}
 
         // Team Lead only, and never the lead themselves.
         // BACKEND: DELETE /projects/{projectId}/members/{studentId}?requesterId=
@@ -247,7 +275,7 @@ namespace UniConnect.MAUI.ViewModels
             if (!IsLeader) return "Only the Team Lead can remove members.";
             if (member.IsLeader) return "The Team Lead can't be removed.";
 
-            try { await _api.RemoveMemberAsync(ProjectId, member.StudentId); }
+            try { await _api.RemoveMemberAsync(ProjectId, member.Student.Email); }
             catch (Exception ex)
             {
                 if (!UseSampleDataOnFailure) return FriendlyError(ex, "Couldn't remove that member.");
@@ -276,7 +304,7 @@ namespace UniConnect.MAUI.ViewModels
             if (IsLeader) return "The Team Lead can't leave. Disband the project instead.";
             try
             {
-                int me = _api.CurrentUserId ?? throw new InvalidOperationException("Not logged in");
+                string me = _api.CurrentUserEmail;// ?? throw new InvalidOperationException("Not logged in")
                 await _api.RemoveMemberAsync(ProjectId, me);
             }
             catch (Exception ex)
@@ -331,12 +359,19 @@ namespace UniConnect.MAUI.ViewModels
                 MyRole = myRole
             };
             var members = new List<ProjectMemberModel>
-            {
-                new() { StudentId = 1, Name = "Tshepang", Surname = "Bambo", Email = "tshepang@example.com", Role = SampleViewerIsLeader ? "MEMBER" : "LEADER" },
-                new() { StudentId = 2, Name = "Lebogang", Surname = "Malatsi", Email = "lebogang@example.com", Role = myRole },
-                new() { StudentId = 3, Name = "Koketso", Surname = "Fakude", Email = "koketso@example.com", Role = "MEMBER" },
-                new() { StudentId = 4, Name = "Molebogeng", Surname = "Mashishi", Email = "molebogeng@example.com", Role = "MEMBER" },
-            };
+{
+    new ProjectMemberModel
+    {
+        Student = new UserModel
+        {
+            UserId = 4,
+            Name = "Molebogeng",
+            Surname = "Mashishi",
+            Email = "molebogeng@example.com"
+        },
+        Role = "MEMBER"
+    }
+};
             return (details, members);
         }
 

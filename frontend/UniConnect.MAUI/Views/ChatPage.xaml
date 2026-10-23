@@ -6,46 +6,47 @@
     xmlns:models="clr-namespace:UniConnect.MAUI.Models"
     x:Class="UniConnect.MAUI.Views.ChatPage"
     Title="Chat"
-    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#0F0F0F}">
+    BackgroundColor="#F7F7F8">
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- Header -->
+        <!-- This is the heading at the top of the chat screen. -->
         <VerticalStackLayout
             Grid.Row="0"
             Padding="24,20,24,14"
-            Spacing="4">
+            Spacing="4"
+            BackgroundColor="#FFFFFF">
 
             <Label
                 Text="PROJECT CHAT"
                 FontSize="11"
                 FontAttributes="Bold"
-                TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
+                TextColor="#777777"
                 CharacterSpacing="1.5" />
 
             <Label
                 Text="Team Chat"
                 FontSize="28"
                 FontAttributes="Bold"
-                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                TextColor="#171717" />
 
             <BoxView
                 HeightRequest="1"
                 Margin="0,12,0,0"
-                Color="{AppThemeBinding Light=#E5E5E5, Dark=#292929}" />
+                Color="#EAEAEA" />
 
         </VerticalStackLayout>
 
-
-        <!-- Messages -->
+        <!-- This displays the messages loaded by ChatViewModel.
+             Each message uses MessageModel to display the sender's name and message text. -->
         <CollectionView
             Grid.Row="1"
             ItemsSource="{Binding Messages}"
-            Margin="18,0"
+            Margin="18,10"
             SelectionMode="None">
 
+            <!-- This appears when the selected project's chat has no messages to display. -->
             <CollectionView.EmptyView>
-
                 <VerticalStackLayout
                     Padding="30"
                     Spacing="8"
@@ -57,63 +58,68 @@
                         FontSize="18"
                         FontAttributes="Bold"
                         HorizontalTextAlignment="Center"
-                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                        TextColor="#171717" />
 
                     <Label
                         Text="Start the conversation with your team."
                         FontSize="13"
                         HorizontalTextAlignment="Center"
-                        TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                        TextColor="#777777" />
 
                 </VerticalStackLayout>
-
             </CollectionView.EmptyView>
 
-
+            <!-- This defines how each message appears in the list.
+                 The bindings get the sender's name and message text from MessageModel. -->
             <CollectionView.ItemTemplate>
-
                 <DataTemplate x:DataType="models:MessageModel">
 
                     <Border
-                        Stroke="{AppThemeBinding Light=#E5E5E5, Dark=#2A2A2A}"
+                        Stroke="#EAEAEA"
                         StrokeThickness="1"
-                        BackgroundColor="{AppThemeBinding Light=#F8F8F8, Dark=#1A1A1A}"
-                        Padding="14,10"
+                        BackgroundColor="#FFFFFF"
+                        Padding="14,12"
                         Margin="0,5"
-                        StrokeShape="RoundRectangle 14">
+                        StrokeShape="RoundRectangle 16">
 
                         <VerticalStackLayout Spacing="5">
 
                             <Label
-                                Text="{Binding SenderName}"
+                                Text="{Binding Sender.Name}"
                                 FontSize="11"
                                 FontAttributes="Bold"
-                                TextColor="{AppThemeBinding Light=#555555, Dark=#BBBBBB}" />
+                                TextColor="#666666" />
 
                             <Label
                                 Text="{Binding Message}"
                                 FontSize="14"
                                 LineBreakMode="WordWrap"
-                                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                                TextColor="#171717" />
+
+
+                            <Label Text="{Binding TimeSent}"
+                                    FontSize="10" 
+                                    TextColor="#999999"
+                                     HorizontalOptions="End" />
+
+                            
+
 
                         </VerticalStackLayout>
-
                     </Border>
 
                 </DataTemplate>
-
             </CollectionView.ItemTemplate>
 
         </CollectionView>
 
-
-        <!-- Message composer -->
+        <!-- This is where the user types a message before sending it. -->
         <Border
             Grid.Row="2"
-            Padding="12"
+            Padding="10"
             Margin="16,8,16,18"
-            BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1A1A1A}"
-            Stroke="{AppThemeBinding Light=#E2E2E2, Dark=#2A2A2A}"
+            BackgroundColor="#FFFFFF"
+            Stroke="#E5E5E5"
             StrokeThickness="1"
             StrokeShape="RoundRectangle 18">
 
@@ -124,27 +130,29 @@
                     Grid.Column="0"
                     Placeholder="Write a message..."
                     Text="{Binding DraftMessage}"
-                    PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#777777}"
-                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                    PlaceholderColor="#999999"
+                    TextColor="#171717"
                     BackgroundColor="Transparent"
                     FontSize="14"
-                    VerticalOptions="Center" />
+                    VerticalOptions="Center"
+                    ReturnType="Send" />
 
+                <!-- Clicking this button calls OnSendClicked in ChatPage.xaml.cs,
+                     which passes the typed message to ChatViewModel to send. -->
                 <Button
                     Grid.Column="1"
                     Text="Send"
                     Clicked="OnSendClicked"
-                    IsEnabled="{Binding CanSend}"
-                    BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                    TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
-                    CornerRadius="18"
+                    IsEnabled="True"
+                    BackgroundColor="#171717"
+                    TextColor="#FFFFFF"
+                    CornerRadius="14"
                     HeightRequest="42"
                     Padding="18,0"
                     FontAttributes="Bold"
                     FontSize="13" />
 
             </Grid>
-
         </Border>
 
     </Grid>

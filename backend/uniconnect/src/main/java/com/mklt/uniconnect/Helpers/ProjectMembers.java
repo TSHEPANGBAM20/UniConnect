@@ -24,7 +24,7 @@ public class ProjectMembers {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "user_id")
     private Student student;
 
     @ManyToOne // a user can be in many groups 

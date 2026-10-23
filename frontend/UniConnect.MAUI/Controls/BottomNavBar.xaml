@@ -12,7 +12,7 @@
                 BackgroundColor="White" Stroke="#E5E5E5"
                 StrokeShape="RoundRectangle 18" Padding="6" WidthRequest="230">
             <VerticalStackLayout Spacing="2">
-                <Label Text="My Account" ClassId="My Account" FontSize="15" TextColor="#374151" Padding="12,10">
+                <Label Text="My Account" ClassId="MyAccount" FontSize="15" TextColor="#374151" Padding="12,10">
                     <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnMenuItemTapped" /></Label.GestureRecognizers>
                 </Label>
                 <Label Text="Settings" ClassId="Settings" FontSize="15" TextColor="#374151" Padding="12,10">

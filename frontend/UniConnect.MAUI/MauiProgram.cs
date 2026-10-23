@@ -52,7 +52,12 @@ namespace UniConnect.MAUI
             builder.Services.AddTransient<ChatPage>();
             builder.Services.AddTransient<ChatViewModel>();
 
+        
+            builder.Services.AddTransient<MyAccountPage>();
+            builder.Services.AddTransient<MyAccountViewModel>();
+
             builder.Services.AddTransient<CalendarPage>();
+            builder.Services.AddTransient<CreateTaskPage>();
 
             return builder.Build();
         }

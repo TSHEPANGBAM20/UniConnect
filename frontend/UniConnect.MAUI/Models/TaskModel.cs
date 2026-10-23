@@ -1,9 +1,16 @@
+using System.Text.Json.Serialization;
 namespace UniConnect.MAUI.Models
+
 {
     public class TaskModel
     {
-        public int TaskId { get; set; }
-        public int ProjectId { get; set; }
+
+        public long TaskId { get; set; }
+
+        [JsonPropertyName("project")]
+        public ProjectModel Project { get; set; }
+        
+        [JsonPropertyName("title")]
         public string TaskTitle { get; set; }
         public string TaskDescription { get; set; }
         public string Priority { get; set; }
@@ -15,10 +22,11 @@ namespace UniConnect.MAUI.Models
 
     public class CreateTaskRequest
     {
+
         public string TaskTitle { get; set; }
         public string TaskDescription { get; set; }
         public string Priority { get; set; }
-        public int? AssignedTo { get; set; }
+        public long? AssignedTo { get; set; }
         public DateTime? DueDate { get; set; }
     }
 

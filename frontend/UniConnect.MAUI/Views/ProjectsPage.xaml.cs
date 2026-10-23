@@ -18,7 +18,8 @@ namespace UniConnect.MAUI.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await _viewModel.LoadProjectsAsync();
+            await _viewModel.LoadProjectsAsync();//triggers page
+
         }
 
         private async void OnNewProjectClicked(object? sender, EventArgs e)

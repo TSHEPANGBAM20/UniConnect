@@ -87,6 +87,10 @@ public class Project {
         return projectCode;
     }
 
+    public ProjectStatus getStatus(){
+        return status;
+    }
+
     
 
     

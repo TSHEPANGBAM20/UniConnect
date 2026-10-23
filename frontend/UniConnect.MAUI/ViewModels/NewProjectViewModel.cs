@@ -9,10 +9,12 @@ namespace UniConnect.MAUI.ViewModels
     {
         private readonly ApiService _apiService;
 
+
+
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Today;
-        public DateTime EndDate { get; set; } = DateTime.Today.AddMonths(3);
+        public DateTime EndDate { get; set; } = DateTime.Today;
 
         private string _errorMessage;
         public string ErrorMessage
@@ -50,9 +52,10 @@ namespace UniConnect.MAUI.ViewModels
                 {
                     ProjectName = ProjectName,
                     ProjectDescription = ProjectDescription,
-                    StartDate = StartDate,
-                    EndDate = EndDate
-                });
+                    StartDate = DateOnly.FromDateTime(StartDate),
+                    EndDate = DateOnly.FromDateTime(EndDate)
+                },_apiService.CurrentUserId);
+                
                 return true;
             }
             catch (Exception)

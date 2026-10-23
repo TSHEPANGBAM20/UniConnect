@@ -16,7 +16,7 @@ namespace UniConnect.MAUI.ViewModels
 
         private readonly ApiService _apiService;
 
-        public int ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         public ObservableCollection<TaskModel> Tasks { get; } = new();
 
@@ -91,9 +91,9 @@ namespace UniConnect.MAUI.ViewModels
 
         private static List<TaskModel> SampleTasks() => new()
         {
-            new TaskModel { TaskId = 1, ProjectId = 1, TaskTitle = "Design the login screen", Status = "NOT_STARTED", AssignedToName = "Tshepang", DueDate = DateTime.Today.AddDays(3) },
-            new TaskModel { TaskId = 2, ProjectId = 1, TaskTitle = "Set up the MySQL database", Status = "IN_PROGRESS", AssignedToName = "Koketso", DueDate = DateTime.Today.AddDays(5) },
-            new TaskModel { TaskId = 3, ProjectId = 1, TaskTitle = "Write the API contract", Status = "DONE", AssignedToName = "Molebogeng", DueDate = DateTime.Today.AddDays(-1) },
+            new TaskModel { TaskId = 1, Project= new ProjectModel{ProjectId=1} , TaskTitle = "Design the login screen", Status = "NOT_STARTED", AssignedToName = "Tshepang", DueDate = DateTime.Today.AddDays(3) },
+            new TaskModel { TaskId = 2, Project= new ProjectModel{ProjectId=1} , TaskTitle = "Set up the MySQL database", Status = "IN_PROGRESS", AssignedToName = "Koketso", DueDate = DateTime.Today.AddDays(5) },
+            new TaskModel { TaskId = 3, Project= new ProjectModel{ProjectId=1} , TaskTitle = "Write the API contract", Status = "DONE", AssignedToName = "Molebogeng", DueDate = DateTime.Today.AddDays(-1) },
         };
 
         public event PropertyChangedEventHandler? PropertyChanged;

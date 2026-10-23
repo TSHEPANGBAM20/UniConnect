@@ -82,7 +82,7 @@ namespace UniConnect.MAUI.ViewModels
                 //
                 // The ApiService is responsible for communicating
                 // with the Spring Boot backend.
-                var projects = await _apiService.GetProjectsAsync();
+                var projects = await _apiService.GetProjectsAsync(_apiService.CurrentUserId);
 
                 Projects.Clear();
 
@@ -132,9 +132,9 @@ namespace UniConnect.MAUI.ViewModels
                     ProjectId = 1,
                     ProjectName = "UniConnect",
                     ProjectDescription = "University team collaboration platform",
-                    StartDate = new DateTime(2026, 10, 1),
-                    EndDate = new DateTime(2026, 11, 30),
-                    Role = "Team Lead"
+                    StartDate = new DateOnly(2026, 10, 1),
+                    EndDate = new DateOnly(2026, 11, 30),
+                    
                 });
 
                 Projects.Add(new ProjectModel
@@ -142,9 +142,10 @@ namespace UniConnect.MAUI.ViewModels
                     ProjectId = 2,
                     ProjectName = "Handy Market",
                     ProjectDescription = "Marketplace for local service providers",
-                    StartDate = new DateTime(2026, 9, 15),
-                    EndDate = new DateTime(2026, 12, 15),
-                    Role = "Developer"
+                    StartDate = new DateOnly(2026, 9, 15),
+                    EndDate = new DateOnly(2026, 12, 15),
+                    ProjectStatus = "IN PROGRESS"
+                    
                 });
 
                 Projects.Add(new ProjectModel
@@ -152,9 +153,9 @@ namespace UniConnect.MAUI.ViewModels
                     ProjectId = 3,
                     ProjectName = "Student Portal",
                     ProjectDescription = "A platform for student resources",
-                    StartDate = new DateTime(2026, 10, 5),
-                    EndDate = new DateTime(2026, 12, 1),
-                    Role = "Team Member"
+                    StartDate = new DateOnly(2026, 10, 5),
+                    EndDate = new DateOnly(2026, 12, 1),
+                    ProjectStatus = "IN PROGRESS"
                 });
 
                 HasProjects = Projects.Count > 0;

@@ -1,6 +1,7 @@
 package com.mklt.uniconnect.Controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,32 +26,38 @@ public class TaskController {
     }
 
     //Create a new task
-    @PostMapping("/create")
-    public String createTask(@RequestBody Task task) {
-        return taskService.createTask(
-            task.getTitle(),
-            task.getDescription(),
-            task.getDueDate(),
-            task.getStatus(),
-            task.getPriority()
-        );
+    @PostMapping("/createTask/{projectId}")
+    public Task createTask(@PathVariable Long projectId, @RequestBody Task task) {
+        return taskService.createTask(projectId,task);
+   
     
     }
 
     //Get all tasks
-    @GetMapping("/all")
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    @GetMapping("/getTaskByProject/{projectId}")
+    public List<Task> getTasksByProject(@PathVariable Long projectId) {
+        return taskService.getTaskByProject(projectId);
     }
 
     //Get a task by id
-    @GetMapping ("/{taskId}")
+    @GetMapping ("/getTaskById/{taskId}")
     public List<Task> getTaskById(@PathVariable Long taskId) {
         return taskService.getTaskById(taskId);
     }
 
+    //Get all tasks with due date
+    @GetMapping("/TaskCalendar/calendar")
+    public List<Task> getCalendarTasks() {
+        return taskService.getTasksWithDueDate();
+    }
+
+    @GetMapping("/notofications/{studentId}")
+    public List<Map<String, Object>> getNotifications(@PathVariable Long studentId) {
+        return taskService.getNotifications(studentId);
+    }
+
     //Update an existing task
-    @PutMapping("/{taskId}")
+    @PutMapping("/updateTask/{taskId}")
     public String updateTask(@PathVariable Long taskId, @RequestBody Task task) {
         return taskService.updateTask(
             taskId,
@@ -61,10 +68,16 @@ public class TaskController {
             task.getPriority()
         );
     }
+
+    //changes the status of a task
+    @PutMapping("/updateStatus/{taskId}/status")
+    public Task updateTaskStatus(@PathVariable Long taskId, @RequestBody Map<String, String> body) {
+        return taskService.updateTaskStatus(taskId, body.get("status"));
+    }
     
         
     //Delete a task
-    @DeleteMapping("/{taskId}")
+    @DeleteMapping("/deleteTask/{taskId}")
     public String deleteTask(@PathVariable Long taskId) {
         return taskService.deleteTask(taskId);
     }

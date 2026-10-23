@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="UniConnect.MAUI.Views.MyAccountPage"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="#FFFFFF"
+    Title="My Account">
+
+    <Grid BackgroundColor="#FFFFFF"
+          RowDefinitions="Auto,*">
+
+        <!-- Header: matches the Dashboard's UniConnect branding. -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="14"
+              Padding="22,25,22,20">
+
+            <Button
+                Grid.Column="0"
+                Text="‹"
+                FontSize="30"
+                TextColor="#111111"
+                BackgroundColor="#FFFFFF"
+                BorderColor="#D8D8D8"
+                BorderWidth="1"
+                CornerRadius="22"
+                WidthRequest="44"
+                HeightRequest="44"
+                Padding="0"
+                VerticalOptions="Center"
+                Clicked="OnBackClicked" />
+
+            <VerticalStackLayout
+                Grid.Column="1"
+                Spacing="3"
+                VerticalOptions="Center">
+
+                <Label
+                    Text="UniConnect"
+                    FontSize="23"
+                    FontAttributes="Bold"
+                    CharacterSpacing="-1"
+                    TextColor="#111111" />
+
+                <Label
+                    Text="Manage your account"
+                    FontSize="12"
+                    TextColor="#777777" />
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Scrollable account content. -->
+        <ScrollView Grid.Row="1"
+                    BackgroundColor="#FFFFFF">
+
+            <VerticalStackLayout
+                Padding="22,8,22,40"
+                Spacing="24"
+                MaximumWidthRequest="520"
+                HorizontalOptions="Center">
+
+                <!-- Page heading. -->
+                <VerticalStackLayout
+                    Spacing="6"
+                    Margin="0,0,0,2">
+
+                    <Label
+                        Text="My Account"
+                        FontSize="29"
+                        FontAttributes="Bold"
+                        CharacterSpacing="-0.7"
+                        TextColor="#111111" />
+
+                    <Label
+                        Text="Keep your personal information up to date."
+                        FontSize="14"
+                        TextColor="#777777" />
+
+                </VerticalStackLayout>
+
+                <!-- Profile card. -->
+                <Border
+                    BackgroundColor="#FAFAFA"
+                    Stroke="#D8D8D8"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20"
+                    Padding="20">
+
+                    <Grid
+                        ColumnDefinitions="Auto,*"
+                        ColumnSpacing="16"
+                        VerticalOptions="Center">
+
+                        <Border
+                            Grid.Column="0"
+                            WidthRequest="76"
+                            HeightRequest="76"
+                            BackgroundColor="#EEEEEE"
+                            Stroke="#E5E5E5"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 38"
+                            VerticalOptions="Center">
+
+                            <Label
+                                x:Name="InitialsLabel"
+                                Text="U"
+                                FontSize="27"
+                                FontAttributes="Bold"
+                                TextColor="#111111"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center" />
+                        </Border>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="5"
+                            VerticalOptions="Center">
+
+                            <Label
+                                Text="YOUR PROFILE"
+                                FontSize="10"
+                                CharacterSpacing="1.8"
+                                FontAttributes="Bold"
+                                TextColor="#777777" />
+
+                            <Label
+                                x:Name="DisplayNameLabel"
+                                Text="Your Name"
+                                FontSize="20"
+                                FontAttributes="Bold"
+                                CharacterSpacing="-0.4"
+                                TextColor="#111111"
+                                LineBreakMode="TailTruncation" />
+
+                            <Label
+                                Text="UniConnect Student"
+                                FontSize="13"
+                                TextColor="#777777" />
+
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Border>
+
+                <!-- Personal details card. -->
+                <Border
+                    BackgroundColor="#FFFFFF"
+                    Stroke="#D8D8D8"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 20"
+                    Padding="20">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <Label
+                                Text="Personal details"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                TextColor="#111111"
+                                VerticalOptions="Center" />
+
+                            <Border
+                                Grid.Column="1"
+                                BackgroundColor="#F3F3F3"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="10,5"
+                                VerticalOptions="Center">
+
+                                <Label
+                                    Text="ACCOUNT"
+                                    FontSize="9"
+                                    CharacterSpacing="1"
+                                    FontAttributes="Bold"
+                                    TextColor="#555555" />
+                            </Border>
+
+                        </Grid>
+
+                        <BoxView
+                            HeightRequest="1"
+                            Color="#E5E5E5" />
+
+                        <!-- Full name field. -->
+                        <VerticalStackLayout Spacing="8">
+
+                            <Label
+                                Text="Full name"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                TextColor="#444444" />
+
+                            <Border
+                                BackgroundColor="#F7F7F7"
+                                Stroke="#E5E5E5"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="12,2">
+
+                                <Entry
+                                    x:Name="FullNameEntry"
+                                    Placeholder="Enter your full name"
+                                    FontSize="14"
+                                    TextColor="#111111"
+                                    PlaceholderColor="#999999"
+                                    BackgroundColor="Transparent"
+                                    IsReadOnly="True" />
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                        <!-- Email field. -->
+                        <VerticalStackLayout Spacing="8">
+
+                            <Label
+                                Text="Email address"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                TextColor="#444444" />
+
+                            <Border
+                                BackgroundColor="#F7F7F7"
+                                Stroke="#E5E5E5"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="12,2">
+
+                                <Entry
+                                    x:Name="EmailEntry"
+                                    Placeholder="Enter your email address"
+                                    Keyboard="Email"
+                                    FontSize="14"
+                                    TextColor="#111111"
+                                    PlaceholderColor="#999999"
+                                    BackgroundColor="Transparent"
+                                    IsReadOnly="True" />
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                        <Label
+                            Text="Your personal information is shown above. Select Edit Profile to make changes."
+                            FontSize="12"
+                            LineBreakMode="WordWrap"
+                            TextColor="#777777" />
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Edit and save actions. -->
+                <VerticalStackLayout Spacing="12">
+
+                    <Button
+                        x:Name="EditProfileButton"
+                        Text="Edit Profile"
+                        Clicked="OnEditProfileClicked"
+                        BackgroundColor="#111111"
+                        TextColor="#FFFFFF"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        CornerRadius="27"
+                        HeightRequest="54" />
+
+                    <Button
+                        x:Name="SaveProfileButton"
+                        Text="Save Changes"
+                        Clicked="OnSaveProfileClicked"
+                        IsVisible="False"
+                        BackgroundColor="#111111"
+                        TextColor="#FFFFFF"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        CornerRadius="27"
+                        HeightRequest="54" />
+
+                    <Button
+                        x:Name="CancelEditButton"
+                        Text="Cancel"
+                        Clicked="OnCancelEditClicked"
+                        IsVisible="False"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#111111"
+                        BorderColor="#D8D8D8"
+                        BorderWidth="1"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        CornerRadius="27"
+                        HeightRequest="50" />
+
+                </VerticalStackLayout>
+
+                <!-- Honest status note: profile persistence is not connected yet. -->
+                <Border
+                    BackgroundColor="#FAFAFA"
+                    Stroke="#E5E5E5"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="15">
+
+                    <Label
+                        Text="Profile updates are currently stored only in this screen. Saving changes to your account through the backend will be connected later."
+                        FontSize="12"
+                        LineHeight="1.3"
+                        TextColor="#777777"
+                        HorizontalTextAlignment="Start" />
+
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

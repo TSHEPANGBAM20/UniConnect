@@ -9,9 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mklt.uniconnect.Entities.Project;
 import com.mklt.uniconnect.Entities.Student;
@@ -46,7 +54,7 @@ public class ProjectsServices {
         boolean projectExists = projectsRepo.existsByProjectName(projectName);
 
         if (projectExists){
-            throw new RuntimeException("A project of that name already exists.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A project of that name already exists.");
         }else{
             //generate a projectCode
             Integer projectCode = generateProjectCode();
@@ -70,7 +78,7 @@ public class ProjectsServices {
 
     //method to edit the file upload
     public Project updateProjectFile(Long id, MultipartFile projectFile) throws IOException{
-        Project project = projectsRepo.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+        Project project = projectsRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project not found"));
         id = project.getID(); 
 
         //getting the actual file name
@@ -91,11 +99,45 @@ public class ProjectsServices {
         projectsRepo.save(project);
         return project;
     }
+
+    //download file:
+    public ResponseEntity<Resource> downloadProjectFile(Long projectId) {
+
+    Project project = projectsRepo.findById(projectId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Project not found"));
+
+    String filePath = project.getProjectFile();
+
+    if (filePath == null || filePath.isBlank()) {
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "No file attached to this project");
+    }
+
+    Path path = Paths.get(filePath).toAbsolutePath().normalize();
+
+    if (!Files.exists(path) || !Files.isRegularFile(path)) {
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "File not found on server");
+    }
+
+    Resource resource = new FileSystemResource(path);
+
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,ContentDisposition.attachment().filename(path.getFileName().toString()).build().toString())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+}
     
+
+    //method shows projects
+    public Project GetProjectDetails(Long projectId){
+        Project project = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project not found"));
+        return project;
+    }
 
     //method to delete the project
     public void deleteProject(Long id){
-        Project project = projectsRepo.findById(id).orElseThrow(() -> new RuntimeException("Project Not found"));
+        Project project = projectsRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
 
         //delete the project
         projectsRepo.deleteById(project.getID());
@@ -107,15 +149,15 @@ public class ProjectsServices {
        
 
          if (student == null){
-        throw new RuntimeException("Student does not exist"); 
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student does not exist"); 
         }
 
         //find the project
-        Project project = projectsRepo.findById(projectId).orElseThrow(() -> new RuntimeException("Project Not found"));
+        Project project = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
          //check if student is a member
          boolean isMember = projectMembersRepo.existsByStudentAndProject(student, project);
          if (isMember){
-            throw new RuntimeException("User already in project.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already in project.");
          }else{
             //add create new member with member role
         ProjectMembers newMember = new ProjectMembers(student, project,ProjectRoles.MEMBER);
@@ -135,7 +177,7 @@ public class ProjectsServices {
 
          boolean isMember = projectMembersRepo.existsByStudentAndProject(student, project);
          if (isMember){
-            throw new RuntimeException("User already in project.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already in project.");
          }else{
              ProjectMembers newMember = new ProjectMembers(student, project,ProjectRoles.MEMBER);
          projectMembersRepo.save(newMember);
@@ -165,7 +207,7 @@ public class ProjectsServices {
     //showing all projects related to particular user
     public List<Project> showStudentProjects(Long studentId){
         //find the group project to which they are a member of 
-        Student student = studentRepo.findById(studentId).orElseThrow(() -> new RuntimeException("Student Not found"));
+        Student student = studentRepo.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student Not found"));
         List<ProjectMembers> memberships = projectMembersRepo.findAllByStudent(student); //finds list of all memberships linked to member
 
 
@@ -185,8 +227,43 @@ public class ProjectsServices {
 
 
         return projects;
-        
     }
+
+    //method to show all project members
+
+    public List<ProjectMembers> showStudentsInProject (Long project_id){
+        Project project = projectsRepo.findById(project_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
+        List<ProjectMembers> memberList = projectMembersRepo.findAllByProject(project);  //find all membership by project
+
+        return memberList ;
+
+    }
+
+    //method to remove student from membership
+    public void removeStudentFromGroup(String studentEmail,Long projectId){
+        //find the student
+        Student student = studentRepo.findByStudentEmail(studentEmail);
+        
+        //find project
+        Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
+
+        //Remove member by student object and projet in group 
+        ProjectMembers member = projectMembersRepo.findByStudentAndProject(student,currentProject);
+        projectMembersRepo.deleteById(member.getId());
+
+    }
+        @Transactional
+        public void disbandGroup(Long projectId){
+        //find project
+        Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
+
+        //delete memberships first
+        projectMembersRepo.deleteAllByProject(currentProject);
+        projectsRepo.deleteById(currentProject.getID());
+
+    }
+
+
 
     
     

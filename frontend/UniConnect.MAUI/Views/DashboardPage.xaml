@@ -73,7 +73,7 @@
                     Margin="0,0,0,25">
 
                     <Label
-                        Text="{Binding WelcomeMessage}"
+                        Text="{Binding WelcomeMessage}" 
                         FontSize="28"
                         FontAttributes="Bold"
                         CharacterSpacing="-0.5"

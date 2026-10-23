@@ -1,9 +1,11 @@
 package com.mklt.uniconnect.Controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Services.StudentServices;
@@ -30,15 +32,15 @@ public class AuthController {
         String password = student.getPassword();
 
         if (name.isEmpty()){
-           throw new RuntimeException("Name field cannot be empty.Please fill it in.");
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Name field cannot be empty.Please fill it in.");
         }else if (surname.isEmpty()){
-           throw new RuntimeException("Surname field cannot be empty.Please fill it in.");
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Surname field cannot be empty.Please fill it in.");
         }else if (email.isEmpty()){
-             throw new RuntimeException("Email field cannot be empty.Please fill it in.");
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Email field cannot be empty.Please fill it in.");
         } else if (password.isEmpty()){
-             throw new RuntimeException("Password field cannot be empty.Please fill it in.");
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password field cannot be empty.Please fill it in.");
         }else if (password.length() <= 4){
-             throw new RuntimeException("Password cannot be less than 4 characters.");
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password cannot be less than 4 characters.");
         }else{
              return studentService.createUser(name, surname,email, password); 
         }
@@ -56,9 +58,9 @@ public class AuthController {
         String password = student.getPassword();
         
         if (email.isEmpty()){
-             throw new RuntimeException("Email field cannot be empty.Please fill it in.");
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Email field cannot be empty.Please fill it in.");
         }else if (password.isEmpty()){
-             throw new RuntimeException("Password field cannot be empty.Please fill it in.");
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password field cannot be empty.Please fill it in.");
         }else{
         return studentService.loginUser(email, password);
         }
