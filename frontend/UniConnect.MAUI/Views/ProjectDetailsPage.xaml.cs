@@ -41,7 +41,7 @@ namespace UniConnect.MAUI.Views
                 await this.DisplayAlertAsync("Couldn't upload file", error, "OK");
         }
 
-        // Tap a file row: download it, then open it with the phone's viewer.
+        // Tap a file row: download it, then open it with the phone's viewer.//no longer using this function
         private async void OnFileTapped(object? sender, TappedEventArgs e)
         {
             if (sender is not BindableObject { BindingContext: ProjectFileModel file }) return;
@@ -54,6 +54,28 @@ namespace UniConnect.MAUI.Views
             }
             await Launcher.Default.OpenAsync(new OpenFileRequest(file.FileName, new ReadOnlyFile(path)));
         }
+
+
+    //new functionality to download file via link
+        private async void OnProjectFileTapped(object? sender, TappedEventArgs e){
+        var (path, error) = await _viewModel.DownloadProjectFileAsync();
+
+         if (path == null){
+            await DisplayAlertAsync(
+            "Couldn't download file",
+            error ?? "Something went wrong.",
+            "OK");
+
+        return;
+    }
+
+    string fileName = Path.GetFileName(_viewModel.Details?.ProjectFileName);
+
+    await Launcher.Default.OpenAsync(
+        new OpenFileRequest(fileName, new ReadOnlyFile(path)));
+}
+
+
 
         // Uploader or Team Lead only (the button is hidden for everyone else)
         private async void OnDeleteFileClicked(object? sender, EventArgs e)

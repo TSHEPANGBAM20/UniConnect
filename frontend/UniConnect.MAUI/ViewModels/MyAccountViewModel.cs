@@ -209,23 +209,32 @@ namespace UniConnect.MAUI.ViewModels
         //
         // IMPORTANT: This method currently validates the profile only.
         // It does not send a request or save changes to the database.
-        public bool PrepareProfileUpdate()
-        {
+        public async Task<bool> PrepareProfileUpdateAsync(){
             if (!ValidateProfile())
-                return false;
+         return false;
 
-            if (_userId == null)
-            {
-                ErrorMessage =
-                    "Student details are unavailable. Please log in again.";
-                return false;
-            }
-
-            ErrorMessage =
-                "Profile saving will be connected when the backend endpoint is ready.";
-
-            return false;
+        if (_userId == null || _userId <= 0)
+        {  ErrorMessage = "Please log in again.";
+        return false;
         }
+        try {
+        await _apiService.UpdateStudentProfileAsync(
+            FullName,
+            Email);
+
+        IsEditing = false;
+        ErrorMessage = string.Empty;
+
+        return true;
+    }
+    catch (Exception ex)
+    {
+        ErrorMessage = $"Profile update failed: {ex.Message}";
+        return false;
+    }
+}
+
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

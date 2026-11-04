@@ -66,5 +66,40 @@ private BCryptPasswordEncoder passwordEncoder;
       }
       return student;
     }
+
+
+    // Edit name and email
+public Student updateStudentNameAndEmail(Long id,String updatedName,String updatedEmail) {
+
+    // Find student
+    Student student = studentRepo.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Student not found"
+            ));
+
+    // Update name if provided
+    if (updatedName != null && !updatedName.isBlank()) {
+        student.setName(updatedName);
+    }
+
+    // Update email if provided
+    if (updatedEmail != null && !updatedEmail.isBlank()) {
+
+        // Check whether another student already uses this email
+        boolean existsByEmail = studentRepo.existsByStudentEmailAndIdNot(updatedEmail, id);
+        if (existsByEmail) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Student with email already exists."
+            );
+        }
+
+        student.setEmail(updatedEmail);
+    }
+
+    // Save and return updated student
+    return studentRepo.save(student);
+}
     
 }

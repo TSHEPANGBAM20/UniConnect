@@ -168,6 +168,7 @@ namespace UniConnect.MAUI.ViewModels
 
         
         // returns the local path of the downloaded copy so the page can open it.
+        
         public async Task<(string? Path, string? Error)> DownloadFileAsync(ProjectFileModel file)
         {
             try
@@ -181,6 +182,28 @@ namespace UniConnect.MAUI.ViewModels
                 return (null, FriendlyError(ex, "Couldn't open that file."));
             }
         }
+
+        public async Task<(string? Path, string? Error)> DownloadProjectFileAsync()
+{
+    if (string.IsNullOrWhiteSpace(Details?.ProjectFileName))
+        return (null, "No file is attached to this project.");
+
+    try
+    {
+        string fileName = Path.GetFileName(Details.ProjectFileName);
+
+        string path = await _api.DownloadProjectFileAsync(
+            ProjectId,
+            0,
+            fileName);
+
+        return (path, null);
+    }
+    catch (Exception ex)
+    {
+        return (null, FriendlyError(ex, "Couldn't download project file."));
+    }
+}
 
         public async Task<string?> DeleteFileAsync(ProjectFileModel file)
         {
@@ -219,6 +242,7 @@ namespace UniConnect.MAUI.ViewModels
 
     try
     {
+        await _api.AddMemberAsync(ProjectId, email); //join fix
         var fresh = await _api.GetProjectMembersAsync(ProjectId);
 
         Members.Clear();

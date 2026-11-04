@@ -2,8 +2,10 @@ package com.mklt.uniconnect.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -64,6 +66,13 @@ public class AuthController {
         }else{
         return studentService.loginUser(email, password);
         }
+    }
+
+
+    @PutMapping("/updateEmailOrName")
+
+    public Student updateEmailOrName (@RequestParam ("id") Long id,@RequestParam ("updatedEmail") String updatedEmail,@RequestParam ("updatedName") String updatedName){
+     return studentService.updateStudentNameAndEmail(id, updatedName, updatedEmail);
     }
 
 

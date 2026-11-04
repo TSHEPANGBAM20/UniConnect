@@ -63,15 +63,15 @@ namespace UniConnect.MAUI.Services
 
 
 
-        public async Task<List<ProjectMemberModel>> AddMemberAsync(long projectId,string email){
+        public async Task AddMemberAsync(long projectId,string email){
         var response = await _http.PostAsync(
         $"/projects/addMember?projectId={projectId}&email={email}",
         null);
 
     await ThrowIfFailedAsync(response);
 
-    return await response.Content
-        .ReadFromJsonAsync<List<ProjectMemberModel>>() ?? new();
+    // return await response.Content
+        // .ReadFromJsonAsync<List<ProjectMemberModel>>() ?? new();
 }
 
 
@@ -159,7 +159,8 @@ namespace UniConnect.MAUI.Services
       
        public async Task<string> DownloadProjectFileAsync(long projectId, long fileId, string fileName) { 
         var response = await _http.GetAsync( $"/projects/downloadProject/{projectId}/download"); 
-        await ThrowIfFailedAsync(response); string safeName = Path.GetFileName(fileName); 
+        await ThrowIfFailedAsync(response); 
+        string safeName = Path.GetFileName(fileName); 
         if (string.IsNullOrWhiteSpace(safeName)) safeName = "project-file"; string path = Path.Combine(FileSystem.CacheDirectory, safeName); 
         await File.WriteAllBytesAsync( path, await response.Content.ReadAsByteArrayAsync()); 
         return path; 
@@ -249,7 +250,7 @@ namespace UniConnect.MAUI.Services
 
         public async Task<List<TaskModel>> GetCalendarTasksAsync()
         {
-            var response = await _http.GetAsync("/tasks/TaskCalendar/calendar");
+         var response = await _http.GetAsync($"/tasks/TaskCalendar/calendar?studentId={CurrentUserId}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<TaskModel>>();
         }
@@ -273,5 +274,14 @@ namespace UniConnect.MAUI.Services
                 $"/chat/sendMessage?projectId={projectId}&senderId={CurrentUserId}", new SendMessageRequest { Message = text });
             response.EnsureSuccessStatusCode();
         }
+
+           public async Task UpdateStudentProfileAsync(string name, string email)
+            {
+             var response = await _http.PutAsync(
+             $"/auth/updateEmailOrName?id={CurrentUserId}&updatedName={name}&updatedEmail={email}",null);
+              await ThrowIfFailedAsync(response);
+} 
     }
+
+
 }

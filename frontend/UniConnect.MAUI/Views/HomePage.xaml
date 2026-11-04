@@ -29,15 +29,6 @@
                     TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
                     VerticalOptions="Center" />
 
-                <Button
-                    Grid.Column="1"
-                    Text="☰"
-                    FontSize="23"
-                    BackgroundColor="Transparent"
-                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                    WidthRequest="45"
-                    HeightRequest="45"
-                    Padding="0" />
 
             </Grid>
 

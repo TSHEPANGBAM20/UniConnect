@@ -13,6 +13,7 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 boolean existsByStudentEmail(String student_email);
 //List<Student> findByStudentEmail(String student_email);
 Student findByStudentEmail(String email);
+boolean existsByStudentEmailAndIdNot(String email,Long id);
 
 
 

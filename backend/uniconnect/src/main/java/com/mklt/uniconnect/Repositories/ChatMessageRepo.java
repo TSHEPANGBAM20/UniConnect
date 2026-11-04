@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface ChatMessageRepo extends JpaRepository<ChatMessage, Long>{
  List<ChatMessage> findByChat_IdOrderByTimeSentAsc(Long chatId);
+
+    public void deleteAllByChat(Chat currentChat);
 }

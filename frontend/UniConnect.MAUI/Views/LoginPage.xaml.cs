@@ -36,13 +36,13 @@ namespace UniConnect.MAUI.Views
                 PasswordEntry.IsPassword ? "Show" : "Hide";
         }
 
-        private async void OnForgotPasswordTapped(object sender, EventArgs e)
-        {
-            await this.DisplayAlertAsync(
-                "Forgot Password",
-                "Password reset isn't implemented yet.",
-                "OK");
-        }
+        // private async void OnForgotPasswordTapped(object sender, EventArgs e)
+        // {
+        //     await this.DisplayAlertAsync(
+        //         "Forgot Password",
+        //         "Password reset isn't implemented yet.",
+        //         "OK");
+        // }
 
         private async void OnBackClicked(object sender, EventArgs e)
         {

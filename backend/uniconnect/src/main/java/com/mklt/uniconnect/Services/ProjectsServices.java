@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -21,11 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mklt.uniconnect.Entities.Chat;
 import com.mklt.uniconnect.Entities.Project;
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Helpers.ProjectMembers;
 import com.mklt.uniconnect.Helpers.ProjectRoles;
 import com.mklt.uniconnect.Helpers.ProjectStatus;
+import com.mklt.uniconnect.Repositories.ChatMessageRepo;
+import com.mklt.uniconnect.Repositories.ChatRepo;
 import com.mklt.uniconnect.Repositories.ProjectMembersRepo;
 import com.mklt.uniconnect.Repositories.ProjectsRepo;
 import com.mklt.uniconnect.Repositories.StudentRepo;
@@ -37,11 +41,15 @@ public class ProjectsServices {
     private ProjectsRepo projectsRepo;
     private ProjectMembersRepo projectMembersRepo;
     private StudentRepo studentRepo;
+    private ChatRepo chatRepo;
+    private ChatMessageRepo chatMessageRepo;
 
-    public ProjectsServices(ProjectsRepo projectsRepo,ProjectMembersRepo projectMembersRepo,StudentRepo studentRepo) {
+    public ProjectsServices(ProjectsRepo projectsRepo,ProjectMembersRepo projectMembersRepo,StudentRepo studentRepo,ChatRepo chatRepo,ChatMessageRepo chatMessageRepo) {
         this.projectsRepo = projectsRepo;
         this.projectMembersRepo = projectMembersRepo;
         this.studentRepo = studentRepo;
+        this.chatRepo = chatRepo;
+        this.chatMessageRepo = chatMessageRepo;
 
         
     }
@@ -252,16 +260,28 @@ public class ProjectsServices {
         projectMembersRepo.deleteById(member.getId());
 
     }
+
         @Transactional
-        public void disbandGroup(Long projectId){
-        //find project
-        Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
+        public void disbandGroup(Long projectId) {
 
-        //delete memberships first
-        projectMembersRepo.deleteAllByProject(currentProject);
-        projectsRepo.deleteById(currentProject.getID());
+            // Find project
+             Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Not found"));
+            // Delete memberships
+            projectMembersRepo.deleteAllByProject(currentProject);
+            // Find project's chat
+            Chat currentChat = chatRepo.findByProject(currentProject);
 
+    // Delete messages before deleting chat
+    if (currentChat != null) {
+        chatMessageRepo.deleteAllByChat(currentChat);
+
+        // Delete chat
+        chatRepo.delete(currentChat);
     }
+
+    // Delete project
+    projectsRepo.deleteById(currentProject.getID());
+}
 
 
 

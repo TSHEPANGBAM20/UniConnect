@@ -83,6 +83,7 @@ namespace UniConnect.MAUI.ViewModels
                 // The ApiService is responsible for communicating
                 // with the Spring Boot backend.
                 var projects = await _apiService.GetProjectsAsync(_apiService.CurrentUserId);
+        
 
                 Projects.Clear();
 
@@ -92,12 +93,6 @@ namespace UniConnect.MAUI.ViewModels
                 }
 
                 HasProjects = Projects.Count > 0;
-
-                // Notifications will eventually be loaded from
-                // the backend notification endpoint.
-                //
-                // For now, we keep the collection empty rather than
-                // displaying fake/sample notification data.
                 Notifications.Clear();
                 HasNotifications = false;
             }

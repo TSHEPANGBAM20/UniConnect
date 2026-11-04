@@ -107,8 +107,8 @@ namespace UniConnect.MAUI.Views
             _viewModel.Email = email;
 
 
-            bool saved = _viewModel.PrepareProfileUpdate();
-
+            bool saved = await _viewModel.PrepareProfileUpdateAsync();
+            
             if (!saved)
             {
                 await DisplayAlertAsync(

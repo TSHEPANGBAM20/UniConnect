@@ -147,7 +147,7 @@
 
             <!-- Forgot Password -->
 
-            <Label
+            <!-- <Label
                 Text="Forgot your password?"
                 FontSize="13"
                 FontAttributes="Bold"
@@ -160,7 +160,7 @@
                         Tapped="OnForgotPasswordTapped" />
                 </Label.GestureRecognizers>
 
-            </Label>
+            </Label> -->
 
             <!-- Error -->
 
