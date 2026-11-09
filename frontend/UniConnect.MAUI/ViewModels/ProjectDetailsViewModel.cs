@@ -55,7 +55,9 @@ namespace UniConnect.MAUI.ViewModels
             null or "" => "-",
             var s => s
         };
-        public string FileText => string.IsNullOrWhiteSpace(Details?.ProjectFileName) ? "No file attached" : Details!.ProjectFileName!;
+        // The files list comes newest first, so the "Project file" link opens the newest file.
+        public string FileText => Files.Count == 0 ? "No file attached" : (Files[0].FileName ?? "Project file");
+        public string ProjectFileDisplayName => Files.Count == 0 ? string.Empty : (Files[0].FileName ?? "project-file");
         public string CodeText => Details?.ProjectCode?.ToString() ?? "------";
         public bool HasCode => Details?.ProjectCode != null;
         public string RoleText => RoleNames.Display(Details?.MyRole);
@@ -93,7 +95,7 @@ namespace UniConnect.MAUI.ViewModels
                 if (ProjectId == 0) throw new InvalidOperationException("No project selected");
                 details = await _api.GetProjectDetailsAsync(ProjectId); 
                 members = await _api.GetProjectMembersAsync(ProjectId); //project members
-                files = new List<ProjectFileModel>();
+                files = await _api.GetProjectFilesAsync(ProjectId); // every file in this project, newest first
             }
             catch (Exception)
             {
@@ -144,8 +146,8 @@ namespace UniConnect.MAUI.ViewModels
                 try
                 {
                     var created = await _api.UploadProjectFileAsync(ProjectId, file.FileName, stream, file.ContentType);
-                    created.CanDelete = true;
-                    Files.Insert(0, created);
+                    created.CanDelete = true;   // the uploader can always delete their own file
+                    Files.Insert(0, created);   // newest first, the same order as the server
                 }
                 catch (Exception ex)
                 {
@@ -185,16 +187,16 @@ namespace UniConnect.MAUI.ViewModels
 
         public async Task<(string? Path, string? Error)> DownloadProjectFileAsync()
 {
-    if (string.IsNullOrWhiteSpace(Details?.ProjectFileName))
+    if (Files.Count == 0)
         return (null, "No file is attached to this project.");
 
     try
     {
-        string fileName = Path.GetFileName(Details.ProjectFileName);
+        string fileName = ProjectFileDisplayName;
 
         string path = await _api.DownloadProjectFileAsync(
             ProjectId,
-            0,
+            Files[0].FileId,
             fileName);
 
         return (path, null);

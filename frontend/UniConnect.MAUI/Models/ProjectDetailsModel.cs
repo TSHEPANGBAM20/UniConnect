@@ -81,8 +81,19 @@ namespace UniConnect.MAUI.Models
         };
 
         [System.Text.Json.Serialization.JsonIgnore]
-        public string InfoText =>
-            $"{SizeText} - {UploadedByName ?? "Unknown"} - {UploadedAt?.ToString("d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture) ?? "-"}";
+        public string InfoText
+        {
+            get
+            {
+                // Only show the details we actually know (the server may not send all of them).
+                var parts = new System.Collections.Generic.List<string>();
+                if (SizeBytes > 0) parts.Add(SizeText);
+                if (!string.IsNullOrWhiteSpace(UploadedByName)) parts.Add(UploadedByName!);
+                if (UploadedAt != null)
+                    parts.Add(UploadedAt.Value.ToString("d MMM yyyy", System.Globalization.CultureInfo.InvariantCulture));
+                return parts.Count == 0 ? "Tap to open" : string.Join(" - ", parts);
+            }
+        }
 
         [System.Text.Json.Serialization.JsonIgnore]
         public bool CanDelete { get; set; }

@@ -8,3 +8,6 @@
 
 # Maven build output
 backend/uniconnect/target/
+
+# Files uploaded while testing the backend
+backend/uniconnect/uploads/

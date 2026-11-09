@@ -81,19 +81,7 @@ public Project getProjectInfo(@RequestParam("projectId")Long projectId){
 }
 
 
-@GetMapping("/downloadProject/{projectId}/download")
-public ResponseEntity<Resource> downloadProjectFile(@PathVariable Long projectId) {
-    return projectsServices.downloadProjectFile(projectId);
-}
-
-
-
-
-//method to upload file
-@PostMapping("/uploadProject")
-public Project uploadProjectFile(@RequestParam("projectId")Long projectId, @RequestParam("projectFile")MultipartFile projectFile) throws IOException{
-    return projectsServices.updateProjectFile(projectId,projectFile) ;
-}
+//project files (list, upload, download, delete) are in ProjectFileController: /projects/{projectId}/files
 
 //Join by projectCode
 @PostMapping("/joinByCode")
