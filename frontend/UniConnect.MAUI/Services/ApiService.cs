@@ -25,6 +25,8 @@ namespace UniConnect.MAUI.Services
 
          public long CurrentUserId { get; private set; }
         public string CurrentUserName { get; private set; }
+
+         public string CurrentUserSurname { get; private set; }
         public string CurrentUserEmail { get; private set; }
 
         public ApiService()
@@ -50,6 +52,7 @@ namespace UniConnect.MAUI.Services
              CurrentUserName = result.Name;
             CurrentUserId = result.UserId;
             CurrentUserEmail = result.Email; 
+            CurrentUserSurname = result.Surname;
             Console.WriteLine(CurrentUserId);//tshepang // used as requesterId / studentId below
             return result;
         }

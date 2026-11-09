@@ -204,7 +204,7 @@
 
                                 <Entry
                                     x:Name="FullNameEntry"
-                                    Placeholder="Enter your full name"
+                                    Placeholder="Enter your full name e.g. Benson Magoo"
                                     FontSize="14"
                                     TextColor="#111111"
                                     PlaceholderColor="#999999"

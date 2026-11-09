@@ -14,7 +14,7 @@ namespace UniConnect.MAUI.ViewModels
         public ObservableCollection<NotificationModel> Notifications { get; } = new();
 
         public string WelcomeMessage =>
-            $"Welcome Back, {_apiService.CurrentUserName ?? "User"}!";
+            $"Welcome Back, {_apiService.CurrentUserName ?? "User"} {_apiService.CurrentUserSurname ??  "User"!}";
 
         private bool _isBusy;
 
@@ -66,7 +66,7 @@ namespace UniConnect.MAUI.ViewModels
         {
             _apiService = apiService;
         }
-
+    
         public async Task LoadProjectsAsync()
         {
             IsBusy = true;

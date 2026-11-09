@@ -57,6 +57,10 @@ public class ChatMessage {
         return message;
     }
 
+    public LocalDateTime getTimeSent() {
+    return timeSent;
+    }
+
     
 
     //setters
@@ -71,6 +75,8 @@ public void setTimeSent() {
         timeSent = LocalDateTime.now();
     }
 }
+
+
 
     
     
