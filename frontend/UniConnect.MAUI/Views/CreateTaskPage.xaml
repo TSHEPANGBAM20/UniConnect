@@ -100,6 +100,55 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Assignment card -->
+                <Border
+                    BackgroundColor="#FFFFFF"
+                    Stroke="#E5E5E5"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18"
+                    Padding="20">
+
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label
+                            Text="Task Assignment"
+                            FontSize="19"
+                            FontAttributes="Bold"
+                            TextColor="#111111" />
+
+                        <Label
+                            Text="Assign this task to a project member."
+                            FontSize="13"
+                            TextColor="#737373" />
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label
+                                Text="Assign To *"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                TextColor="#262626" />
+
+                            <Border
+                                BackgroundColor="#F7F7F7"
+                                Stroke="#E2E2E2"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="8,0">
+
+                                <Picker
+                                    x:Name="AssignedToPicker"
+                                    Title="Loading project members..."
+                                    BackgroundColor="Transparent"
+                                    TextColor="#111111"
+                                    TitleColor="#858585"
+                                    FontSize="14"
+                                    HeightRequest="50" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Schedule and priority card -->
                 <Border
                     BackgroundColor="#FFFFFF"

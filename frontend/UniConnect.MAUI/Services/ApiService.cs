@@ -374,6 +374,7 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /tasks/createTask/{projectId}
+            // Sends task details, including the assigned student's ID.
             // DueDate is sent as yyyy-MM-dd because the backend
             // expects a Java LocalDate.
 
@@ -387,6 +388,12 @@ namespace UniConnect.MAUI.Services
                 throw new Exception("Task details are required.");
             }
 
+            if (!request.AssignedTo.HasValue ||
+                request.AssignedTo.Value <= 0)
+            {
+                throw new Exception("A valid student must be assigned to the task.");
+            }
+
             var taskData = new
             {
                 Title = request.TaskTitle,
@@ -397,13 +404,16 @@ namespace UniConnect.MAUI.Services
                     "yyyy-MM-dd",
                     System.Globalization.CultureInfo.InvariantCulture),
 
-                Status = "TODO"
+                Status = "TODO",
+
+                // The actual student ID selected in CreateTaskPage.
+                AssignedTo = request.AssignedTo.Value
             };
 
             var response = await _http.PostAsJsonAsync(
                 $"/tasks/createTask/{projectId}", taskData);
 
-            response.EnsureSuccessStatusCode();
+            await ThrowIfFailedAsync(response);
 
             return await response.Content.ReadFromJsonAsync<TaskModel>()
                 ?? throw new Exception(

@@ -7,7 +7,7 @@ namespace UniConnect.MAUI.Models
     // This model does not currently require a separate database table.
     public class NotificationModel
     {
-        // BACKEND:
+        // BACKEND:0
         // Unique identifier for the notification.
         // Currently, the frontend uses the associated TaskId as this value.
         public long NotificationId { get; set; }
