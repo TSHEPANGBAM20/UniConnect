@@ -11,7 +11,7 @@ namespace UniConnect.MAUI.ViewModels
     public class DashboardViewModel : INotifyPropertyChanged
     {
         private readonly ApiService _apiService;
-    //comment
+  
         public ObservableCollection<ProjectModel> Projects { get; } = new();
 
         public ObservableCollection<NotificationModel> Notifications { get; } = new();
