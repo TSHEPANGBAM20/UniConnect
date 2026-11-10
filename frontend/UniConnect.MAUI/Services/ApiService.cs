@@ -146,6 +146,7 @@ namespace UniConnect.MAUI.Services
             return await response.Content.ReadFromJsonAsync<List<ProjectFileModel>>() ?? new();
         }
 
+        // POST /projects/{projectId}/files returns the new file record.
         public async Task<ProjectFileModel> UploadProjectFileAsync(long projectId, string fileName, Stream content, string? contentType)
         {
             using var form = new MultipartFormDataContent();
@@ -154,14 +155,14 @@ namespace UniConnect.MAUI.Services
             string.IsNullOrWhiteSpace(contentType) ? "application/octet-stream" : contentType);
             form.Add(part, "projectFile", fileName);
 
-            var response = await _http.PostAsync($"/projects/uploadProject?projectId={projectId}", form);
+            var response = await _http.PostAsync($"/projects/{projectId}/files?studentId={RequireUserId()}", form);
             await ThrowIfFailedAsync(response);
             return (await response.Content.ReadFromJsonAsync<ProjectFileModel>())!;
         }
 
       
        public async Task<string> DownloadProjectFileAsync(long projectId, long fileId, string fileName) { 
-        var response = await _http.GetAsync( $"/projects/downloadProject/{projectId}/download"); 
+        var response = await _http.GetAsync( $"/projects/{projectId}/files/{fileId}/download?studentId={RequireUserId()}"); 
         await ThrowIfFailedAsync(response); 
         string safeName = Path.GetFileName(fileName); 
         if (string.IsNullOrWhiteSpace(safeName)) safeName = "project-file"; string path = Path.Combine(FileSystem.CacheDirectory, safeName); 

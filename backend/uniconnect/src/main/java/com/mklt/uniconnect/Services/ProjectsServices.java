@@ -43,13 +43,15 @@ public class ProjectsServices {
     private StudentRepo studentRepo;
     private ChatRepo chatRepo;
     private ChatMessageRepo chatMessageRepo;
+    private ProjectFileServices projectFileServices;
 
-    public ProjectsServices(ProjectsRepo projectsRepo,ProjectMembersRepo projectMembersRepo,StudentRepo studentRepo,ChatRepo chatRepo,ChatMessageRepo chatMessageRepo) {
+    public ProjectsServices(ProjectsRepo projectsRepo,ProjectMembersRepo projectMembersRepo,StudentRepo studentRepo,ChatRepo chatRepo,ChatMessageRepo chatMessageRepo,ProjectFileServices projectFileServices) {
         this.projectsRepo = projectsRepo;
         this.projectMembersRepo = projectMembersRepo;
         this.studentRepo = studentRepo;
         this.chatRepo = chatRepo;
         this.chatMessageRepo = chatMessageRepo;
+        this.projectFileServices = projectFileServices;
 
         
     }
@@ -84,58 +86,7 @@ public class ProjectsServices {
         
     }
 
-    //method to edit the file upload
-    public Project updateProjectFile(Long id, MultipartFile projectFile) throws IOException{
-        Project project = projectsRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project not found"));
-        id = project.getID(); 
-
-        //getting the actual file name
-        String fileName = projectFile.getOriginalFilename();
-        Path directory = Paths.get("uploads", "projects", id.toString()); //constructing the base file path/directory path
-
-        Files.createDirectories(directory); //create if necessary
-
-        String filePath = directory.resolve(fileName).toString(); //adds file name to path
-
-        //set the project file
-        project.setProjectFile(filePath); //setting file path in the entity
-
-        //write a file to folder
-        projectFile.transferTo(Paths.get(filePath)); //sends file to uploads/projec
-
-        //save project
-        projectsRepo.save(project);
-        return project;
-    }
-
-    //download file:
-    public ResponseEntity<Resource> downloadProjectFile(Long projectId) {
-
-    Project project = projectsRepo.findById(projectId)
-            .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Project not found"));
-
-    String filePath = project.getProjectFile();
-
-    if (filePath == null || filePath.isBlank()) {
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "No file attached to this project");
-    }
-
-    Path path = Paths.get(filePath).toAbsolutePath().normalize();
-
-    if (!Files.exists(path) || !Files.isRegularFile(path)) {
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "File not found on server");
-    }
-
-    Resource resource = new FileSystemResource(path);
-
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,ContentDisposition.attachment().filename(path.getFileName().toString()).build().toString())
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource);
-}
-    
+    //project files (upload, download, delete) now live in ProjectFileServices
 
     //method shows projects
     public Project GetProjectDetails(Long projectId){
@@ -147,7 +98,8 @@ public class ProjectsServices {
     public void deleteProject(Long id){
         Project project = projectsRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
 
-        //delete the project
+        //delete the project (and its uploaded files)
+        projectFileServices.deleteAllForProject(project);
         projectsRepo.deleteById(project.getID());
     } 
 
@@ -279,7 +231,8 @@ public class ProjectsServices {
         chatRepo.delete(currentChat);
     }
 
-    // Delete project
+    // Delete the project's uploaded files, then the project
+    projectFileServices.deleteAllForProject(currentProject);
     projectsRepo.deleteById(currentProject.getID());
 }
 

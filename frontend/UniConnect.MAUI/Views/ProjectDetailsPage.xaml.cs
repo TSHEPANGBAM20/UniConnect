@@ -69,7 +69,7 @@ namespace UniConnect.MAUI.Views
         return;
     }
 
-    string fileName = Path.GetFileName(_viewModel.Details?.ProjectFileName);
+    string fileName = _viewModel.ProjectFileDisplayName;
 
     await Launcher.Default.OpenAsync(
         new OpenFileRequest(fileName, new ReadOnlyFile(path)));
