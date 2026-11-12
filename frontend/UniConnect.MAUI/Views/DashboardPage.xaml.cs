@@ -46,34 +46,68 @@ namespace UniConnect.MAUI.Views
             Debug.WriteLine(
                 $"DASHBOARD DIAGNOSTIC: OnAppearing, Preview = {Preview}");
 
-            if (Preview == "true")
+            try
             {
-                _viewModel.LoadPreviewProjects();
+                if (Preview == "true")
+                {
+                    _viewModel.LoadPreviewProjects();
 
-                Debug.WriteLine(
-                    $"DASHBOARD DIAGNOSTIC: Preview project count = {_viewModel.Projects.Count}");
+                    Debug.WriteLine(
+                        $"DASHBOARD DIAGNOSTIC: Preview project count = {_viewModel.Projects.Count}");
+                }
+                else
+                {
+                    await _viewModel.LoadProjectsAsync();
+
+                    Debug.WriteLine(
+                        $"DASHBOARD DIAGNOSTIC: API project count = {_viewModel.Projects.Count}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await _viewModel.LoadProjectsAsync();
-
                 Debug.WriteLine(
-                    $"DASHBOARD DIAGNOSTIC: API project count = {_viewModel.Projects.Count}");
+                    $"DASHBOARD LOADING ERROR: {ex.Message}");
             }
         }
 
+        // Opens the New Project page.
         private async void OnNewProjectClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(NewProjectPage));
         }
 
+        // Opens Projects with the Join prompt.
         private async void OnJoinWithCodeClicked(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(
                 "///ProjectsPage?openJoinPrompt=true");
         }
 
-        private async void OnProjectTapped(object sender, TappedEventArgs e)
+        // Opens the Projects page and displays all projects.
+        private async void OnViewAllProjectsTapped(
+            object sender,
+            TappedEventArgs e)
+        {
+            try
+            {
+                await Shell.Current.GoToAsync("///ProjectsPage");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"VIEW ALL PROJECTS ERROR: {ex.Message}");
+
+                await DisplayAlertAsync(
+                    "Navigation error",
+                    "Unable to open all projects. Please try again.",
+                    "OK");
+            }
+        }
+
+        // Opens the selected project.
+        private async void OnProjectTapped(
+            object sender,
+            TappedEventArgs e)
         {
             if (sender is BindableObject view &&
                 view.BindingContext is ProjectModel project)
@@ -83,7 +117,7 @@ namespace UniConnect.MAUI.Views
             }
         }
 
-        // Opens the relevant project chat from a chat notification.
+        // Opens the relevant project chat from a notification.
         private async void OnNotificationTapped(
             object sender,
             TappedEventArgs e)
@@ -94,7 +128,6 @@ namespace UniConnect.MAUI.Views
                 return;
             }
 
-            // Only chat notifications open the Chat page.
             if (notification.NotificationType != "CHAT_MESSAGE" ||
                 notification.ProjectId <= 0)
             {
@@ -113,7 +146,6 @@ namespace UniConnect.MAUI.Views
 
             try
             {
-                // Clear the pending notification for this project.
                 DashboardViewModel.MarkChatNotificationsAsRead(
                     _apiService.CurrentUserId,
                     notification.ProjectId,
@@ -121,7 +153,6 @@ namespace UniConnect.MAUI.Views
 
                 notification.IsRead = true;
 
-                // Open the selected project's chat.
                 await Shell.Current.GoToAsync(
                     $"{nameof(ChatPage)}?projectId={notification.ProjectId}");
             }
@@ -137,10 +168,16 @@ namespace UniConnect.MAUI.Views
             }
         }
 
+        // Bottom navigation.
         private async void OnTabSelected(object? sender, string tab)
-            => await TabNavigator.GoToTabAsync(
-                this, tab, current: "Home");
+        {
+            await TabNavigator.GoToTabAsync(
+                this,
+                tab,
+                current: "Home");
+        }
 
+        // Menu navigation.
         private async void OnMenuItemSelected(
             object? sender,
             string item)

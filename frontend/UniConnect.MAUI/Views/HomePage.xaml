@@ -16,7 +16,6 @@
             HorizontalOptions="Center">
 
             <!-- Header -->
-
             <Grid
                 ColumnDefinitions="*,Auto"
                 Margin="0,0,0,22">
@@ -32,7 +31,6 @@
             </Grid>
 
             <!-- Hero -->
-
             <Border
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 26"
@@ -80,7 +78,6 @@
             </Border>
 
             <!-- Introduction -->
-
             <VerticalStackLayout
                 Spacing="10"
                 Margin="0,0,0,22">
@@ -101,7 +98,6 @@
             </VerticalStackLayout>
 
             <!-- Main Actions -->
-
             <VerticalStackLayout
                 Spacing="10"
                 Margin="0,0,0,32">
@@ -128,25 +124,14 @@
                     FontSize="15"
                     FontAttributes="Bold" />
 
-                <Button
-                    Text="Preview Dashboard"
-                    Clicked="OnDashboardPreviewClicked"
-                    BackgroundColor="Transparent"
-                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
-                    HeightRequest="45"
-                    FontSize="13"
-                    FontAttributes="Bold" />
-
             </VerticalStackLayout>
 
             <!-- Features -->
-
             <VerticalStackLayout
                 Spacing="18"
                 Margin="0,0,0,30">
 
-                <VerticalStackLayout
-                    Spacing="5">
+                <VerticalStackLayout Spacing="5">
 
                     <Label
                         Text="Everything in one place."
@@ -162,7 +147,6 @@
                 </VerticalStackLayout>
 
                 <!-- Projects -->
-
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -194,7 +178,6 @@
                 </Border>
 
                 <!-- Tasks -->
-
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -226,7 +209,6 @@
                 </Border>
 
                 <!-- Calendar -->
-
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -258,7 +240,6 @@
                 </Border>
 
                 <!-- Team Chat -->
-
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -292,7 +273,6 @@
             </VerticalStackLayout>
 
             <!-- Footer -->
-
             <VerticalStackLayout
                 Spacing="7"
                 HorizontalOptions="Center"

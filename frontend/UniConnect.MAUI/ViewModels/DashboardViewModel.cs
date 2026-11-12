@@ -13,6 +13,12 @@ namespace UniConnect.MAUI.ViewModels
     {
         private readonly ApiService _apiService;
 
+        // Stores all projects retrieved from the backend.
+        // The dashboard only displays the two most recently accessed.
+        private readonly List<ProjectModel> _allProjects = new();
+
+        private const int DashboardProjectLimit = 2;
+
         public ObservableCollection<ProjectModel> Projects { get; } = new();
 
         public ObservableCollection<NotificationModel> Notifications { get; } = new();
@@ -69,7 +75,8 @@ namespace UniConnect.MAUI.ViewModels
             _apiService = apiService;
         }
 
-        // Loads projects and combines task, project and chat notifications.
+        // Loads all projects from the backend.
+        // Only two projects are displayed on the dashboard.
         public async Task LoadProjectsAsync()
         {
             IsBusy = true;
@@ -79,6 +86,7 @@ namespace UniConnect.MAUI.ViewModels
             try
             {
                 Projects.Clear();
+                _allProjects.Clear();
 
                 try
                 {
@@ -88,12 +96,12 @@ namespace UniConnect.MAUI.ViewModels
                     var projects = await _apiService.GetProjectsAsync(
                         _apiService.CurrentUserId);
 
-                    foreach (var project in projects ?? new List<ProjectModel>())
+                    if (projects != null)
                     {
-                        Projects.Add(project);
+                        _allProjects.AddRange(projects);
                     }
 
-                    HasProjects = Projects.Count > 0;
+                    RefreshDashboardProjects();
                 }
                 catch (Exception ex)
                 {
@@ -109,8 +117,75 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // Combines backend task notifications with frontend project
-        // and incoming chat notifications.
+        // Records when a project is opened.
+        // This information is saved on the device.
+        public void RecordProjectAccess(long projectId)
+        {
+            if (projectId <= 0)
+                return;
+
+            string key = GetProjectAccessKey(
+                _apiService.CurrentUserId,
+                projectId);
+
+            Preferences.Default.Set(key, DateTime.UtcNow.Ticks);
+
+            RefreshDashboardProjects();
+
+            Debug.WriteLine(
+                $"PROJECT ACCESS RECORDED: Project {projectId}");
+        }
+
+        // Refreshes the dashboard with the two most recently accessed projects.
+        private void RefreshDashboardProjects()
+        {
+            var recentProjects = _allProjects
+                .Select((project, index) => new
+                {
+                    Project = project,
+                    OriginalIndex = index,
+                    LastAccessed = GetProjectLastAccessed(
+                        _apiService.CurrentUserId,
+                        project.ProjectId)
+                })
+                .OrderByDescending(x => x.LastAccessed)
+                .ThenBy(x => x.OriginalIndex)
+                .Take(DashboardProjectLimit)
+                .Select(x => x.Project)
+                .ToList();
+
+            Projects.Clear();
+
+            foreach (var project in recentProjects)
+            {
+                Projects.Add(project);
+            }
+
+            HasProjects = _allProjects.Count > 0;
+
+            Debug.WriteLine(
+                $"DASHBOARD PROJECTS: Showing {Projects.Count} of {_allProjects.Count} projects.");
+        }
+
+        // Gets the last accessed time for a project.
+        private static long GetProjectLastAccessed(
+            long userId,
+            long projectId)
+        {
+            string key = GetProjectAccessKey(userId, projectId);
+
+            return Preferences.Default.Get(key, 0L);
+        }
+
+        // Creates a unique storage key for each user's project.
+        private static string GetProjectAccessKey(
+            long userId,
+            long projectId)
+        {
+            return $"ProjectLastAccessed_{userId}_{projectId}";
+        }
+
+        // Combines backend task notifications with project and chat notifications.
         private async Task LoadDeadlineNotificationsAsync()
         {
             Notifications.Clear();
@@ -147,11 +222,11 @@ namespace UniConnect.MAUI.ViewModels
                 Debug.WriteLine($"TASK NOTIFICATION ERROR: {ex.Message}");
             }
 
-            // 2. Generate project deadline notifications.
+            // 2. Generate project deadline notifications for ALL projects.
             combinedNotifications.AddRange(
                 BuildProjectDeadlineNotifications());
 
-            // 3. Check for new incoming chat messages.
+            // 3. Check for new incoming chat messages in ALL projects.
             await LoadChatNotificationsAsync(combinedNotifications);
 
             // 4. Sort notifications by date, newest first.
@@ -176,7 +251,7 @@ namespace UniConnect.MAUI.ViewModels
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
             DateOnly tomorrow = today.AddDays(1);
 
-            foreach (var project in Projects)
+            foreach (var project in _allProjects)
             {
                 string status = project.ProjectStatus?.Trim() ?? string.Empty;
 
@@ -234,14 +309,14 @@ namespace UniConnect.MAUI.ViewModels
             return projectNotifications;
         }
 
-        // Checks each project for incoming messages.
+        // Checks every project for incoming messages.
         private async Task LoadChatNotificationsAsync(
             List<NotificationModel> combinedNotifications)
         {
             if (_apiService.CurrentUserId <= 0)
                 return;
 
-            foreach (var project in Projects)
+            foreach (var project in _allProjects)
             {
                 if (project.ProjectId <= 0)
                     continue;
@@ -250,11 +325,13 @@ namespace UniConnect.MAUI.ViewModels
                 {
                     // BACKEND:
                     // POST /chat/chatMessages?projectId={projectId}
-                    //
                     // Retrieves messages belonging to this project.
 
                     var messages = await _apiService.GetMessagesAsync(
                         project.ProjectId);
+
+                    if (messages == null)
+                        continue;
 
                     var incomingMessages = messages
                         .Where(m => m.SenderId != _apiService.CurrentUserId)
@@ -388,6 +465,7 @@ namespace UniConnect.MAUI.ViewModels
             try
             {
                 Projects.Clear();
+                _allProjects.Clear();
                 Notifications.Clear();
 
                 HasNotifications = false;
@@ -395,7 +473,7 @@ namespace UniConnect.MAUI.ViewModels
                 // PREVIEW DATA:
                 // These projects are temporary sample data.
 
-                Projects.Add(new ProjectModel
+                _allProjects.Add(new ProjectModel
                 {
                     ProjectId = 1,
                     ProjectName = "UniConnect",
@@ -404,7 +482,7 @@ namespace UniConnect.MAUI.ViewModels
                     EndDate = new DateOnly(2026, 11, 30)
                 });
 
-                Projects.Add(new ProjectModel
+                _allProjects.Add(new ProjectModel
                 {
                     ProjectId = 2,
                     ProjectName = "Handy Market",
@@ -414,7 +492,7 @@ namespace UniConnect.MAUI.ViewModels
                     ProjectStatus = "IN PROGRESS"
                 });
 
-                Projects.Add(new ProjectModel
+                _allProjects.Add(new ProjectModel
                 {
                     ProjectId = 3,
                     ProjectName = "Student Portal",
@@ -424,12 +502,14 @@ namespace UniConnect.MAUI.ViewModels
                     ProjectStatus = "IN PROGRESS"
                 });
 
+                // Display only two preview projects.
+                RefreshDashboardProjects();
+
                 foreach (var notification in BuildProjectDeadlineNotifications())
                 {
                     Notifications.Add(notification);
                 }
 
-                HasProjects = Projects.Count > 0;
                 HasNotifications = Notifications.Count > 0;
             }
             finally

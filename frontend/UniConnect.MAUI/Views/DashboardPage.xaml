@@ -277,13 +277,21 @@
                         FontAttributes="Bold"
                         TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
+                    <!-- View all navigation -->
                     <Label
                         Text="View all"
                         Grid.Column="1"
                         FontSize="12"
                         FontAttributes="Bold"
                         TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Center">
+
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnViewAllProjectsTapped" />
+                        </Label.GestureRecognizers>
+
+                    </Label>
 
                 </Grid>
 
