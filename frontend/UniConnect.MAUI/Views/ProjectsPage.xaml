@@ -12,70 +12,147 @@
 
         <Grid RowDefinitions="Auto,Auto,*">
 
-            <Label Grid.Row="0" Text="Projects" FontSize="22" FontAttributes="Bold"
-                   TextColor="Black" HorizontalOptions="Center" Margin="0,20,0,10" />
+            <!-- Page heading -->
+            <VerticalStackLayout Grid.Row="0"
+                                 Spacing="5"
+                                 Margin="24,25,24,16">
 
-            <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10" Margin="24,6,24,12">
-                <Button Grid.Column="0" Text="New Project" Clicked="OnNewProjectClicked"
-                        BackgroundColor="Black" TextColor="White" FontAttributes="Bold"
-                        CornerRadius="25" HeightRequest="50" />
-                <!-- Enter a project code to join an existing project -->
-                <Button Grid.Column="1" Text="Join with Code" Clicked="OnJoinWithCodeClicked"
-                        BackgroundColor="White" TextColor="Black" BorderColor="Black" BorderWidth="1"
-                        FontAttributes="Bold" CornerRadius="25" HeightRequest="50" />
+                <Label Text="My Projects"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="Black" />
+
+                <Label Text="Manage and track your work"
+                       FontSize="14"
+                       TextColor="#777777" />
+
+            </VerticalStackLayout>
+
+            <!-- Project action buttons -->
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,*"
+                  ColumnSpacing="10"
+                  Margin="24,0,24,18">
+
+                <Button Grid.Column="0"
+                        Text="New Project"
+                        Clicked="OnNewProjectClicked"
+                        BackgroundColor="Black"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="25"
+                        HeightRequest="50" />
+
+                <Button Grid.Column="1"
+                        Text="Join with Code"
+                        Clicked="OnJoinWithCodeClicked"
+                        BackgroundColor="White"
+                        TextColor="Black"
+                        BorderColor="Black"
+                        BorderWidth="1"
+                        FontAttributes="Bold"
+                        CornerRadius="25"
+                        HeightRequest="50" />
+
             </Grid>
 
-            <CollectionView Grid.Row="2" ItemsSource="{Binding Projects}" Margin="24,0">
+            <!-- Project list -->
+            <CollectionView Grid.Row="2"
+                            ItemsSource="{Binding Projects}"
+                            Margin="24,0">
 
                 <CollectionView.EmptyView>
-                    <Label Text="No projects yet. Tap New Project to create one."
-                           TextColor="Gray" FontSize="13" HorizontalOptions="Center" Margin="0,30" />
+                    <VerticalStackLayout Spacing="8"
+                                         HorizontalOptions="Center"
+                                         Margin="0,40">
+
+                        <Label Text="No projects yet"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center" />
+
+                        <Label Text="Create a new project or join one using a project code."
+                               FontSize="13"
+                               TextColor="Gray"
+                               HorizontalTextAlignment="Center" />
+
+                    </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:ProjectModel">
-                        <Border Stroke="Black" StrokeShape="RoundRectangle 16"
-                                Padding="16,14" Margin="0,0,0,12">
-                            <VerticalStackLayout Spacing="3">
-                                <Label Text="{Binding ProjectName}" FontAttributes="Bold"
-                                       FontSize="15" TextColor="Black" />
 
-                                <Label Text="{Binding ProjectStatus}" FontSize="12" TextColor="Gray">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding Role}" Value="TEAM_LEAD">
-                                            <Setter Property="Text" Value="Team Lead" />
-                                            <Setter Property="TextColor" Value="#95fe8b" />
-                                            <Setter Property="FontAttributes" Value="Bold" />
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label" Binding="{Binding Role}" Value="LEADER">
-                                            <Setter Property="Text" Value="Team Lead" />
-                                            <Setter Property="TextColor" Value="#1E3A8A" />
-                                            <Setter Property="FontAttributes" Value="Bold" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
+                        <Border Stroke="#DDDDDD"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16"
+                                BackgroundColor="White"
+                                Padding="16"
+                                Margin="0,0,0,14">
+
+                            <VerticalStackLayout Spacing="10">
+
+                                <Label Text="{Binding ProjectName}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="Black" />
 
                                 <Label Text="{Binding EndDate, StringFormat='Due {0:dd MMM yyyy}'}"
-                                       FontSize="11" TextColor="Gray" />
+                                       FontSize="12"
+                                       TextColor="#777777" />
+
+                                <BoxView HeightRequest="1"
+                                         Color="#EEEEEE" />
+
+                                <Grid ColumnDefinitions="*,Auto">
+
+                                    <Label Grid.Column="0"
+                                           Text="Open project"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="Black"
+                                           VerticalOptions="Center" />
+
+                                    <Label Grid.Column="1"
+                                           Text="›"
+                                           FontSize="22"
+                                           TextColor="#777777"
+                                           VerticalOptions="Center" />
+
+                                </Grid>
+
                             </VerticalStackLayout>
+
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnProjectTapped" />
                             </Border.GestureRecognizers>
+
                         </Border>
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
 
                 <CollectionView.Footer>
                     <Grid HeightRequest="120" />
                 </CollectionView.Footer>
+
             </CollectionView>
 
-            <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                               Color="Black" VerticalOptions="Start" Margin="0,20" />
+            <!-- Loading indicator -->
+            <ActivityIndicator Grid.Row="2"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="Black"
+                               VerticalOptions="Start"
+                               Margin="0,20" />
+
         </Grid>
 
-        <controls:BottomNavBar ActiveTab="Projects" VerticalOptions="End"
+        <!-- Bottom navigation -->
+        <controls:BottomNavBar ActiveTab="Projects"
+                               VerticalOptions="End"
                                TabSelected="OnTabSelected"
                                MenuItemSelected="OnMenuItemSelected" />
+
     </Grid>
 </ContentPage>

@@ -17,11 +17,10 @@ namespace UniConnect.MAUI.Services
         private readonly HttpClient _http;
 
 #if ANDROID
-        // BACKEND: Android emulator connects to the computer's localhost
-        // through 10.0.2.2. Keep the backend running on port 8080.
+        // BACKEND: Android emulator connects through 10.0.2.2.
         public static string BaseUrl = "http://10.0.2.2:8080";
 #elif IOS
-        // BACKEND: Confirm the correct backend address when testing on iOS.
+        // BACKEND: iOS backend address.
         public static string BaseUrl = "http://localhost:8080";
 #else
         // BACKEND: Local development backend address.
@@ -30,8 +29,6 @@ namespace UniConnect.MAUI.Services
 
         // BACKEND:
         // These values are populated after a successful login.
-        // CurrentUserId is used when requesting user-specific projects,
-        // tasks and deadline notifications.
         public long CurrentUserId { get; private set; }
         public string CurrentUserName { get; private set; }
         public string CurrentUserSurname { get; private set; }
@@ -60,9 +57,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /auth/login
-            // Accepts the user's login details.
-            // The response must contain UserId, Name, Surname and Email.
-            // These values are stored for use in other API requests.
 
             var response = await _http.PostAsJsonAsync(
                 "/auth/login", request);
@@ -85,7 +79,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /auth/register
-            // Receives the new user's registration details.
 
             var response = await _http.PostAsJsonAsync(
                 "/auth/register", request);
@@ -103,10 +96,9 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /projects/addMember
-            // Adds a student to a project using the project ID and email.
 
             var response = await _http.PostAsync(
-                $"/projects/addMember?projectId={projectId}&email={email}",
+                $"/projects/addMember?projectId={projectId}&email={Uri.EscapeDataString(email)}",
                 null);
 
             await ThrowIfFailedAsync(response);
@@ -157,6 +149,40 @@ namespace UniConnect.MAUI.Services
             return await response.Content.ReadFromJsonAsync<ProjectDetailsModel>();
         }
 
+        // Update project details - Team Lead only
+        public async Task<ProjectDetailsModel> UpdateProjectAsync(
+            long projectId,
+            ProjectDetailsModel project)
+        {
+            // BACKEND:
+            // POST /projects/updateProject?projectId={projectId}&studentId={studentId}
+
+            if (CurrentUserId <= 0)
+            {
+                throw new InvalidOperationException(
+                    "A student must be logged in to edit a project.");
+            }
+
+            var requestData = new
+            {
+                ProjectName = project.ProjectName,
+                ProjectDescription = project.ProjectDescription,
+                StartDate = project.StartDate?.ToString("yyyy-MM-dd"),
+                EndDate = project.EndDate?.ToString("yyyy-MM-dd"),
+                Status = project.Status
+            };
+
+            var response = await _http.PostAsJsonAsync(
+                $"/projects/updateProject?projectId={projectId}&studentId={CurrentUserId}",
+                requestData);
+
+            await ThrowIfFailedAsync(response);
+
+            return await response.Content.ReadFromJsonAsync<ProjectDetailsModel>()
+                ?? throw new InvalidOperationException(
+                    "The backend did not return the updated project.");
+        }
+
         public async Task<List<ProjectMemberModel>> GetProjectMembersAsync(
             long projectId)
         {
@@ -181,7 +207,7 @@ namespace UniConnect.MAUI.Services
             // DELETE /projects/removeMemberFromgroup
 
             var response = await _http.DeleteAsync(
-                $"/projects/removeMemberFromgroup?studentEmail={studentEmail}&projectId={projectId}");
+                $"/projects/removeMemberFromgroup?studentEmail={Uri.EscapeDataString(studentEmail)}&projectId={projectId}");
 
             await ThrowIfFailedAsync(response);
         }
@@ -206,7 +232,7 @@ namespace UniConnect.MAUI.Services
                 throw new InvalidOperationException("Not logged in");
 
             var response = await _http.PostAsync(
-                $"/projects/joinByCode?projectCode={projectCode}&email={email}",
+                $"/projects/joinByCode?projectCode={projectCode}&email={Uri.EscapeDataString(email)}",
                 null);
 
             await ThrowIfFailedAsync(response);
@@ -232,7 +258,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // GET /projects/{projectId}/files?studentId={studentId}
-            // Returns the files belonging to the selected project.
 
             var response = await _http.GetAsync(
                 $"/projects/{projectId}/files?studentId={RequireUserId()}");
@@ -251,8 +276,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /projects/{projectId}/files?studentId={studentId}
-            // Accepts a multipart file upload.
-            // The uploaded file is sent using the form field "projectFile".
 
             using var form = new MultipartFormDataContent();
 
@@ -281,8 +304,7 @@ namespace UniConnect.MAUI.Services
             string fileName)
         {
             // BACKEND:
-            // GET /projects/{projectId}/files/{fileId}/download?studentId={studentId}
-            // Downloads the selected project file.
+            // GET /projects/{projectId}/files/{fileId}/download
 
             var response = await _http.GetAsync(
                 $"/projects/{projectId}/files/{fileId}/download?studentId={RequireUserId()}");
@@ -310,7 +332,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // DELETE /projects/{projectId}/files/{fileId}
-            // The requester ID identifies the user performing the deletion.
 
             var response = await _http.DeleteAsync(
                 $"/projects/{projectId}/files/{fileId}?requesterId={RequireUserId()}");
@@ -374,9 +395,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // POST /tasks/createTask/{projectId}
-            // Sends task details, including the assigned student's ID.
-            // DueDate is sent as yyyy-MM-dd because the backend
-            // expects a Java LocalDate.
 
             if (projectId <= 0)
             {
@@ -441,8 +459,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // PUT /tasks/updateStatus/{taskId}/status
-            // Use "DONE" as the status for completed tasks.
-            // Deadline notifications exclude tasks with status DONE.
 
             var request = new UpdateTaskStatusRequest
             {
@@ -487,13 +503,6 @@ namespace UniConnect.MAUI.Services
         {
             // BACKEND:
             // GET /tasks/notifications/{studentId}
-            // Retrieves deadline notifications generated by the backend.
-            //
-            // Notification types:
-            // OVERDUE
-            // DUE_TODAY
-            // DUE_TOMORROW
-            //
             // Tasks with status DONE are excluded.
 
             if (CurrentUserId <= 0)
@@ -560,16 +569,27 @@ namespace UniConnect.MAUI.Services
         // ==========================================
 
         public async Task UpdateStudentProfileAsync(
-            string name, string email)
+            string name,
+            string surname,
+            string email)
         {
             // BACKEND:
             // PUT /auth/updateEmailOrName
+            // Updates the student's first name, surname and email.
 
             var response = await _http.PutAsync(
-                $"/auth/updateEmailOrName?id={CurrentUserId}&updatedName={name}&updatedEmail={email}",
+                $"/auth/updateEmailOrName?id={CurrentUserId}" +
+                $"&updatedName={Uri.EscapeDataString(name)}" +
+                $"&updatedSurname={Uri.EscapeDataString(surname)}" +
+                $"&updatedEmail={Uri.EscapeDataString(email)}",
                 null);
 
             await ThrowIfFailedAsync(response);
+
+            // Update the logged-in user's details after a successful response.
+            CurrentUserName = name;
+            CurrentUserSurname = surname;
+            CurrentUserEmail = email;
         }
     }
 }

@@ -44,6 +44,50 @@ namespace UniConnect.MAUI.Models
         // Return the task deadline.
         // The backend uses LocalDate for this field.
         public DateTime? DueDate { get; set; }
+
+        // FRONTEND:
+        // Check whether the task has been completed.
+        [JsonIgnore]
+        public bool IsCompleted =>
+            string.Equals(Status?.Trim(), "DONE",
+                StringComparison.OrdinalIgnoreCase)
+            ||
+            string.Equals(Status?.Trim(), "COMPLETED",
+                StringComparison.OrdinalIgnoreCase);
+
+        // FRONTEND:
+        // A task is overdue when its deadline has passed
+        // and it has not been completed.
+        [JsonIgnore]
+        public bool IsOverdue =>
+            !IsCompleted &&
+            DueDate.HasValue &&
+            DueDate.Value.Date < DateTime.Today;
+
+        // FRONTEND:
+        // Display OVERDUE without changing the backend status.
+        [JsonIgnore]
+        public string DisplayStatus
+        {
+            get
+            {
+                if (IsOverdue)
+                    return "OVERDUE";
+
+                if (IsCompleted)
+                    return "DONE";
+
+                if (string.Equals(Status?.Trim(), "IN_PROGRESS",
+                    StringComparison.OrdinalIgnoreCase))
+                    return "IN PROGRESS";
+
+                if (string.Equals(Status?.Trim(), "NOT_STARTED",
+                    StringComparison.OrdinalIgnoreCase))
+                    return "PENDING";
+
+                return Status ?? "PENDING";
+            }
+        }
     }
 
     // BACKEND:

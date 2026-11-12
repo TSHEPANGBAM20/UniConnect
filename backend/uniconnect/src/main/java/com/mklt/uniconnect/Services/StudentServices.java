@@ -1,6 +1,5 @@
-package com.mklt.uniconnect.Services;
 
-import java.util.List;
+package com.mklt.uniconnect.Services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,96 +9,105 @@ import org.springframework.web.server.ResponseStatusException;
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Repositories.StudentRepo;
 
-
-@Service 
+@Service
 public class StudentServices {
 
-  //Service classess facillitate business logic or steps that do a particular task, and also invoke Repo methods
-private StudentRepo studentRepo;
-private BCryptPasswordEncoder passwordEncoder;
+    private StudentRepo studentRepo;
+    private BCryptPasswordEncoder passwordEncoder;
 
-
-    //Whenever we want to use methods or an object without creating a new one globally, we have to add that Object as a parameter in teh constructor of the class it is used in.
     public StudentServices(StudentRepo studentRepo, BCryptPasswordEncoder passwordEncoder) {
-      this.studentRepo=studentRepo;
-      this.passwordEncoder = passwordEncoder;
-    }
-    
-
-  
-
-
-    public Student createUser(String name, String surname, String email,String password ){
-       //first check whether a user of the same student email exists by repo
-         boolean exists = studentRepo.existsByStudentEmail(email);
-
-       if (exists){
-            //User does not exist message
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already exists");   
-}
-       else{
-        //hashing password
-        String hashedPassword = passwordEncoder.encode(password);
-        //create student Object
-        Student student = new Student(name, surname,email, hashedPassword);
-        studentRepo.save(student); //saves student to database
-        return student;
-       }
-
-    }
-    public Student loginUser(String email, String password) {
-      //List<Student> studentList =studentRepo.findByStudentEmail(email);
-      Student student = studentRepo.findByStudentEmail(email);
-
-
-
-      if (student == null){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student does not exist"); 
-      }
-
-      //getting the hashed password
-      String hashedPassword = student.getPassword(); //store saved password (hashed)
-      boolean passwordCheck = passwordEncoder.matches(password,hashedPassword);//check if password input and hashed match
-
-      if (!passwordCheck) {
-         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password Incorrect! Try again"); 
-      }
-      return student;
+        this.studentRepo = studentRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    // Register a new student
+    public Student createUser(String name, String surname, String email, String password) {
 
-    // Edit name and email
-public Student updateStudentNameAndEmail(Long id,String updatedName,String updatedEmail) {
+        boolean exists = studentRepo.existsByStudentEmail(email);
 
-    // Find student
-    Student student = studentRepo.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Student not found"
-            ));
-
-    // Update name if provided
-    if (updatedName != null && !updatedName.isBlank()) {
-        student.setName(updatedName);
-    }
-
-    // Update email if provided
-    if (updatedEmail != null && !updatedEmail.isBlank()) {
-
-        // Check whether another student already uses this email
-        boolean existsByEmail = studentRepo.existsByStudentEmailAndIdNot(updatedEmail, id);
-        if (existsByEmail) {
+        if (exists) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Student with email already exists."
+                    HttpStatus.BAD_REQUEST,
+                    "User already exists"
             );
         }
 
-        student.setEmail(updatedEmail);
+        String hashedPassword = passwordEncoder.encode(password);
+
+        Student student = new Student(name, surname, email, hashedPassword);
+
+        studentRepo.save(student);
+
+        return student;
     }
 
-    // Save and return updated student
-    return studentRepo.save(student);
-}
-    
+    // Login student
+    public Student loginUser(String email, String password) {
+
+        Student student = studentRepo.findByStudentEmail(email);
+
+        if (student == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Student does not exist"
+            );
+        }
+
+        String hashedPassword = student.getPassword();
+
+        boolean passwordCheck = passwordEncoder.matches(password, hashedPassword);
+
+        if (!passwordCheck) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password Incorrect! Try again"
+            );
+        }
+
+        return student;
+    }
+
+    // Update student name, surname and email
+    public Student updateStudentNameAndEmail(
+            Long id,
+            String updatedName,
+            String updatedSurname,
+            String updatedEmail) {
+
+        // Find student
+        Student student = studentRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Student not found"
+                ));
+
+        // Update first name
+        if (updatedName != null && !updatedName.isBlank()) {
+            student.setName(updatedName);
+        }
+
+        // Update surname
+        if (updatedSurname != null && !updatedSurname.isBlank()) {
+            student.setSurname(updatedSurname);
+        }
+
+        // Update email
+        if (updatedEmail != null && !updatedEmail.isBlank()) {
+
+            boolean existsByEmail =
+                    studentRepo.existsByStudentEmailAndIdNot(updatedEmail, id);
+
+            if (existsByEmail) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Student with email already exists."
+                );
+            }
+
+            student.setEmail(updatedEmail);
+        }
+
+        // Save and return updated student
+        return studentRepo.save(student);
+    }
 }

@@ -1,3 +1,4 @@
+
 package com.mklt.uniconnect.Entities;
 
 import java.time.LocalDate;
@@ -11,75 +12,77 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
-@Entity 
+@Entity
 public class Project {
 
-    @Id 
+    @Id
     @GeneratedValue
     private Long projectID;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String projectName;
+
     private String projectDescription;
     private LocalDate startDate;
     private LocalDate endDate;
     private String projectFile;
+
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
-    @Column (unique=true)
+
+    @Column(unique = true)
     private Integer projectCode;
 
+    // Setters
 
-
-    //setters, for changing or later insertions
-
-    public void setProjectDescription(String description){
+    public void setProjectDescription(String description) {
         this.projectDescription = description;
     }
 
-     public void setProjectName(String name){
+    public void setProjectName(String name) {
         this.projectName = name;
     }
 
-     public void setStartDate(LocalDate startDate){
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-     public void setEndDate(LocalDate endDate){
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-
-     public void setProjectFile(String file){
+    public void setProjectFile(String file) {
         this.projectFile = file;
     }
 
+    // Added setter for project status
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
+    }
 
+    // Getters
 
-    //getters
-
-    public Long getID(){
+    public Long getID() {
         return projectID;
     }
 
-     public String getProjectDescription(){
+    public String getProjectDescription() {
         return projectDescription;
     }
 
-     public String getProjectName(){
+    public String getProjectName() {
         return projectName;
     }
 
-     public LocalDate getStartDate(){
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-     public LocalDate getEndDate(){
-       return endDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-
-     public String getProjectFile(){
+    public String getProjectFile() {
         return projectFile;
     }
 
@@ -87,37 +90,29 @@ public class Project {
         return projectCode;
     }
 
-    public ProjectStatus getStatus(){
+    public ProjectStatus getStatus() {
         return status;
     }
 
-    
-
-    
-
-    //constructors
+    // Constructors
 
     public Project() {
-    } //empty constructor for JPA
+        // Empty constructor for JPA
+    }
 
-    public Project(String projectName, String projectDescription, LocalDate startDate, LocalDate endDate,ProjectStatus status, Integer projectCode) {
+    public Project(
+            String projectName,
+            String projectDescription,
+            LocalDate startDate,
+            LocalDate endDate,
+            ProjectStatus status,
+            Integer projectCode) {
+
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
         this.projectCode = projectCode;
-        
     }
-
-   
-
-
-
-
-
-
-
-        
-
 }

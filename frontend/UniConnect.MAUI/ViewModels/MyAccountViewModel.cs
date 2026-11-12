@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UniConnect.MAUI.Services;
 
 namespace UniConnect.MAUI.ViewModels
@@ -10,8 +11,6 @@ namespace UniConnect.MAUI.ViewModels
     {
         private readonly ApiService _apiService;
 
-        // stores the ID of the currently logged-in student.
-        // The backend team must confirm how this ID should be used
         private long? _userId;
 
         private string _name = string.Empty;
@@ -25,6 +24,7 @@ namespace UniConnect.MAUI.ViewModels
 
                 _name = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(FullName));
                 OnPropertyChanged(nameof(Initials));
             }
         }
@@ -45,11 +45,11 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // Combines the student's first name and surname for display.
+        // Combines first name and surname for display.
         public string FullName =>
             $"{Name} {Surname}".Trim();
 
-        // Creates profile initials from the student's name.
+        // Creates profile initials.
         public string Initials
         {
             get
@@ -85,7 +85,7 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // Stores the original values so Cancel can restore them.
+        // Original values used when cancelling edits.
         private string _originalName = string.Empty;
         private string _originalSurname = string.Empty;
         private string _originalEmail = string.Empty;
@@ -125,26 +125,14 @@ namespace UniConnect.MAUI.ViewModels
         {
             _apiService = apiService;
 
-            
             _userId = _apiService.CurrentUserId;
 
-            string[] nameParts =
-                _apiService.CurrentUserName.Split(
-                    ' ',
-                    StringSplitOptions.RemoveEmptyEntries);
-
-            if (nameParts.Length > 0)
-            {
-                Name = nameParts[0];
-                Surname = nameParts.Length > 1
-                    ? string.Join(" ", nameParts, 1, nameParts.Length - 1)
-                    : string.Empty;
-            }
-
-            Email = _apiService.CurrentUserEmail;
+            Name = _apiService.CurrentUserName ?? string.Empty;
+            Surname = _apiService.CurrentUserSurname ?? string.Empty;
+            Email = _apiService.CurrentUserEmail ?? string.Empty;
         }
 
-        // Saves the current values before editing begins.
+        // Save original values before editing.
         public void BeginEditing()
         {
             _originalName = Name;
@@ -155,8 +143,7 @@ namespace UniConnect.MAUI.ViewModels
             IsEditing = true;
         }
 
-        // Validates the profile fields on the frontend.
-       
+        // Validate profile information.
         public bool ValidateProfile()
         {
             ErrorMessage = string.Empty;
@@ -186,7 +173,7 @@ namespace UniConnect.MAUI.ViewModels
             return true;
         }
 
-        // Restores the original values when the user cancels editing.
+        // Restore original values when cancelling.
         public void CancelEditing()
         {
             Name = _originalName;
@@ -197,44 +184,41 @@ namespace UniConnect.MAUI.ViewModels
             IsEditing = false;
         }
 
-        // BACKEND: Connect this method to an ApiService profile-update
-        // method after the backend team confirms the endpoint.
-        //
-        // The update request will need the student's identity and
-        // the agreed fields for name, surname and email.
-        //
-        // BACKEND: Update the existing student record in the database.
-        // Return a response indicating whether the update succeeded.
-        // The frontend should only report success after confirmation.
-        //
-        // IMPORTANT: This method currently validates the profile only.
-        // It does not send a request or save changes to the database.
-        public async Task<bool> PrepareProfileUpdateAsync(){
+        // Update the student profile through the backend.
+        public async Task<bool> PrepareProfileUpdateAsync()
+        {
             if (!ValidateProfile())
-         return false;
+                return false;
 
-        if (_userId == null || _userId <= 0)
-        {  ErrorMessage = "Please log in again.";
-        return false;
+            if (_userId == null || _userId <= 0)
+            {
+                ErrorMessage = "Please log in again.";
+                return false;
+            }
+
+            try
+            {
+                await _apiService.UpdateStudentProfileAsync(
+                    Name.Trim(),
+                    Surname.Trim(),
+                    Email.Trim());
+
+                // Update local values after successful backend response.
+                Name = Name.Trim();
+                Surname = Surname.Trim();
+                Email = Email.Trim();
+
+                IsEditing = false;
+                ErrorMessage = string.Empty;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Profile update failed: {ex.Message}";
+                return false;
+            }
         }
-        try {
-        await _apiService.UpdateStudentProfileAsync(
-            FullName,
-            Email);
-
-        IsEditing = false;
-        ErrorMessage = string.Empty;
-
-        return true;
-    }
-    catch (Exception ex)
-    {
-        ErrorMessage = $"Profile update failed: {ex.Message}";
-        return false;
-    }
-}
-
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

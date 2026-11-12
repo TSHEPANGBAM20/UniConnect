@@ -11,7 +11,7 @@
     <Grid BackgroundColor="#FFFFFF"
           RowDefinitions="Auto,*">
 
-        <!-- Header: matches the Dashboard's UniConnect branding. -->
+        <!-- Header -->
         <Grid Grid.Row="0"
               ColumnDefinitions="Auto,*"
               ColumnSpacing="14"
@@ -52,7 +52,7 @@
             </VerticalStackLayout>
         </Grid>
 
-        <!-- Scrollable account content. -->
+        <!-- Scrollable account content -->
         <ScrollView Grid.Row="1"
                     BackgroundColor="#FFFFFF">
 
@@ -62,7 +62,7 @@
                 MaximumWidthRequest="520"
                 HorizontalOptions="Center">
 
-                <!-- Page heading. -->
+                <!-- Page heading -->
                 <VerticalStackLayout
                     Spacing="6"
                     Margin="0,0,0,2">
@@ -81,7 +81,7 @@
 
                 </VerticalStackLayout>
 
-                <!-- Profile card. -->
+                <!-- Profile card -->
                 <Border
                     BackgroundColor="#FAFAFA"
                     Stroke="#D8D8D8"
@@ -145,7 +145,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Personal details card. -->
+                <!-- Personal details card -->
                 <Border
                     BackgroundColor="#FFFFFF"
                     Stroke="#D8D8D8"
@@ -186,11 +186,11 @@
                             HeightRequest="1"
                             Color="#E5E5E5" />
 
-                        <!-- Full name field. -->
+                        <!-- First name field -->
                         <VerticalStackLayout Spacing="8">
 
                             <Label
-                                Text="Full name"
+                                Text="First name"
                                 FontSize="13"
                                 FontAttributes="Bold"
                                 TextColor="#444444" />
@@ -203,8 +203,8 @@
                                 Padding="12,2">
 
                                 <Entry
-                                    x:Name="FullNameEntry"
-                                    Placeholder="Enter your full name e.g. Benson Magoo"
+                                    x:Name="NameEntry"
+                                    Placeholder="Enter your first name"
                                     FontSize="14"
                                     TextColor="#111111"
                                     PlaceholderColor="#999999"
@@ -214,7 +214,35 @@
 
                         </VerticalStackLayout>
 
-                        <!-- Email field. -->
+                        <!-- Surname field -->
+                        <VerticalStackLayout Spacing="8">
+
+                            <Label
+                                Text="Surname"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                TextColor="#444444" />
+
+                            <Border
+                                BackgroundColor="#F7F7F7"
+                                Stroke="#E5E5E5"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="12,2">
+
+                                <Entry
+                                    x:Name="SurnameEntry"
+                                    Placeholder="Enter your surname"
+                                    FontSize="14"
+                                    TextColor="#111111"
+                                    PlaceholderColor="#999999"
+                                    BackgroundColor="Transparent"
+                                    IsReadOnly="True" />
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                        <!-- Email field -->
                         <VerticalStackLayout Spacing="8">
 
                             <Label
@@ -252,7 +280,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Edit and save actions. -->
+                <!-- Edit and save actions -->
                 <VerticalStackLayout Spacing="12">
 
                     <Button
@@ -294,7 +322,7 @@
 
                 </VerticalStackLayout>
 
-                <!-- Honest status note: profile persistence is not connected yet. -->
+                <!-- Profile update information -->
                 <Border
                     BackgroundColor="#FAFAFA"
                     Stroke="#E5E5E5"
@@ -303,7 +331,7 @@
                     Padding="15">
 
                     <Label
-                        Text="Profile updates are currently stored only in this screen. Saving changes to your account through the backend will be connected later."
+                        Text="Your profile changes are sent to your UniConnect account when you select Save Changes. Changes are confirmed only after a successful response."
                         FontSize="12"
                         LineHeight="1.3"
                         TextColor="#777777"

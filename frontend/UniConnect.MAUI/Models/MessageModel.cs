@@ -25,6 +25,8 @@ namespace UniConnect.MAUI.Models
         public DateTime TimeSent { get; set; }
 
         public bool IsOwnMessage { get; set; }
+
+        public int BubbleColorIndex { get; set; }
     }
 
     // Request sent when a user sends a chat message.

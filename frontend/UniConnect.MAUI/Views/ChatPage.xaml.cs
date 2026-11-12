@@ -3,7 +3,7 @@ using UniConnect.MAUI.ViewModels;
 
 namespace UniConnect.MAUI.Views
 {
-    //controls chat screens
+    // Controls the chat screen.
     public partial class ChatPage : ContentPage
     {
         private readonly ChatViewModel _viewModel;
@@ -16,13 +16,16 @@ namespace UniConnect.MAUI.Views
             BindingContext = _viewModel;
         }
 
-    
-        //messages appear here 
+        // Loads messages and displays the latest message when opening chat.
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
             await _viewModel.LoadMessagesAsync();
+
+            await Task.Delay(100);
+
+            ScrollToLatestMessage();
 
             if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
             {
@@ -33,7 +36,22 @@ namespace UniConnect.MAUI.Views
             }
         }
 
-        //send Message
+        // Scrolls to the newest message.
+        private void ScrollToLatestMessage()
+        {
+            if (_viewModel.Messages.Count == 0)
+                return;
+
+            var latestMessage = _viewModel.Messages[
+                _viewModel.Messages.Count - 1];
+
+            MessagesCollectionView.ScrollTo(
+                latestMessage,
+                position: ScrollToPosition.End,
+                animate: false);
+        }
+
+        // Sends a message and scrolls to it.
         private async void OnSendClicked(object? sender, EventArgs e)
         {
             _viewModel.DraftMessage = MessageEntry.Text ?? string.Empty;
@@ -47,6 +65,10 @@ namespace UniConnect.MAUI.Views
 
                 if (string.IsNullOrEmpty(_viewModel.DraftMessage))
                     MessageEntry.Text = string.Empty;
+
+                await Task.Delay(100);
+
+                ScrollToLatestMessage();
 
                 if (!string.IsNullOrWhiteSpace(_viewModel.ErrorMessage))
                 {

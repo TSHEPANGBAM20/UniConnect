@@ -64,8 +64,7 @@ namespace UniConnect.MAUI.Views
             if (sender is Button button &&
                 button.BindingContext is TaskModel task)
             {
-                //Updates this task's status to DONE.
-                
+                // Updates this task's status to DONE.
                 await _viewModel.MarkDoneAsync(task);
             }
         }
@@ -132,60 +131,70 @@ namespace UniConnect.MAUI.Views
             }
         }
 
-
-                private async void OnProjectMenuItemClicked(object? sender, EventArgs e){
-                    if (sender is not Button button ||button.CommandParameter is not string choice)
-                    return;
-                    await CloseDrawerAsync();
-
-string projectId = Uri.EscapeDataString(
-    _viewModel.ProjectId.ToString());
-
-switch (choice)
-{
-    case "Tasks":
-        // Already on the Task Board.
-        break;
-
-        case "Project Details":
-        if (_viewModel.ProjectId <= 0)
-                    {
-                      await DisplayAlertAsync(
-            "Coming soon",
-            "Project Details is not available yet.",
-            "OK"); 
-            return;
-            }
-            //passess projectId to Specific project details
-            await Shell.Current.GoToAsync(
-            $"{nameof(ProjectDetailsPage)}?projectId={projectId}");
-             break;
-
-        
-        
-
-    case "Project Chat":
-        if (_viewModel.ProjectId <= 0)
+        private async void OnProjectMenuItemClicked(object? sender, EventArgs e)
         {
-            await DisplayAlertAsync(
-                "Project unavailable",
-                "The selected project ID is missing. Please return to Projects and open the project again.",
-                "OK");
-            return;
+            if (sender is not Button button ||
+                button.CommandParameter is not string choice)
+            {
+                return;
+            }
+
+            await CloseDrawerAsync();
+
+            string projectId = Uri.EscapeDataString(
+                _viewModel.ProjectId.ToString());
+
+            switch (choice)
+            {
+                case "Tasks":
+                    // Already on the Task Board.
+                    break;
+
+                case "Project Details":
+                    if (_viewModel.ProjectId <= 0)
+                    {
+                        await DisplayAlertAsync(
+                            "Project unavailable",
+                            "The selected project ID is missing. Please return to Projects and open the project again.",
+                            "OK");
+                        return;
+                    }
+
+                    // Passes the selected project ID to ProjectDetailsPage.
+                    await Shell.Current.GoToAsync(
+                        $"{nameof(ProjectDetailsPage)}?projectId={projectId}");
+                    break;
+
+                case "Project Chat":
+                    if (_viewModel.ProjectId <= 0)
+                    {
+                        await DisplayAlertAsync(
+                            "Project unavailable",
+                            "The selected project ID is missing. Please return to Projects and open the project again.",
+                            "OK");
+                        return;
+                    }
+
+                    // Passes the selected project ID to ChatPage.
+                    await Shell.Current.GoToAsync(
+                        $"{nameof(ChatPage)}?projectId={projectId}");
+                    break;
+            }
         }
 
-        // Passes the selected project ID to ChatPage.
-        await Shell.Current.GoToAsync(
-            $"{nameof(ChatPage)}?projectId={projectId}");
-        break;
-}
-
-
-}
-
-
-        private async void OnAddTaskTapped(object? sender, TappedEventArgs e)
+        // Button event handler: EventArgs is required for Clicked.
+        private async void OnAddTaskTapped(object? sender, EventArgs e)
         {
+            // Extra safety check: only a Team Leader can open task creation.
+            if (!_viewModel.IsTeamLeader)
+            {
+                await DisplayAlertAsync(
+                    "Access restricted",
+                    "Only the Team Leader can create and assign tasks.",
+                    "OK");
+                return;
+            }
+
             if (_viewModel.ProjectId <= 0)
             {
                 await DisplayAlertAsync(
@@ -196,7 +205,6 @@ switch (choice)
             }
 
             // CreateTaskPage receives the selected project ID.
-        
             _refreshTasksOnAppearing = true;
 
             try

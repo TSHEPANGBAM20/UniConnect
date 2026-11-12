@@ -15,10 +15,9 @@ namespace UniConnect.MAUI.Views
             _viewModel = viewModel;
             BindingContext = _viewModel;
 
-            //Displays the profile details currently held by the ViewModel.
-        
-
-            FullNameEntry.Text = _viewModel.FullName;
+            // Load the student's profile details.
+            NameEntry.Text = _viewModel.Name;
+            SurnameEntry.Text = _viewModel.Surname;
             EmailEntry.Text = _viewModel.Email;
 
             SetEditingState(false);
@@ -28,16 +27,18 @@ namespace UniConnect.MAUI.Views
         // Updates the displayed name and avatar initials.
         private void UpdateDisplayName()
         {
-            string name = FullNameEntry.Text?.Trim() ?? string.Empty;
+            string fullName =
+                $"{_viewModel.Name} {_viewModel.Surname}".Trim();
 
-            DisplayNameLabel.Text = string.IsNullOrWhiteSpace(name)
-                ? "Your Name"
-                : name;
+            DisplayNameLabel.Text =
+                string.IsNullOrWhiteSpace(fullName)
+                    ? "Your Name"
+                    : fullName;
 
-            InitialsLabel.Text = GetInitials(name);
+            InitialsLabel.Text = GetInitials(fullName);
         }
 
-        // Gets the user's initials from their name.
+        // Gets the user's initials.
         private static string GetInitials(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -54,69 +55,42 @@ namespace UniConnect.MAUI.Views
                    $"{char.ToUpperInvariant(parts[^1][0])}";
         }
 
-        // Opens edit mode and stores the original values in the ViewModel.
+        // Opens profile editing.
         private void OnEditProfileClicked(object? sender, EventArgs e)
         {
             _viewModel.BeginEditing();
 
-            FullNameEntry.Text = _viewModel.FullName;
+            NameEntry.Text = _viewModel.Name;
+            SurnameEntry.Text = _viewModel.Surname;
             EmailEntry.Text = _viewModel.Email;
 
             SetEditingState(true);
-            FullNameEntry.Focus();
+            NameEntry.Focus();
         }
 
-        // Validates the entered values and prepares the profile update.
+        // Saves the updated profile.
         private async void OnSaveProfileClicked(object? sender, EventArgs e)
         {
-            string fullName = FullNameEntry.Text?.Trim() ?? string.Empty;
-            string email = EmailEntry.Text?.Trim() ?? string.Empty;
-
-            if (string.IsNullOrWhiteSpace(fullName))
-            {
-                await DisplayAlertAsync(
-                    "Name required",
-                    "Please enter your full name.",
-                    "OK");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(email) ||
-                !email.Contains('@') ||
-                !email.Contains('.') ||
-                email.StartsWith('@') ||
-                email.EndsWith('@'))
-            {
-                await DisplayAlertAsync(
-                    "Invalid email",
-                    "Please enter a valid email address.",
-                    "OK");
-                return;
-            }
-
-            // Splits the full name into the ViewModel's name and surname.
-            string[] nameParts = fullName.Split(
-                ' ',
-                StringSplitOptions.RemoveEmptyEntries);
-
-            _viewModel.Name = nameParts[0];
-            _viewModel.Surname = nameParts.Length > 1
-                ? string.Join(" ", nameParts, 1, nameParts.Length - 1)
-                : string.Empty;
-
-            _viewModel.Email = email;
-
+            _viewModel.Name = NameEntry.Text?.Trim() ?? string.Empty;
+            _viewModel.Surname = SurnameEntry.Text?.Trim() ?? string.Empty;
+            _viewModel.Email = EmailEntry.Text?.Trim() ?? string.Empty;
 
             bool saved = await _viewModel.PrepareProfileUpdateAsync();
-            
+
             if (!saved)
             {
                 await DisplayAlertAsync(
                     "Profile not saved",
                     _viewModel.ErrorMessage,
                     "OK");
+
                 return;
             }
+
+            // Refresh the displayed profile after backend confirmation.
+            NameEntry.Text = _viewModel.Name;
+            SurnameEntry.Text = _viewModel.Surname;
+            EmailEntry.Text = _viewModel.Email;
 
             UpdateDisplayName();
             SetEditingState(false);
@@ -127,25 +101,28 @@ namespace UniConnect.MAUI.Views
                 "OK");
         }
 
-        // Restores the original values when editing is cancelled.
+        // Restores original details when editing is cancelled.
         private void OnCancelEditClicked(object? sender, EventArgs e)
         {
             _viewModel.CancelEditing();
 
-            FullNameEntry.Text = _viewModel.FullName;
+            NameEntry.Text = _viewModel.Name;
+            SurnameEntry.Text = _viewModel.Surname;
             EmailEntry.Text = _viewModel.Email;
 
             UpdateDisplayName();
             SetEditingState(false);
         }
 
-        // Controls whether the fields and buttons are editable or visible.
+        // Controls editing permissions and button visibility.
         private void SetEditingState(bool editing)
         {
-            FullNameEntry.IsReadOnly = !editing;
+            NameEntry.IsReadOnly = !editing;
+            SurnameEntry.IsReadOnly = !editing;
             EmailEntry.IsReadOnly = !editing;
 
-            FullNameEntry.IsEnabled = true;
+            NameEntry.IsEnabled = true;
+            SurnameEntry.IsEnabled = true;
             EmailEntry.IsEnabled = true;
 
             EditProfileButton.IsVisible = !editing;
@@ -153,7 +130,7 @@ namespace UniConnect.MAUI.Views
             CancelEditButton.IsVisible = editing;
         }
 
-        // Returns to the previous page and checks before discarding edits.
+        // Returns to the dashboard.
         private async void OnBackClicked(object? sender, EventArgs e)
         {
             if (_viewModel.IsEditing)

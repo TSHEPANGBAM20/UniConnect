@@ -29,7 +29,6 @@
                     TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
                     VerticalOptions="Center" />
 
-
             </Grid>
 
             <!-- Hero -->
@@ -109,7 +108,7 @@
 
                 <Button
                     Text="Get Started"
-                    Clicked="OnGetStartedClicked" 
+                    Clicked="OnGetStartedClicked"
                     BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
                     TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
                     CornerRadius="26"
@@ -136,65 +135,9 @@
                     TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}"
                     HeightRequest="45"
                     FontSize="13"
-                    FontAttributes="Bold"
-                    />
+                    FontAttributes="Bold" />
 
             </VerticalStackLayout>
-
-            <!-- Project Search -->
-
-            <Border
-                Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#333333}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 22"
-                BackgroundColor="{AppThemeBinding Light=#F7F7F7, Dark=#1B1B1B}"
-                Padding="20"
-                Margin="0,0,0,35">
-
-                <VerticalStackLayout
-                    Spacing="12">
-
-                    <Label
-                        Text="Have a project code?"
-                        FontSize="20"
-                        FontAttributes="Bold"
-                        TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
-
-                    <Label
-                        Text="Enter the code shared by your team lead to find and request to join a project."
-                        FontSize="13"
-                        LineHeight="1.2"
-                        TextColor="{AppThemeBinding Light=#666666, Dark=#B8B8B8}" />
-
-                    <Grid
-                        ColumnDefinitions="*,Auto"
-                        ColumnSpacing="8"
-                        Margin="0,5,0,0">
-
-                        <Entry
-                            x:Name="ProjectCodeEntry"
-                            Placeholder="Project code"
-                            FontSize="14"
-                            TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                            PlaceholderColor="{AppThemeBinding Light=#999999, Dark=#777777}"
-                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#292929}"
-                            HeightRequest="50" />
-
-                        <Button
-                            Grid.Column="1"
-                            Text="Search"
-                            BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                            TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
-                            CornerRadius="18"
-                            HeightRequest="50"
-                            Padding="18,0"
-                            FontAttributes="Bold" />
-
-                    </Grid>
-
-                </VerticalStackLayout>
-
-            </Border>
 
             <!-- Features -->
 
@@ -217,6 +160,8 @@
                         TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
                 </VerticalStackLayout>
+
+                <!-- Projects -->
 
                 <Border
                     StrokeThickness="1"
@@ -248,6 +193,8 @@
 
                 </Border>
 
+                <!-- Tasks -->
+
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -278,6 +225,8 @@
 
                 </Border>
 
+                <!-- Calendar -->
+
                 <Border
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
@@ -307,6 +256,8 @@
                     </VerticalStackLayout>
 
                 </Border>
+
+                <!-- Team Chat -->
 
                 <Border
                     StrokeThickness="1"

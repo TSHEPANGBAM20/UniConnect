@@ -1,3 +1,4 @@
+
 package com.mklt.uniconnect.Entities;
 
 import jakarta.persistence.Column;
@@ -6,77 +7,69 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
- 
-@Entity  //all variables will be translated to table columns
-@Table (name = "UniConnectStudents") //the table in the database where the information is supposed to go
+@Entity
+@Table(name = "UniConnectStudents")
 public class Student {
 
-@Id //says that the variable is a primary key
-@GeneratedValue //for auto increment
-private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-private String student_name;
-private String student_surname;
+    private String student_name;
+    private String student_surname;
 
-@Column (unique = true)
-private String studentEmail;
-private String password;
+    @Column(unique = true)
+    private String studentEmail;
 
-    //an empty constructor = allows a version of object creation where parameters aren't passed
-    //in this case its so that the repository handles it for me
+    private String password;
+
+    // Empty constructor required by JPA
     public Student() {
     }
 
-
-     public Student(String name, String surname,String studentEmail,String password) {
+    // Constructor used when registering a student
+    public Student(String name, String surname, String studentEmail, String password) {
         this.student_name = name;
         this.student_surname = surname;
         this.studentEmail = studentEmail;
         this.password = password;
-        
     }
 
-    //setters
-    //setters are used to change information on an object
-
-    public void setName(String name){
+    // Setters
+    public void setName(String name) {
         this.student_name = name;
     }
 
-    public void setSurname(String surname){
+    public void setSurname(String surname) {
         this.student_surname = surname;
     }
 
-    public void setEmail(String email){
-        this.studentEmail= email;
+    public void setEmail(String email) {
+        this.studentEmail = email;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    //getters
-    //getters are used dusing run time to get the particular value of a certain private variable of an entity
-    public String getName(){
+    // Getters
+    public String getName() {
         return student_name;
     }
 
-     public String getSurname(){
+    public String getSurname() {
         return student_surname;
     }
 
-
-    public String getEmail(){
+    public String getEmail() {
         return studentEmail;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
     public Long getId() {
         return id;
     }
-
-    
 }

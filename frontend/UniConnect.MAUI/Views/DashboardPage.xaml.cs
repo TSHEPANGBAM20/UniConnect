@@ -1,3 +1,4 @@
+
 using System.Diagnostics;
 using UniConnect.MAUI.Models;
 using UniConnect.MAUI.Services;
@@ -8,14 +9,19 @@ namespace UniConnect.MAUI.Views
     public partial class DashboardPage : ContentPage, IQueryAttributable
     {
         private readonly DashboardViewModel _viewModel;
+        private readonly ApiService _apiService;
 
         public string Preview { get; set; } = "false";
 
-        public DashboardPage(DashboardViewModel viewModel)
+        public DashboardPage(
+            DashboardViewModel viewModel,
+            ApiService apiService)
         {
             InitializeComponent();
 
             _viewModel = viewModel;
+            _apiService = apiService;
+
             BindingContext = _viewModel;
         }
 
@@ -29,7 +35,8 @@ namespace UniConnect.MAUI.Views
                 ? "true"
                 : "false";
 
-            Debug.WriteLine($"DASHBOARD DIAGNOSTIC: Preview = {Preview}");
+            Debug.WriteLine(
+                $"DASHBOARD DIAGNOSTIC: Preview = {Preview}");
         }
 
         protected override async void OnAppearing()
@@ -60,6 +67,12 @@ namespace UniConnect.MAUI.Views
             await Shell.Current.GoToAsync(nameof(NewProjectPage));
         }
 
+        private async void OnJoinWithCodeClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(
+                "///ProjectsPage?openJoinPrompt=true");
+        }
+
         private async void OnProjectTapped(object sender, TappedEventArgs e)
         {
             if (sender is BindableObject view &&
@@ -70,10 +83,67 @@ namespace UniConnect.MAUI.Views
             }
         }
 
-        private async void OnTabSelected(object? sender, string tab)
-            => await TabNavigator.GoToTabAsync(this, tab, current: "Home");
+        // Opens the relevant project chat from a chat notification.
+        private async void OnNotificationTapped(
+            object sender,
+            TappedEventArgs e)
+        {
+            if (sender is not BindableObject view ||
+                view.BindingContext is not NotificationModel notification)
+            {
+                return;
+            }
 
-        private async void OnMenuItemSelected(object? sender, string item)
+            // Only chat notifications open the Chat page.
+            if (notification.NotificationType != "CHAT_MESSAGE" ||
+                notification.ProjectId <= 0)
+            {
+                return;
+            }
+
+            if (_apiService.CurrentUserId <= 0)
+            {
+                await DisplayAlertAsync(
+                    "Login required",
+                    "Please log in again to open this chat.",
+                    "OK");
+
+                return;
+            }
+
+            try
+            {
+                // Clear the pending notification for this project.
+                DashboardViewModel.MarkChatNotificationsAsRead(
+                    _apiService.CurrentUserId,
+                    notification.ProjectId,
+                    notification.MessageId);
+
+                notification.IsRead = true;
+
+                // Open the selected project's chat.
+                await Shell.Current.GoToAsync(
+                    $"{nameof(ChatPage)}?projectId={notification.ProjectId}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"CHAT NOTIFICATION NAVIGATION ERROR: {ex.Message}");
+
+                await DisplayAlertAsync(
+                    "Unable to open chat",
+                    "The chat could not be opened. Please try again.",
+                    "OK");
+            }
+        }
+
+        private async void OnTabSelected(object? sender, string tab)
+            => await TabNavigator.GoToTabAsync(
+                this, tab, current: "Home");
+
+        private async void OnMenuItemSelected(
+            object? sender,
+            string item)
         {
             if (item == "Logout")
             {
@@ -83,14 +153,11 @@ namespace UniConnect.MAUI.Views
 
             if (item == "MyAccount")
             {
-               await Shell.Current.GoToAsync("//MyAccountPage");
-               return ;
+                await Shell.Current.GoToAsync("//MyAccountPage");
+                return;
             }
-            
 
-            
-            
-            this.DisplayAlertAsync(
+            await DisplayAlertAsync(
                 "Coming soon",
                 $"{item} isn't built yet.",
                 "OK");

@@ -10,7 +10,7 @@
 
     <Grid RowDefinitions="Auto,*,Auto">
 
-        <!-- This is the heading at the top of the chat screen. -->
+        <!-- Chat heading -->
         <VerticalStackLayout
             Grid.Row="0"
             Padding="24,20,24,14"
@@ -37,15 +37,15 @@
 
         </VerticalStackLayout>
 
-        <!-- This displays the messages loaded by ChatViewModel.
-             Each message uses MessageModel to display the sender's name and message text. -->
+        <!-- Chat messages -->
         <CollectionView
+            x:Name="MessagesCollectionView"
             Grid.Row="1"
             ItemsSource="{Binding Messages}"
+            ItemsUpdatingScrollMode="KeepLastItemInView"
             Margin="18,10"
             SelectionMode="None">
 
-            <!-- This appears when the selected project's chat has no messages to display. -->
             <CollectionView.EmptyView>
                 <VerticalStackLayout
                     Padding="30"
@@ -69,42 +69,139 @@
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
 
-        
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MessageModel">
 
                     <Border
-                        Stroke="#EAEAEA"
+                        Stroke="#BDBDBD"
                         StrokeThickness="1"
-                        BackgroundColor="#FFFFFF"
+                        BackgroundColor="#D9D9D9"
                         Padding="14,12"
                         Margin="0,5"
                         StrokeShape="RoundRectangle 16">
 
+                        <Border.Triggers>
+
+                            <!-- Black bubble -->
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding BubbleColorIndex}"
+                                Value="0">
+
+                                <Setter
+                                    Property="BackgroundColor"
+                                    Value="#171717" />
+
+                                <Setter
+                                    Property="Stroke"
+                                    Value="#171717" />
+
+                            </DataTrigger>
+
+                            <!-- White bubble -->
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding BubbleColorIndex}"
+                                Value="1">
+
+                                <Setter
+                                    Property="BackgroundColor"
+                                    Value="#FFFFFF" />
+
+                                <Setter
+                                    Property="Stroke"
+                                    Value="#D0D0D0" />
+
+                            </DataTrigger>
+
+                            <!-- Grey bubble -->
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding BubbleColorIndex}"
+                                Value="2">
+
+                                <Setter
+                                    Property="BackgroundColor"
+                                    Value="#D9D9D9" />
+
+                                <Setter
+                                    Property="Stroke"
+                                    Value="#BDBDBD" />
+
+                            </DataTrigger>
+
+                        </Border.Triggers>
+
                         <VerticalStackLayout Spacing="5">
 
+                            <!-- Sender name -->
                             <Label
                                 Text="{Binding Sender.Name}"
                                 FontSize="11"
                                 FontAttributes="Bold"
-                                TextColor="#666666" />
+                                TextColor="#171717">
 
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding BubbleColorIndex}"
+                                        Value="0">
+
+                                        <Setter
+                                            Property="TextColor"
+                                            Value="#FFFFFF" />
+
+                                    </DataTrigger>
+                                </Label.Triggers>
+
+                            </Label>
+
+                            <!-- Message text -->
                             <Label
                                 Text="{Binding Message}"
                                 FontSize="14"
                                 LineBreakMode="WordWrap"
-                                TextColor="#171717" />
+                                TextColor="#171717">
 
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding BubbleColorIndex}"
+                                        Value="0">
 
-                            <Label Text="{Binding TimeSent}"
-                                    FontSize="10" 
-                                    TextColor="#999999"
-                                     HorizontalOptions="End" />
+                                        <Setter
+                                            Property="TextColor"
+                                            Value="#FFFFFF" />
 
-                            
+                                    </DataTrigger>
+                                </Label.Triggers>
 
+                            </Label>
+
+                            <!-- Message time -->
+                            <Label
+                                Text="{Binding TimeSent}"
+                                FontSize="10"
+                                TextColor="#666666"
+                                HorizontalOptions="End">
+
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding BubbleColorIndex}"
+                                        Value="0">
+
+                                        <Setter
+                                            Property="TextColor"
+                                            Value="#E0E0E0" />
+
+                                    </DataTrigger>
+                                </Label.Triggers>
+
+                            </Label>
 
                         </VerticalStackLayout>
+
                     </Border>
 
                 </DataTemplate>
@@ -112,7 +209,7 @@
 
         </CollectionView>
 
-        <!-- user types a message before sending it. -->
+        <!-- Message input -->
         <Border
             Grid.Row="2"
             Padding="10"
@@ -136,7 +233,6 @@
                     VerticalOptions="Center"
                     ReturnType="Send" />
 
-                <!-- Clicking this button calls OnSendClicked in ChatPage.xaml.cs, passes the typed message to ChatViewModel to send. -->
                 <Button
                     Grid.Column="1"
                     Text="Send"

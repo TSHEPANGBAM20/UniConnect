@@ -7,8 +7,7 @@ using UniConnect.MAUI.Services;
 
 namespace UniConnect.MAUI.ViewModels
 {
-   
-    // sends new messages and keeps the screen updated when something changes.
+    // Sends new messages and keeps the screen updated when something changes.
     [QueryProperty(nameof(ProjectId), "projectId")]
     public class ChatViewModel : INotifyPropertyChanged
     {
@@ -19,7 +18,7 @@ namespace UniConnect.MAUI.ViewModels
         private string _errorMessage = string.Empty;
         private long _projectId;
 
-        //  ID of the project whose chat the user is opening. passed to this page when the user navigates to the chat screen.
+        // ID of the project whose chat the user is opening.
         public long ProjectId
         {
             get => _projectId;
@@ -34,12 +33,10 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // This collection stores the messages shown in the chat.
-
+        // Stores the messages shown in the chat.
         public ObservableCollection<MessageModel> Messages { get; } = new();
 
-        // This stores the message the user is busy typing.
-        // When it changes, CanSend is checked again to see if the send button should be enabled.
+        // Stores the message the user is typing.
         public string DraftMessage
         {
             get => _draftMessage;
@@ -54,8 +51,7 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // This stores an error message if loading or sending messages does not work.
-        // The ChatPage uses it to show the user what went wrong.
+        // Stores an error message if loading or sending fails.
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -69,8 +65,7 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // IsBusy is used while the chat messages are loading.
-        // It also helps stop the user from trying to send a message at the same time.
+        // Tracks whether messages are loading.
         public bool IsBusy
         {
             get => _isBusy;
@@ -85,8 +80,7 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // IsSending tracks whether a message is currently being sent.
-        // This helps prevent the user from submitting the same message repeatedly.
+        // Tracks whether a message is being sent.
         public bool IsSending
         {
             get => _isSending;
@@ -101,25 +95,50 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // The user can only send a message if a project is selected, the message is not empty,
-        // and the app is not already loading messages or sending another message.
+        // Checks whether the user can send a message.
         public bool CanSend =>
             !IsBusy &&
             !IsSending &&
             ProjectId > 0 &&
             !string.IsNullOrWhiteSpace(DraftMessage);
 
-        // separate from the code that controls what happens on the chat screen.
         public ChatViewModel(ApiService apiService)
         {
             _apiService = apiService;
         }
 
-        // This loads the messages for the selected project and displays them in the chat.
-        // If something goes wrong, an error is saved and the loading state is reset.
-    
-        // note: GetMessagesAsync(ProjectId) must retrieve messages for the correct project
-        
+        // Assigns bubble colours according to the sender.
+        // The same sender always receives the same colour.
+        private void AssignBubbleColours(List<MessageModel> messages)
+        {
+            var senderColours = new Dictionary<long, int>();
+
+            // The logged-in user's messages are always black.
+            senderColours[_apiService.CurrentUserId] = 0;
+
+            int nextColour = 1;
+
+            foreach (var message in messages)
+            {
+                message.IsOwnMessage =
+                    message.SenderId == _apiService.CurrentUserId;
+
+                // Check whether this sender already has a colour.
+                if (!senderColours.ContainsKey(message.SenderId))
+                {
+                    // Assign the next participant colour.
+                    senderColours[message.SenderId] = nextColour;
+
+                    // Alternate between white and grey for other participants.
+                    nextColour = nextColour == 1 ? 2 : 1;
+                }
+
+                message.BubbleColorIndex =
+                    senderColours[message.SenderId];
+            }
+        }
+
+        // Loads messages for the selected project.
         public async Task LoadMessagesAsync()
         {
             if (ProjectId <= 0 || IsBusy)
@@ -130,7 +149,10 @@ namespace UniConnect.MAUI.ViewModels
 
             try
             {
-                var messages = await _apiService.GetMessagesAsync(ProjectId);
+                var messages =
+                    await _apiService.GetMessagesAsync(ProjectId);
+
+                AssignBubbleColours(messages);
 
                 Messages.Clear();
 
@@ -148,8 +170,7 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // This sends the text the user typed for the selected project's chat.
-
+        // Sends the message typed by the user.
         public async Task SendAsync()
         {
             if (!CanSend)
@@ -167,11 +188,10 @@ namespace UniConnect.MAUI.ViewModels
             {
                 await _apiService.SendMessageAsync(ProjectId, text);
 
-                // Clear the input only after the send request succeeds.
+                // Clear the input after a successful send.
                 DraftMessage = string.Empty;
 
-                // Reload the chat so the latest messages can be displayed.
-                // If refreshing fails, it does not necessarily mean sending failed.
+                // Reload messages to display the latest version.
                 await RefreshMessagesAfterSendAsync();
             }
             catch (Exception)
@@ -187,13 +207,15 @@ namespace UniConnect.MAUI.ViewModels
             }
         }
 
-        // This reloads the messages after sending so the chat can show the latest version
-        // returned by the backend.
+        // Reloads messages after sending.
         private async Task RefreshMessagesAfterSendAsync()
         {
             try
             {
-                var messages = await _apiService.GetMessagesAsync(ProjectId);
+                var messages =
+                    await _apiService.GetMessagesAsync(ProjectId);
+
+                AssignBubbleColours(messages);
 
                 Messages.Clear();
 
@@ -202,19 +224,14 @@ namespace UniConnect.MAUI.ViewModels
             }
             catch (Exception)
             {
-                // Sending may have worked even if reloading the messages failed.
-                // The chat can try loading the messages again later.
                 ErrorMessage =
                     "The message was submitted, but the chat couldn't refresh.";
             }
         }
 
-        // This notifies the screen when a property changes so that the displayed information
-        // stays up to date without needing to reopen the page.
+        // Notifies the screen when a property changes.
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // This raises the notification for whichever property has changed.
-        // CallerMemberName automatically gets the property name when it is called.
         protected void OnPropertyChanged(
             [CallerMemberName] string? name = null)
         {

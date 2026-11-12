@@ -11,166 +11,175 @@
 
     <Grid MaximumWidthRequest="500">
 
-    <ScrollView>
+        <ScrollView>
+            <VerticalStackLayout Padding="24,20,24,120" Spacing="20">
 
-        <VerticalStackLayout
-            Padding="24,20,24,120"
-            Spacing="20">
+                <!-- Header -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="YOUR SCHEDULE"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1.5"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-            <!-- Header -->
-            <VerticalStackLayout Spacing="4">
+                    <Label Text="Calendar"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-                <Label
-                    Text="YOUR SCHEDULE"
-                    FontSize="11"
-                    FontAttributes="Bold"
-                    CharacterSpacing="1.5"
-                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                    <Label Text="Keep track of deadlines and milestones."
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                </VerticalStackLayout>
 
-                <Label
-                    Text="Calendar"
-                    FontSize="30"
-                    FontAttributes="Bold"
-                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
+                <!-- Month header -->
+                <Border Padding="18"
+                        BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 18">
 
-                <Label
-                    Text="Keep track of deadlines and milestones."
-                    FontSize="13"
-                    TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                    <Grid ColumnDefinitions="*,Auto,*">
+                        <Button x:Name="PreviousMonthButton"
+                                Grid.Column="0"
+                                Text="‹"
+                                Clicked="OnPreviousMonthClicked"
+                                FontSize="25"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                                HorizontalOptions="Start" />
 
-            </VerticalStackLayout>
+                        <Label x:Name="MonthTitleLabel"
+                               Grid.Column="1"
+                               Text="Calendar"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}" />
 
+                        <Button x:Name="NextMonthButton"
+                                Grid.Column="2"
+                                Text="›"
+                                Clicked="OnNextMonthClicked"
+                                FontSize="25"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
+                                HorizontalOptions="End" />
+                    </Grid>
+                </Border>
 
-            <!-- Month header -->
-            <Border
-                Padding="18"
-                BackgroundColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}"
-                StrokeThickness="0"
-                StrokeShape="RoundRectangle 18">
+                <!-- Weekdays -->
+                <Grid ColumnDefinitions="*,*,*,*,*,*,*"
+                      ColumnSpacing="4">
 
-                <Grid ColumnDefinitions="*,Auto,*">
+                    <Label Grid.Column="0" Text="M" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-                    <Button
-                        x:Name="PreviousMonthButton"
-                        Grid.Column="0"
-                        Text="‹"
-                        Clicked="OnPreviousMonthClicked"
-                        FontSize="25"
-                        BackgroundColor="Transparent"
-                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
-                        HorizontalOptions="Start" />
+                    <Label Grid.Column="1" Text="T" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-                    <Label
-                        x:Name="MonthTitleLabel"
-                        Grid.Column="1"
-                        Text="October 2026"
-                        FontSize="17"
-                        FontAttributes="Bold"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}" />
+                    <Label Grid.Column="2" Text="W" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-                    <Button
-                        x:Name="NextMonthButton"
-                        Grid.Column="2"
-                        Text="›"
-                        Clicked="OnNextMonthClicked"
-                        FontSize="25"
-                        BackgroundColor="Transparent"
-                        TextColor="{AppThemeBinding Light=#FFFFFF, Dark=#111111}"
-                        HorizontalOptions="End" />
+                    <Label Grid.Column="3" Text="T" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
+                    <Label Grid.Column="4" Text="F" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                    <Label Grid.Column="5" Text="S" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+
+                    <Label Grid.Column="6" Text="S" HorizontalTextAlignment="Center"
+                           FontAttributes="Bold" FontSize="12"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
                 </Grid>
 
-            </Border>
+                <!-- Calendar days -->
+                <Grid x:Name="CalendarGrid"
+                      ColumnDefinitions="*,*,*,*,*,*,*"
+                      RowSpacing="8"
+                      ColumnSpacing="6" />
 
+                <!-- Calendar legend -->
+                <Border BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#191919}"
+                        Stroke="{AppThemeBinding Light=#E5E5E5, Dark=#2A2A2A}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="14">
 
-            <!-- Weekdays -->
-            <Grid
-                ColumnDefinitions="*,*,*,*,*,*,*"
-                ColumnSpacing="4">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="DEADLINE LEGEND"
+                               FontSize="10"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1.3"
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
 
-                <Label Grid.Column="0" Text="M" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                        <HorizontalStackLayout Spacing="22">
+                            <HorizontalStackLayout Spacing="8"
+                                                   VerticalOptions="Center">
+                                <BoxView WidthRequest="9"
+                                         HeightRequest="9"
+                                         CornerRadius="5"
+                                         Color="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-                <Label Grid.Column="1" Text="T" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                                <Label Text="Task deadline"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
+                            </HorizontalStackLayout>
 
-                <Label Grid.Column="2" Text="W" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                            <HorizontalStackLayout Spacing="8"
+                                                   VerticalOptions="Center">
+                                <BoxView WidthRequest="9"
+                                         HeightRequest="9"
+                                         CornerRadius="5"
+                                         Color="#999999" />
 
-                <Label Grid.Column="3" Text="T" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                                <Label Text="Project deadline"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
 
-                <Label Grid.Column="4" Text="F" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
+                <!-- Upcoming Tasks -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Upcoming Tasks"
+                           FontSize="19"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-                <Label Grid.Column="5" Text="S" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
-
-                <Label Grid.Column="6" Text="S" HorizontalTextAlignment="Center"
-                       FontAttributes="Bold" FontSize="12"
-                       TextColor="{AppThemeBinding Light=#777777, Dark=#AAAAAA}" />
-
-            </Grid>
-
-
-            <!-- Calendar days -->
-            <Grid
-            x:Name="CalendarGrid"
-            ColumnDefinitions="*,*,*,*,*,*,*"
-            RowSpacing="8"
-            ColumnSpacing="6" />
-
-
-            <!-- Upcoming Tasks -->
-
-            <VerticalStackLayout Spacing="12">
-
-                <Label
-                    Text="Upcoming Tasks"
-                    FontSize="19"
-                    FontAttributes="Bold"
-                    TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
-
-            <VerticalStackLayout
-            x:Name="UpcomingList"
-            Spacing="12" />
-
-            </VerticalStackLayout>
-
-            <!-- Upcoming Project Deadlines -->
-
-            <VerticalStackLayout Spacing="12">
-
-            <Label
-                Text="Project Deadlines"
-                FontSize="19"
-                FontAttributes="Bold"
-                TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
-
-            <VerticalStackLayout
-                x:Name="UpcomingProjectsList"
-                Spacing="12" />
-
-            </VerticalStackLayout>
-
+                    <VerticalStackLayout x:Name="UpcomingList"
+                                         Spacing="12" />
                 </VerticalStackLayout>
-            </ScrollView>
 
-            <!-- Floating bottom navigation -->
-            <controls:BottomNavBar
-                ActiveTab="Calendar"
-                VerticalOptions="End"
-                TabSelected="OnTabSelected"
-                MenuItemSelected="OnMenuItemSelected" />
+                <!-- Project Deadlines -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Project Deadlines"
+                           FontSize="19"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#111111, Dark=#FFFFFF}" />
 
-            </Grid>
+                    <VerticalStackLayout x:Name="UpcomingProjectsList"
+                                         Spacing="12" />
+                </VerticalStackLayout>
 
-            </ContentPage>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom navigation -->
+        <controls:BottomNavBar
+            ActiveTab="Calendar"
+            VerticalOptions="End"
+            TabSelected="OnTabSelected"
+            MenuItemSelected="OnMenuItemSelected" />
+
+    </Grid>
+</ContentPage>

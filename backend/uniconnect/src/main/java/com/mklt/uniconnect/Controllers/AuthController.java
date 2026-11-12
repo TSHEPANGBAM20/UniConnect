@@ -1,3 +1,4 @@
+
 package com.mklt.uniconnect.Controllers;
 
 import org.springframework.http.HttpStatus;
@@ -12,71 +13,90 @@ import org.springframework.web.server.ResponseStatusException;
 import com.mklt.uniconnect.Entities.Student;
 import com.mklt.uniconnect.Services.StudentServices;
 
-
-
-@RestController 
-@RequestMapping ("/auth") //Base path for auth endpoint 
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
-    //the only job of the controller methods is to invoke the services
     private StudentServices studentService;
+
     public AuthController(StudentServices studentService) {
         this.studentService = studentService;
     }
 
+    // Register a student
     @PostMapping("/register")
-    public Student registerUser (@RequestBody Student student){
+    public Student registerUser(@RequestBody Student student) {
 
-        //Variables
         String name = student.getName();
         String surname = student.getSurname();
         String email = student.getEmail();
         String password = student.getPassword();
 
-        if (name.isEmpty()){
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Name field cannot be empty.Please fill it in.");
-        }else if (surname.isEmpty()){
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Surname field cannot be empty.Please fill it in.");
-        }else if (email.isEmpty()){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Email field cannot be empty.Please fill it in.");
-        } else if (password.isEmpty()){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password field cannot be empty.Please fill it in.");
-        }else if (password.length() <= 4){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password cannot be less than 4 characters.");
-        }else{
-             return studentService.createUser(name, surname,email, password); 
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Name field cannot be empty. Please fill it in."
+            );
+        } else if (surname == null || surname.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Surname field cannot be empty. Please fill it in."
+            );
+        } else if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email field cannot be empty. Please fill it in."
+            );
+        } else if (password == null || password.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password field cannot be empty. Please fill it in."
+            );
+        } else if (password.length() <= 4) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password cannot be less than 4 characters."
+            );
         }
-        
-       
+
+        return studentService.createUser(name, surname, email, password);
     }
 
-    //1. Data is collected into usermodel
-    //1. Sent to  is collected to path as json body via
-
-    //login
+    // Login
     @PostMapping("/login")
     public Student loginUser(@RequestBody Student student) {
+
         String email = student.getEmail();
         String password = student.getPassword();
-        
-        if (email.isEmpty()){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Email field cannot be empty.Please fill it in.");
-        }else if (password.isEmpty()){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password field cannot be empty.Please fill it in.");
-        }else{
-        return studentService.loginUser(email, password);
+
+        if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email field cannot be empty. Please fill it in."
+            );
+        } else if (password == null || password.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password field cannot be empty. Please fill it in."
+            );
         }
+
+        return studentService.loginUser(email, password);
     }
 
-
+    // Update student name, surname and email
     @PutMapping("/updateEmailOrName")
+    public Student updateEmailOrName(
+            @RequestParam("id") Long id,
+            @RequestParam("updatedName") String updatedName,
+            @RequestParam("updatedSurname") String updatedSurname,
+            @RequestParam("updatedEmail") String updatedEmail) {
 
-    public Student updateEmailOrName (@RequestParam ("id") Long id,@RequestParam ("updatedEmail") String updatedEmail,@RequestParam ("updatedName") String updatedName){
-     return studentService.updateStudentNameAndEmail(id, updatedName, updatedEmail);
+        return studentService.updateStudentNameAndEmail(
+                id,
+                updatedName,
+                updatedSurname,
+                updatedEmail
+        );
     }
-
-
-
-
-
 }

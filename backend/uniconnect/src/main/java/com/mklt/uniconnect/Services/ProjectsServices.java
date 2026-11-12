@@ -1,25 +1,14 @@
+
 package com.mklt.uniconnect.Services;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mklt.uniconnect.Entities.Chat;
@@ -34,8 +23,7 @@ import com.mklt.uniconnect.Repositories.ProjectMembersRepo;
 import com.mklt.uniconnect.Repositories.ProjectsRepo;
 import com.mklt.uniconnect.Repositories.StudentRepo;
 
-
-@Service 
+@Service
 public class ProjectsServices {
 
     private ProjectsRepo projectsRepo;
@@ -45,201 +33,337 @@ public class ProjectsServices {
     private ChatMessageRepo chatMessageRepo;
     private ProjectFileServices projectFileServices;
 
-    public ProjectsServices(ProjectsRepo projectsRepo,ProjectMembersRepo projectMembersRepo,StudentRepo studentRepo,ChatRepo chatRepo,ChatMessageRepo chatMessageRepo,ProjectFileServices projectFileServices) {
+    public ProjectsServices(
+            ProjectsRepo projectsRepo,
+            ProjectMembersRepo projectMembersRepo,
+            StudentRepo studentRepo,
+            ChatRepo chatRepo,
+            ChatMessageRepo chatMessageRepo,
+            ProjectFileServices projectFileServices) {
+
         this.projectsRepo = projectsRepo;
         this.projectMembersRepo = projectMembersRepo;
         this.studentRepo = studentRepo;
         this.chatRepo = chatRepo;
         this.chatMessageRepo = chatMessageRepo;
         this.projectFileServices = projectFileServices;
-
-        
     }
 
-    //method to create project
+    // Create project
+    @Transactional
+    public Project createProject(
+            Student student,
+            String projectName,
+            String projectDescription,
+            LocalDate startDate,
+            LocalDate endDate) {
 
-    @Transactional 
-    public Project createProject(Student student , String projectName,String projectDescription, LocalDate startDate, LocalDate endDate){
-        //checks if a project of that name exists
-        boolean projectExists = projectsRepo.existsByProjectName(projectName);
-
-        if (projectExists){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A project of that name already exists.");
-        }else{
-            //generate a projectCode
-            Integer projectCode = generateProjectCode();
-           
-
-           
-            //create a new project and save it to db
-            Project newProject = new Project(projectName, projectDescription, startDate, endDate,ProjectStatus.INPROGRESS,projectCode);
-            //save to db
-            projectsRepo.save(newProject);
-
-            //save new member
-             ProjectMembers newMember = new ProjectMembers(student, newProject, ProjectRoles.LEADER);
-             projectMembersRepo.save(newMember);
-
-            return newProject;
-
+        if (projectsRepo.existsByProjectName(projectName)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "A project of that name already exists.");
         }
-        
+
+        Integer projectCode = generateProjectCode();
+
+        Project newProject = new Project(
+                projectName,
+                projectDescription,
+                startDate,
+                endDate,
+                ProjectStatus.INPROGRESS,
+                projectCode);
+
+        projectsRepo.save(newProject);
+
+        ProjectMembers newMember = new ProjectMembers(
+                student,
+                newProject,
+                ProjectRoles.LEADER);
+
+        projectMembersRepo.save(newMember);
+
+        return newProject;
     }
 
-    //project files (upload, download, delete) now live in ProjectFileServices
+    // Update project details - Team Lead only
+    @Transactional
+    public Project updateProject(
+            Long projectId,
+            Long studentId,
+            String projectName,
+            String projectDescription,
+            LocalDate startDate,
+            LocalDate endDate,
+            ProjectStatus status) {
 
-    //method shows projects
-    public Project GetProjectDetails(Long projectId){
-        Project project = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project not found"));
-        return project;
+        // Find the project
+        Project project = projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Project not found."));
+
+        // Find the student requesting the update
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Student not found."));
+
+        // Check the student's membership and role
+        ProjectMembers membership =
+                projectMembersRepo.findByStudentAndProject(student, project);
+
+        if (membership == null ||
+                membership.getRole() != ProjectRoles.LEADER) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Only the Team Lead can edit project details.");
+        }
+
+        // Validate project name
+        if (projectName == null || projectName.trim().isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project name cannot be empty.");
+        }
+
+        // Validate description
+        if (projectDescription == null ||
+                projectDescription.trim().isEmpty()) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project description cannot be empty.");
+        }
+
+        // Validate dates
+        if (startDate == null || endDate == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Start date and end date are required.");
+        }
+
+        if (endDate.isBefore(startDate)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "End date cannot be before the start date.");
+        }
+
+        // Validate status
+        if (status == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project status is required.");
+        }
+
+        String cleanedProjectName = projectName.trim();
+
+        // Prevent duplicate project names
+        if (!cleanedProjectName.equalsIgnoreCase(project.getProjectName())
+                && projectsRepo.existsByProjectName(cleanedProjectName)) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "A project of that name already exists.");
+        }
+
+        // Update project information
+        project.setProjectName(cleanedProjectName);
+        project.setProjectDescription(projectDescription.trim());
+        project.setStartDate(startDate);
+        project.setEndDate(endDate);
+        project.setStatus(status);
+
+        return projectsRepo.save(project);
     }
 
-    //method to delete the project
-    public void deleteProject(Long id){
-        Project project = projectsRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
+    // Get project details
+    public Project GetProjectDetails(Long projectId) {
 
-        //delete the project (and its uploaded files)
+        return projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
+    }
+
+    // Delete project
+    public void deleteProject(Long id) {
+
+        Project project = projectsRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
+
         projectFileServices.deleteAllForProject(project);
         projectsRepo.deleteById(project.getID());
-    } 
+    }
 
-    public ProjectMembers addMemberToProject(Long projectId,String email){
-        //find student by email
-        Student student = studentRepo.findByStudentEmail(email); // check if the user exists
-       
+    // Add member to project
+    public ProjectMembers addMemberToProject(Long projectId, String email) {
 
-         if (student == null){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student does not exist"); 
+        Student student = studentRepo.findByStudentEmail(email);
+
+        if (student == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Student does not exist");
         }
 
-        //find the project
-        Project project = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
-         //check if student is a member
-         boolean isMember = projectMembersRepo.existsByStudentAndProject(student, project);
-         if (isMember){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already in project.");
-         }else{
-            //add create new member with member role
-        ProjectMembers newMember = new ProjectMembers(student, project,ProjectRoles.MEMBER);
+        Project project = projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
 
-        //save new member
+        boolean isMember =
+                projectMembersRepo.existsByStudentAndProject(student, project);
+
+        if (isMember) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User already in project.");
+        }
+
+        ProjectMembers newMember = new ProjectMembers(
+                student,
+                project,
+                ProjectRoles.MEMBER);
+
         projectMembersRepo.save(newMember);
 
         return newMember;
-
-         }
-     
     }
 
-    public ProjectMembers joinProject(Integer projectCode, String email){
+    // Join project using project code
+    public ProjectMembers joinProject(Integer projectCode, String email) {
+
         Student student = studentRepo.findByStudentEmail(email);
         Project project = projectsRepo.findByProjectCode(projectCode);
 
-         boolean isMember = projectMembersRepo.existsByStudentAndProject(student, project);
-         if (isMember){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"User already in project.");
-         }else{
-             ProjectMembers newMember = new ProjectMembers(student, project,ProjectRoles.MEMBER);
-         projectMembersRepo.save(newMember);
-         
-         return newMember;
-         }
-    
-    }
-
-
-    public Integer generateProjectCode(){
-            Random random = new Random();
-            int randomCode;
-            boolean projectExistsByCode;
-
-            //generate a random number
-            do {
-                randomCode = random.nextInt(100000,999999);
-                //check if it exists
-                projectExistsByCode = projectsRepo.existsByProjectCode(randomCode);
-
-            }while(projectExistsByCode);
-
-            return randomCode;
-    }
-
-    //showing all projects related to particular user
-    public List<Project> showStudentProjects(Long studentId){
-        //find the group project to which they are a member of 
-        Student student = studentRepo.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student Not found"));
-        List<ProjectMembers> memberships = projectMembersRepo.findAllByStudent(student); //finds list of all memberships linked to member
-
-
-        List<Project> projects = new ArrayList<>(); // stires projects
-        
-        // we loop through the project memberships
-        //on the left
-        for (ProjectMembers membership: memberships ) {
-            
-            //store project
-            Project project = membership.getProject();
-
-            //add to projects list
-            projects.add(project);
-
+        if (student == null || project == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Student or project not found.");
         }
 
+        boolean isMember =
+                projectMembersRepo.existsByStudentAndProject(student, project);
+
+        if (isMember) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "User already in project.");
+        }
+
+        ProjectMembers newMember = new ProjectMembers(
+                student,
+                project,
+                ProjectRoles.MEMBER);
+
+        projectMembersRepo.save(newMember);
+
+        return newMember;
+    }
+
+    // Generate unique project code
+    public Integer generateProjectCode() {
+
+        Random random = new Random();
+        int randomCode;
+        boolean projectExistsByCode;
+
+        do {
+            randomCode = random.nextInt(100000, 999999);
+            projectExistsByCode =
+                    projectsRepo.existsByProjectCode(randomCode);
+
+        } while (projectExistsByCode);
+
+        return randomCode;
+    }
+
+    // Show all projects belonging to a student
+    public List<Project> showStudentProjects(Long studentId) {
+
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Student not found"));
+
+        List<ProjectMembers> memberships =
+                projectMembersRepo.findAllByStudent(student);
+
+        List<Project> projects = new ArrayList<>();
+
+        for (ProjectMembers membership : memberships) {
+            projects.add(membership.getProject());
+        }
 
         return projects;
     }
 
-    //method to show all project members
+    // Show all members in a project
+    public List<ProjectMembers> showStudentsInProject(Long projectId) {
 
-    public List<ProjectMembers> showStudentsInProject (Long project_id){
-        Project project = projectsRepo.findById(project_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
-        List<ProjectMembers> memberList = projectMembersRepo.findAllByProject(project);  //find all membership by project
+        Project project = projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
 
-        return memberList ;
-
+        return projectMembersRepo.findAllByProject(project);
     }
 
-    //method to remove student from membership
-    public void removeStudentFromGroup(String studentEmail,Long projectId){
-        //find the student
+    // Remove student from project
+    public void removeStudentFromGroup(
+            String studentEmail,
+            Long projectId) {
+
         Student student = studentRepo.findByStudentEmail(studentEmail);
-        
-        //find project
-        Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Project Not found"));
 
-        //Remove member by student object and projet in group 
-        ProjectMembers member = projectMembersRepo.findByStudentAndProject(student,currentProject);
+        if (student == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Student not found.");
+        }
+
+        Project currentProject = projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
+
+        ProjectMembers member =
+                projectMembersRepo.findByStudentAndProject(
+                        student, currentProject);
+
+        if (member == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Student is not a member of this project.");
+        }
+
         projectMembersRepo.deleteById(member.getId());
-
     }
 
-        @Transactional
-        public void disbandGroup(Long projectId) {
+    // Disband project
+    @Transactional
+    public void disbandGroup(Long projectId) {
 
-            // Find project
-             Project currentProject = projectsRepo.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project Not found"));
-            // Delete memberships
-            projectMembersRepo.deleteAllByProject(currentProject);
-            // Find project's chat
-            Chat currentChat = chatRepo.findByProject(currentProject);
+        Project currentProject = projectsRepo.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Project not found"));
 
-    // Delete messages before deleting chat
-    if (currentChat != null) {
-        chatMessageRepo.deleteAllByChat(currentChat);
+        projectMembersRepo.deleteAllByProject(currentProject);
 
-        // Delete chat
-        chatRepo.delete(currentChat);
+        Chat currentChat = chatRepo.findByProject(currentProject);
+
+        if (currentChat != null) {
+            chatMessageRepo.deleteAllByChat(currentChat);
+            chatRepo.delete(currentChat);
+        }
+
+        projectFileServices.deleteAllForProject(currentProject);
+
+        projectsRepo.deleteById(currentProject.getID());
     }
-
-    // Delete the project's uploaded files, then the project
-    projectFileServices.deleteAllForProject(currentProject);
-    projectsRepo.deleteById(currentProject.getID());
-}
-
-
-
-    
-    
-    
-    
 }

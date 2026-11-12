@@ -1,21 +1,16 @@
+
 package com.mklt.uniconnect.Controllers;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mklt.uniconnect.Entities.Project;
@@ -24,108 +19,160 @@ import com.mklt.uniconnect.Helpers.ProjectMembers;
 import com.mklt.uniconnect.Repositories.StudentRepo;
 import com.mklt.uniconnect.Services.ProjectsServices;
 
-
-@RestController 
+@RestController
 @RequestMapping("/projects")
 public class ProjectsController {
-private ProjectsServices projectsServices;
-private StudentRepo studentRepo;
 
-    public ProjectsController(ProjectsServices projectsServices,StudentRepo studentRepo) {
+    private ProjectsServices projectsServices;
+    private StudentRepo studentRepo;
+
+    public ProjectsController(
+            ProjectsServices projectsServices,
+            StudentRepo studentRepo) {
+
         this.projectsServices = projectsServices;
         this.studentRepo = studentRepo;
     }
 
-@PostMapping("/createProject")
-public Project createProject(@RequestBody Project project, @RequestParam("id") Long student_id){
+    // Create project
+    @PostMapping("/createProject")
+    public Project createProject(
+            @RequestBody Project project,
+            @RequestParam("id") Long studentId) {
 
-Student student = studentRepo.findById(student_id).orElseThrow(() ->new ResponseStatusException(HttpStatus.BAD_REQUEST,"Student not found")); //first find student
-//Creates a new project
-String projectName = project.getProjectName();
-String projectDescription = project.getProjectDescription();
-LocalDate startDate = project.getStartDate();
-LocalDate endDate = project.getEndDate();
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Student not found"));
 
+        String projectName = project.getProjectName();
+        String projectDescription = project.getProjectDescription();
+        LocalDate startDate = project.getStartDate();
+        LocalDate endDate = project.getEndDate();
 
+        if (projectName == null || projectName.trim().isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project name cannot be empty!");
+        }
 
-//field validation
-if (projectName.isEmpty()){
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Project Name cannot be empty!");
-}else if (projectDescription.isEmpty()){
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Project Description cannot be empty!");
-}else if (startDate == null){
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Project Start Date cannot be empty!");
-}else if(endDate == null){
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Project End Date cannot be empty!");
-}else{
-    
-    return projectsServices.createProject(student,projectName, projectDescription, startDate, endDate);
-}
+        if (projectDescription == null ||
+                projectDescription.trim().isEmpty()) {
 
-}
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project description cannot be empty!");
+        }
 
-//add member-Group leader action
-@PostMapping("/addMember")
+        if (startDate == null || endDate == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project dates cannot be empty!");
+        }
 
-public ProjectMembers addMember(@RequestParam ("projectId") Long projectId,@RequestParam ("email") String email ){
-if (email.isEmpty()){
-   throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error email Start Date cannot be empty!"); 
-}
-return projectsServices.addMemberToProject(projectId, email);
-}
+        return projectsServices.createProject(
+                student,
+                projectName,
+                projectDescription,
+                startDate,
+                endDate);
+    }
 
-//method to getProject Details
-@PostMapping("/getProjectInfo")
-public Project getProjectInfo(@RequestParam("projectId")Long projectId){
-    return projectsServices.GetProjectDetails(projectId);
-}
+    // Update project - Team Lead only
+    @PostMapping("/updateProject")
+    public Project updateProject(
+            @RequestParam("projectId") Long projectId,
+            @RequestParam("studentId") Long studentId,
+            @RequestBody Project updatedProject) {
 
+        return projectsServices.updateProject(
+                projectId,
+                studentId,
+                updatedProject.getProjectName(),
+                updatedProject.getProjectDescription(),
+                updatedProject.getStartDate(),
+                updatedProject.getEndDate(),
+                updatedProject.getStatus());
+    }
 
-//project files (list, upload, download, delete) are in ProjectFileController: /projects/{projectId}/files
+    // Add member
+    @PostMapping("/addMember")
+    public ProjectMembers addMember(
+            @RequestParam("projectId") Long projectId,
+            @RequestParam("email") String email) {
 
-//Join by projectCode
-@PostMapping("/joinByCode")
-public ProjectMembers joinByProjectCode(@RequestParam("projectCode") Integer projectCode,@RequestParam ("email") String email) {
-if (email.isEmpty()){
-   throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Start Date cannot be empty!"); 
-}else if (projectCode == null){
-   throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Error Start Date cannot be empty!");
-}else{
-    return projectsServices.joinProject(projectCode, email);
-}
+        if (email == null || email.trim().isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email cannot be empty!");
+        }
 
-}
+        return projectsServices.addMemberToProject(projectId, email);
+    }
 
+    // Get project details
+    @PostMapping("/getProjectInfo")
+    public Project getProjectInfo(
+            @RequestParam("projectId") Long projectId) {
 
-//show student projects
+        return projectsServices.GetProjectDetails(projectId);
+    }
+
+    // Project files are handled by ProjectFileController
+
+    // Join by project code
+    @PostMapping("/joinByCode")
+    public ProjectMembers joinByProjectCode(
+            @RequestParam("projectCode") Integer projectCode,
+            @RequestParam("email") String email) {
+
+        if (email == null || email.trim().isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email cannot be empty!");
+        }
+
+        if (projectCode == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Project code cannot be empty!");
+        }
+
+        return projectsServices.joinProject(projectCode, email);
+    }
+
+    // Show student projects
     @PostMapping("/showStudentProjects")
-    public List <Project> showStudentProjects(@RequestParam("studentId") Long studentId){
+    public List<Project> showStudentProjects(
+            @RequestParam("studentId") Long studentId) {
+
         return projectsServices.showStudentProjects(studentId);
     }
 
-@PostMapping("/showStudentsInProject")
-public List <ProjectMembers> showStudentsInProject(@RequestParam("projectId") Long projectId){
-return projectsServices.showStudentsInProject(projectId);
+    // Show project members
+    @PostMapping("/showStudentsInProject")
+    public List<ProjectMembers> showStudentsInProject(
+            @RequestParam("projectId") Long projectId) {
+
+        return projectsServices.showStudentsInProject(projectId);
+    }
+
+    // Remove member
+    @DeleteMapping("/removeMemberFromgroup")
+    public void removeStudentFromGroup(
+            @RequestParam("studentEmail") String studentEmail,
+            @RequestParam("projectId") Long projectId) {
+
+        projectsServices.removeStudentFromGroup(
+                studentEmail,
+                projectId);
+    }
+
+    // Disband project
+    @DeleteMapping("/disbandGroup")
+    public void disbandGroup(
+            @RequestParam("projectId") Long projectId) {
+
+        projectsServices.disbandGroup(projectId);
+    }
 }
-
-//remove member from group 
-@DeleteMapping ("/removeMemberFromgroup")
-  public void removeStudentFromGroup(@RequestParam("studentEmail") String studentEmail, @RequestParam("projectId") Long projectId ){
-    projectsServices.removeStudentFromGroup(studentEmail,projectId);
-  }
-
-  //disband group 
-@DeleteMapping ("/disbandGroup")
-  public void disbandGroup( @RequestParam("projectId") Long projectId ){
-    projectsServices.disbandGroup(projectId);
-  }
-
-}
-
-
-
-
-
-
-
-

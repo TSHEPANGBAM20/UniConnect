@@ -1,3 +1,4 @@
+
 package com.mklt.uniconnect.Entities;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 public class ChatMessage {
 
@@ -18,18 +21,19 @@ public class ChatMessage {
     private Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "chatID") 
+    @JoinColumn(name = "chatID")
+    @JsonIgnoreProperties({"messages", "project"})
     private Chat chat;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"password"})
     private Student sender;
 
     private String message;
     private LocalDateTime timeSent;
 
-    //condtructors
-
+    // Constructors
     public ChatMessage(Chat chat, Student sender, String message) {
         this.chat = chat;
         this.sender = sender;
@@ -39,8 +43,7 @@ public class ChatMessage {
     public ChatMessage() {
     }
 
-    //getters
-
+    // Getters
     public Long getId() {
         return Id;
     }
@@ -53,36 +56,28 @@ public class ChatMessage {
         return sender;
     }
 
+    // This exposes the sender's ID directly in the JSON response.
+    public Long getSenderId() {
+        return sender != null ? sender.getId() : null;
+    }
+
     public String getMessage() {
         return message;
     }
 
     public LocalDateTime getTimeSent() {
-    return timeSent;
+        return timeSent;
     }
 
-    
-
-    //setters
-    
+    // Setters
     public void setMessage(String newMessage) {
         this.message = newMessage;
     }
 
     @PrePersist
-public void setTimeSent() {
-    if (timeSent == null) {
-        timeSent = LocalDateTime.now();
+    public void setTimeSent() {
+        if (timeSent == null) {
+            timeSent = LocalDateTime.now();
+        }
     }
-}
-
-
-
-    
-    
-
-    
-
-
-
 }
