@@ -153,8 +153,7 @@ namespace UniConnect.MAUI.ViewModels
                         "Couldn't update the task. Try again.";
                     return;
                 }
-
-                // Sample mode: simulate a successful update.
+                
             }
 
             task.Status = "DONE";
